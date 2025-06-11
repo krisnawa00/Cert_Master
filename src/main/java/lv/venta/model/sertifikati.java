@@ -1,10 +1,23 @@
 package lv.venta.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-
 import java.time.LocalDate;
+import java.util.Collection;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "Sertifikati")
@@ -27,6 +40,12 @@ public class sertifikati {
     @JoinColumn(name = "KDat_ID", nullable = false)
     private KursaDatumi kursaDatums;
 
+    @OneToMany(mappedBy = "sertifikati")
+    @ToString.Exclude
+    private Collection<Sertifikatu_registracijas_tabula> sertifikatuRegistracijasTabula;
+    
+    
+    
     @NotNull
     @Column(name = "Izsniegts_datums")
     private LocalDate izsniegtsDatums;
