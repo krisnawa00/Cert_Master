@@ -1,9 +1,22 @@
 package lv.venta.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import java.util.Collection;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lv.venta.model.enums.Limenis;
 
 @Getter
@@ -32,12 +45,22 @@ public class Kurss {
     @NotNull
     @Column(name = "limenis")
     private Limenis limenis;
+    @Column(name = "līmenis")
+    Limenis līmenis;
+
+    @OneToMany(mappedBy = "kurss")
+    @ToString.Exclude
+    private Collection<KursaDatumi> kursaDatumi; 
+
 
     @Builder
-    public Kurss(String nosaukums, int stundas, Limenis limenis) {
+    public Kurss(String nosaukums, int stundas, Limenis līmenis) {
         this.nosaukums = nosaukums;
         this.stundas = stundas;
-        this.limenis = limenis;
+        this.līmenis = līmenis;
     }
+
+
+    
 }
 
