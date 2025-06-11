@@ -1,5 +1,7 @@
 package lv.venta.model;
 
+import java.util.Collection;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -63,6 +65,17 @@ public class KursaDalibnieks {
     @Column(name = "Pasta_indekss")
     private String pastaIndekss;
 
+    
+    
+    
+    @OneToMany(mappedBy = "dalibnieks")
+    @ToString.Exclude
+    private Collection<Vertejums> vertejumi;
+
+    @OneToMany(mappedBy = "dalibnieks")
+    @ToString.Exclude
+    private Collection<sertifikati> sertifikati;
+    
     @Builder
     public KursaDalibnieks(String vards, String uzvards, String ePasts, String telefonaNr,
                             String personasId, String pilseta, String valsts,
