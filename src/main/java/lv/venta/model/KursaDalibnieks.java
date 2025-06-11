@@ -80,15 +80,16 @@ public class KursaDalibnieks {
     public KursaDalibnieks(String vards, String uzvards, String ePasts, String telefonaNr,
                             String personasId, String pilseta, String valsts,
                             String ielaNosaukumsNumurs, String dzivoklaNummurs, String pastaIndekss) {
-        setVards(vards);
-        setUzvards(uzvards);
-        setEPasts(ePasts);
-        setTelefonaNr(telefonaNr);
-        setPersonasId(personasId);
-        setPilseta(pilseta);
-        setValsts(valsts);
-        setIelaNosaukumsNumurs(ielaNosaukumsNumurs);
-        setDzivoklaNummurs(dzivoklaNummurs);
-        setPastaIndekss(pastaIndekss);
+    	this.vards = vards;
+    	this.uzvards = uzvards;
+    	this.ePasts = ePasts;
+    	this.telefonaNr = telefonaNr;
+    	this.personasId = personasId;
+    	this.pilseta = pilseta;
+    	this.valsts = valsts;
+    	this.ielaNosaukumsNumurs = ielaNosaukumsNumurs;
+    	this.dzivoklaNummurs = dzivoklaNummurs;
+    	this.pastaIndekss = pastaIndekss;
+
     }
 }
