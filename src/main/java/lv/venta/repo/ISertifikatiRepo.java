@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import lv.venta.model.sertifikati;
 
-public interface ISertifikatiRepo extends CrudRepository<sertifikati, Integer> {
+public interface ISertifikatiRepo extends CrudRepository<sertifikati, Long> {
     
     
 

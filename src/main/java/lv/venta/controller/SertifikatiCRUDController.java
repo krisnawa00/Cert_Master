@@ -1,28 +1,29 @@
 package lv.venta.controller;
 
 import lv.venta.model.sertifikati;
-import lv.venta.service.SertifikatiService;
+import lv.venta.service.impl.SertifikatiCRUDService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping("/sertifikats")
+@RequestMapping("/CRUD")
 public class SertifikatiCRUDController {
 
     @Autowired
-    private SertifikatiService sertifikatiService;
+    private SertifikatiCRUDService sertCrud;
 
-    @GetMapping("/show/all") // localhost:8080/sertifikats/show/all
+    @GetMapping("/sertifikati/show/all")
     public String getAllSertifikati(Model model) {
         try {
-            ArrayList<sertifikati> allSertifikati = (ArrayList<sertifikati>) sertifikatiService.findAll();
-            model.addAttribute("package", allSertifikati);
-            return "sertifikati-all-page";
+            ArrayList<sertifikati> all = sertCrud.retrieveAllSertifikati();
+            model.addAttribute("package", all);
+            return "sertifikatu-page";
         } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
             return "error-page";

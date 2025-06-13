@@ -1,5 +1,5 @@
 package lv.venta.model.enums;
 
 public enum Limenis {
-    Profesionālās,Bakalaurs,Doktora,other 
+    Beginner,Junior,Intermediate,Advanced,other 
 }
