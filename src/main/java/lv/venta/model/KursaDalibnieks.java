@@ -2,9 +2,23 @@ package lv.venta.model;
 
 import java.util.Collection;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lv.venta.model.enums.Pilseta;
+import lv.venta.model.enums.Valsts;
 
 @Getter
 @Setter
@@ -47,11 +61,11 @@ public class KursaDalibnieks {
 
     @NotNull
     @Column(name = "Pilseta")
-    private String pilseta;
+    Pilseta pilseta;
 
     @NotNull
     @Column(name = "Valsts")
-    private String valsts;
+    Valsts valsts;
 
     @NotNull
     @Column(name = "Iela_nosaukums_numurs")
@@ -78,7 +92,7 @@ public class KursaDalibnieks {
     
     @Builder
     public KursaDalibnieks(String vards, String uzvards, String ePasts, String telefonaNr,
-                            String personasId, String pilseta, String valsts,
+                            String personasId, @NotNull Pilseta pilseta, @NotNull Valsts valsts,
                             String ielaNosaukumsNumurs, String dzivoklaNummurs, String pastaIndekss) {
     	this.vards = vards;
     	this.uzvards = uzvards;
