@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Controller
@@ -29,4 +28,18 @@ public class SertifikatiCRUDController {
             return "error-page";
         }
     }
+    
+    @GetMapping("/sertifikati/show/{id}")
+    public String getSertifikatsById(@PathVariable long sertId, Model model) {
+    	try {
+            sertifikati s = sertCrud.retrieveSertifikatsById(sertId);
+            model.addAttribute("package", s);
+            return "sertifikats-one-page";
+        } catch (Exception e) {
+            model.addAttribute("package", e.getMessage());
+            return "error-page";
+        }
+    }
+    
+    
 }

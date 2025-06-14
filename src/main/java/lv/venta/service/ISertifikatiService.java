@@ -7,5 +7,5 @@ public interface ISertifikatiService {
     
     ArrayList<sertifikati> retrieveAllSertifikati() throws Exception;
 
-    sertifikati retrieveSertifikatsById(long id) throws Exception;
+    sertifikati retrieveSertifikatsById(long sertId) throws Exception;
 }

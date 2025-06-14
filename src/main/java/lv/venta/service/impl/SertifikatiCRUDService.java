@@ -24,13 +24,13 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     }
 
     @Override
-    public sertifikati retrieveSertifikatsById(long id) throws Exception {
-        if (id <= 0) {
+    public sertifikati retrieveSertifikatsById(long sertId) throws Exception {
+        if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
-        if (!sertRepo.existsById(id)) {
-            throw new Exception("Sertifikāts ar ID " + id + " neeksistē");
+        if (!sertRepo.existsById(sertId)) {
+            throw new Exception("Sertifikāts ar ID " + sertId + " neeksistē");
         }
-        return sertRepo.findById(id).get();
+        return sertRepo.findById(sertId).get();
     }
 }
