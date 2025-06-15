@@ -33,10 +33,10 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
-        if (!macibuRezultatiRepo.existsById(id)) {
+        if (!macibuRezultatiRepo.existsById((long) id)) {
             throw new Exception("Macību rezultāts ar ID " + id + " neeksistē");
         }
-        return macibuRezultatiRepo.findById(id).get();
+        return macibuRezultatiRepo.findById((long) id).get();
     }
     
     
@@ -45,10 +45,10 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
-        if (!macibuRezultatiRepo.existsById(id)) {
+        if (!macibuRezultatiRepo.existsById((long) id)) {
             throw new Exception("Macību rezultāts ar ID " + id + " neeksistē");
         }
-        macibuRezultatiRepo.deleteById(id);
+        macibuRezultatiRepo.deleteById((long) id);
     }
 
     

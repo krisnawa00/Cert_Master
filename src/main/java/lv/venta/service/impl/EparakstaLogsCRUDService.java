@@ -35,10 +35,10 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
-        if (!eParakstaLogsRepo.existsById(id)) {
+        if (!eParakstaLogsRepo.existsById((long) id)) {
             throw new Exception("EParaksta logs ar ID " + id + " neeksistē");
         }
-        return eParakstaLogsRepo.findById(id).get();
+        return eParakstaLogsRepo.findById((long) id).get();
     }
 
 
@@ -47,10 +47,10 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
-        if (!eParakstaLogsRepo.existsById(id)) {
+        if (!eParakstaLogsRepo.existsById((long) id)) {
             throw new Exception("EParaksta logs ar ID " + id + " neeksistē");
         }
-        eParakstaLogsRepo.deleteById(id);
+        eParakstaLogsRepo.deleteById((long) id);
     }
 
 
