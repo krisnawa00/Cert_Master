@@ -19,7 +19,7 @@ public class EparakstaLogsCRUDController {
     @Autowired
     private EparakstaLogsCRUDService eparakstaLogsCRUDService; 
 
-    @GetMapping("/eparakstalogs/show/all")
+    @GetMapping("/eparakstalogs/show/all")//localhost:8080/crud/eparakstalogs/show/all
     public String getAllEparakstaLogs(Model model){
 
         try {
@@ -32,11 +32,11 @@ public class EparakstaLogsCRUDController {
         }
     }  // sis strada
     
-    @GetMapping("/eparakstalogs/{id}")
+    @GetMapping("/eparakstalogs/{id}")//localhost:8080/crud/eparakstalogs/1
     public String getEparakstaLogById(@PathVariable("id") int id, Model model) {
     try {
         EParakstaLogs eparakstaLogs = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
-        model.addAttribute("eparakstaLogs", eparakstaLogs);
+        model.addAttribute("eparaksts", eparakstaLogs);
         return "one-eparaksta-logs-page";
     } catch (Exception e) {
         model.addAttribute("error", e.getMessage());
@@ -44,11 +44,11 @@ public class EparakstaLogsCRUDController {
     }
 }
 
-    @GetMapping("/eparakstalogs/delete/{id}")
+    @GetMapping("/eparakstalogs/delete/{id}")//localhost:8080/crud/eparakstalogs/delete/1
     public String deleteEparakstaLogs(@PathVariable("id") int id,Model model){
         try {
             eparakstaLogsCRUDService.deleteMacibuRezultatiById(id);
-            model.addAttribute("rezultati", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
+            model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
             return "eparaksta-logs-page";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -59,7 +59,7 @@ public class EparakstaLogsCRUDController {
 
     }
 
-
+// viss strada
 
 
 }

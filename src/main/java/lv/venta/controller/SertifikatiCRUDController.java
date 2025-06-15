@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping("/CRUD")
+@RequestMapping("crud")
 public class SertifikatiCRUDController {
 
     @Autowired
     private SertifikatiCRUDService sertCrud;
 
-    @GetMapping("/sertifikati/show/all")
+    @GetMapping("/sertifikati/show/all")//localhost:8080/crud/sertifikati/show/all
     public String getAllSertifikati(Model model) {
         try {
-            ArrayList<Sertifikati> all = sertCrud.retrieveAllSertifikati();
-            model.addAttribute("package", all);
+        	ArrayList<Sertifikati> sertifikati = sertCrud.retrieveAllSertifikati();
+            model.addAttribute("sertifikati", sertifikati);
             return "sertifikatu-page";
         } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
@@ -29,11 +29,11 @@ public class SertifikatiCRUDController {
         }
     }
     
-    @GetMapping("/sertifikati/show/{id}")
-    public String getSertifikatsById(@PathVariable long sertId, Model model) {
+    @GetMapping("/sertifikati/show/{id}")//localhost:8080/crud/sertifikati/show/2
+    public String getSertifikatsById(@PathVariable int id, Model model) {
     	try {
-            Sertifikati s = sertCrud.retrieveSertifikatiById(sertId);
-            model.addAttribute("package", s);
+            Sertifikati s = sertCrud.retrieveSertifikatiById(id);
+            model.addAttribute("sertifikats", s);
             return "sertifikats-one-page";
         } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
@@ -42,4 +42,4 @@ public class SertifikatiCRUDController {
     }
     
     
-}
+} // viss strada dievs palidz

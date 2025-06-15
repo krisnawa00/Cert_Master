@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="eparaksts : ${eparakstsList}">
+            <tr th:each="eparaksts : ${eparaksts}">
                 <td th:text="${eparaksts.eId}"></td>
                 <td th:text="${eparaksts.sertifikati.sertId}"></td>
                 <td th:text="${#temporals.format(eparaksts.parakstisanasDatums, 'dd-MM-yyyy')}"></td>

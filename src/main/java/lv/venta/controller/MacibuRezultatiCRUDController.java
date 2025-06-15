@@ -22,7 +22,7 @@ public class MacibuRezultatiCRUDController {
     private MacibuRezultatiCrudService macibuRezultatiCRUDService; 
 
 
-    @GetMapping("/maciburezultati/show/all")
+    @GetMapping("/maciburezultati/show/all")//localhost:8080/crud/maciburezultati/show/all
     public String getAllMacibuRezultati(Model model) {
         try {
             Iterable<MacibuRezultati> rezultati = macibuRezultatiCRUDService.retrieveAllMacibuRezultati();
@@ -35,7 +35,7 @@ public class MacibuRezultatiCRUDController {
     }
     
     
-    @GetMapping("/maciburezultati/{id}")
+    @GetMapping("/maciburezultati/{id}")//localhost:8080/crud/maciburezultati/2
     public String getMacibuRezultatiById(@PathVariable("id")int id, Model model) {
         try {
             MacibuRezultati rezultats = macibuRezultatiCRUDService.retrieveMacibuRezultatiById(id);
@@ -48,7 +48,7 @@ public class MacibuRezultatiCRUDController {
     }
     
 
-    @GetMapping("/maciburezultati/delete/{id}")
+    @GetMapping("/maciburezultati/delete/{id}")//localhost:8080/crud/maciburezultati/delete/1
     public String deleteMacibuRezultatiById(@PathVariable("id") int id, Model model) {
         try {
         macibuRezultatiCRUDService.deleteMacibuRezultatiById(id);
