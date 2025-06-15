@@ -28,7 +28,7 @@ public class Pasniedzeji {
     @Column(name = "Uzvards")
     private String uzvards;
     
-    @OneToMany(mappedBy = "pasniedzejs")
+    @OneToMany(mappedBy = "pasniedzeji")
     @ToString.Exclude
     private Collection<KursaDatumi> kursadatumi;
     

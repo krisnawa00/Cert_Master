@@ -57,11 +57,11 @@ public class KursaDatumi {
     @Column(name = "Beiga_datums")
     private String beigadatums;
 
-    @OneToMany(mappedBy = "Kursa_Dalibnieks")
+    @OneToMany(mappedBy = "kursaDatums")
     @ToString.Exclude
     private Collection<Vertejums> vertejumi;
 
-    @OneToMany(mappedBy = "Kursa_Dalibnieks")
+    @OneToMany(mappedBy = "kursaDatums")
     @ToString.Exclude
     private Collection<sertifikati> sertifikati;
 
