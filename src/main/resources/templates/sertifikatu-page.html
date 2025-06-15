@@ -2,9 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	    <title>Sertifikāts</title>
+	<title>Sertifikāts</title>
 </head>
 <body>
-	
+	<div class="sertifikats">
+		<h2>TestDevLab Skola</h2>
+		<h1>CERTIFICATE</h1>
+			<div class="cert-number">
+				No. <span th:text="${sertifikats.id}"></span>
+			</div>
+			<div class="name" th:text="${package.vards + ' ' + package.uzvards}"></div>
+
+			<div class="details">
+				ir sekmīgi pabeidzis kursu<br>
+				<strong th:text="${package.kurss.nosaukums}"></strong><br>
+				<span th:text="'Datums: ' + ${package.datums}"></span>
+			</div>
+
+			<div class="footer">
+				<div>
+					<div class="paraksts"></div>
+					<div>Raita Rollande<br>Head of educational institution</div>
+				</div>
+			</div>
+			
+	</div>
 </body>
 </html>
