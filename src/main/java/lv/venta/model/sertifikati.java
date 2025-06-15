@@ -25,7 +25,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Sertifikati {
+public class sertifikati {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
