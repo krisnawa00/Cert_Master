@@ -1,3 +1,4 @@
+
 package lv.venta.model;
 
 import java.util.Collection;
