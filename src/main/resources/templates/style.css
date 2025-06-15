@@ -1,0 +1,72 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f3f9fd;
+    margin: 0;
+    padding: 2rem;
+    color: #002147;
+}
+.sertifikats {
+    background: white;
+    max-width: 800px;
+    margin: auto;
+    padding: 3rem;
+    border: 10px solid #002147;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    text-align: center;
+    font-weight: normal;
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #003366;
+}
+
+.cert-number {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+}
+
+.name {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 2rem 0;
+    background-color: #ffff00;
+    display: inline-block;
+    padding: 0.3rem 1rem;
+}
+
+.details {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4rem;
+    align-items: center;
+}
+
+.footer .paraksts {
+    height: 50px;
+    width: 200px;
+    border-bottom: 1px solid #333;
+    margin-bottom: 0.5rem;
+}
+
+
+
+
+
