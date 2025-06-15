@@ -44,6 +44,9 @@ public class sertifikati {
     @ToString.Exclude
     private Collection<Sertifikatu_registracijas_tabula> sertifikatuRegistracijasTabula;
     
+    @OneToMany(mappedBy = "sertifikati")
+    @ToString.Exclude
+    private Collection<EParakstaLogs> EparakstsLogs ;
     
     
     @NotNull

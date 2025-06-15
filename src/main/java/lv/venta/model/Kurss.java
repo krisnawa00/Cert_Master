@@ -45,19 +45,21 @@ public class Kurss {
     @NotNull
     @Column(name = "limenis")
     private Limenis limenis;
-    @Column(name = "līmenis")
-    Limenis līmenis;
 
     @OneToMany(mappedBy = "kurss")
     @ToString.Exclude
     private Collection<KursaDatumi> kursaDatumi; 
+    
+    @OneToMany(mappedBy = "kurss")
+    @ToString.Exclude
+    private Collection<MacibuRezultati> maciburezultati ; 
 
 
     @Builder
     public Kurss(String nosaukums, int stundas, Limenis līmenis) {
         this.nosaukums = nosaukums;
         this.stundas = stundas;
-        this.līmenis = līmenis;
+        this.limenis = līmenis;
     }
 
 

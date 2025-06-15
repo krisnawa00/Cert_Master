@@ -1,12 +1,15 @@
 package lv.venta.model;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,12 +18,13 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Eparaksta_logs")
 public class EParakstaLogs {
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "E_ID")
     private long eId;
-	
-	@ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "Sert_ID", nullable = false)
     private sertifikati sertifikats;
 
@@ -31,7 +35,13 @@ public class EParakstaLogs {
     @NotNull
     @Column(name = "Statuss")
     private String statuss;
-	
-    
-	
+
+    @Builder
+    public EParakstaLogs(sertifikati sertifikats,
+                           LocalDate parakstisanasDatums,
+                           String statuss) {
+        this.sertifikats = sertifikats;
+        this.parakstisanasDatums = parakstisanasDatums;
+        this.statuss = statuss;
+    }
 }

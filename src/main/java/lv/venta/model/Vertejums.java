@@ -34,6 +34,8 @@ public class Vertejums {
     @NotNull
     @Column(name = "Datums")
     private LocalDate datums;
+    
+    
 
     @Builder
     public Vertejums(KursaDatumi kursaDatums, KursaDalibnieks dalibnieks, String vertejums, LocalDate datums) {

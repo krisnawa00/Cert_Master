@@ -1,4 +1,6 @@
 package lv.venta.model;
+import java.util.Collection;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -13,8 +15,8 @@ import lombok.*;
 public class Pasniedzeji {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "KD_ID")
-    private long kdId;
+    @Column(name = "P_ID")
+    private long pId;
 
     @NotNull
     @Pattern(regexp = "[A-ZĀČĒĢĪĶĻŅŠŪŽ][a-zāčēģīķļņšūž]+", message = "Vārds must start with a capital letter and contain only letters")
@@ -25,6 +27,10 @@ public class Pasniedzeji {
     @Pattern(regexp = "[A-ZĀČĒĢĪĶĻŅŠŪŽ][a-zāčēģīķļņšūž]+", message = "Uzvārds must start with a capital letter and contain only letters")
     @Column(name = "Uzvards")
     private String uzvards;
+    
+    @OneToMany(mappedBy = "pasniedzejs")
+    @ToString.Exclude
+    private Collection<KursaDatumi> kursadatumi;
     
     @Builder
     public Pasniedzeji(String vards, String uzvards) {

@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import lv.venta.model.EParakstaLogs;
 
-public interface IEParakstaLogsRepo extends CrudRepository<EParakstaLogs, Integer> {
+public interface IEParakstaLogsRepo extends CrudRepository<EParakstaLogs, Long> {
 
 }
