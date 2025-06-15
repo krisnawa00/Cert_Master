@@ -35,8 +35,8 @@ public class MacibuRezultatiCRUDController {
     }
     
     
-    @GetMapping("/maciburezultati/show/{id}")
-    public String getMacibuRezultatiById(int id, Model model) {
+    @GetMapping("/maciburezultati/{id}")
+    public String getMacibuRezultatiById(@PathVariable("id")int id, Model model) {
         try {
             MacibuRezultati rezultats = macibuRezultatiCRUDService.retrieveMacibuRezultatiById(id);
             model.addAttribute("rezultats", rezultats);
@@ -49,7 +49,7 @@ public class MacibuRezultatiCRUDController {
     
 
     @GetMapping("/maciburezultati/delete/{id}")
-    public String deleteMacibuRezultatiById(@PathVariable int id, Model model) {
+    public String deleteMacibuRezultatiById(@PathVariable("id") int id, Model model) {
         try {
         macibuRezultatiCRUDService.deleteMacibuRezultatiById(id);
         model.addAttribute("rezultati", macibuRezultatiCRUDService.retrieveAllMacibuRezultati());
