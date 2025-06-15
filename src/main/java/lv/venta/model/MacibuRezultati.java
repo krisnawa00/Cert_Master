@@ -15,7 +15,7 @@ public class MacibuRezultati {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "MR_ID")
-    private Long mrId;
+    private long mrId;
 
     @ManyToOne
     @JoinColumn(name = "K_ID", nullable = false)
