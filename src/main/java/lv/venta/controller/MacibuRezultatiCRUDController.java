@@ -15,7 +15,7 @@ import lv.venta.service.impl.MacibuRezultatiCrudService;
 
 
 @Controller
-@RequestMapping("crud/maciburezultati")
+@RequestMapping("crud")
 public class MacibuRezultatiCRUDController {
 
     @Autowired
@@ -61,7 +61,7 @@ public class MacibuRezultatiCRUDController {
     }
     
 
-
+// viss iet
 
 
 

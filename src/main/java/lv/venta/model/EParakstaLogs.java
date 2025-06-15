@@ -26,7 +26,7 @@ public class EParakstaLogs {
 
     @ManyToOne
     @JoinColumn(name = "Sert_ID", nullable = false)
-    private sertifikati sertifikati;
+    private Sertifikati sertifikati;
 
     @NotNull
     @Column(name = "Parakstisanas_datums")
@@ -37,7 +37,7 @@ public class EParakstaLogs {
     private String statuss;
 
     @Builder
-    public EParakstaLogs(sertifikati sertifikati,
+    public EParakstaLogs(Sertifikati sertifikati,
                            LocalDate parakstisanasDatums,
                            String statuss) {
         this.sertifikati = sertifikati;

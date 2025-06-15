@@ -1,22 +1,22 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org">
 <body>
-    <p>Mācību rezultāti</p>
-    
-    <table border="1px">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Kursa ID</th>
-                <th>Macibu_rezultats</th>
-            </tr>
-        </thead>
-        <tbody>
-                    <tr th:each="rezultats : ${rezultati}">
-                    <td th:text="${rezultats.id}"></td>
-                    <td th:text="${rezultats.kursa_id}"></td>
-                    <td th:text="${rezultats.macibu_rezultats}"></td>
-            </tr>
-        </tbody>
+    <p>Study Results:</p>
+
+    <table border="1">
+        <tr>
+			<td>Rezultāta ID</td>
+			<td>Kursa nosaukums</td>
+			<td>Stundas</td>
+			<td>Līmenis</td>
+			<td>Izieta</td>
+        </tr>
+        <tr th:each="result : ${rezultati}">
+            <td th:text="${result.mrId}"></td>
+            <td th:text="${result.kurss.nosaukums}"></td>
+            <td th:text="${result.kurss.stundas}"></td>
+            <td th:text="${result.kurss.limenis}"></td>
+            <td th:text="${result.macibuRezultats} ? 'Yes' : 'No'"></td>
+        </tr>
     </table>
 </body>
 </html>

@@ -12,7 +12,7 @@ import lv.venta.service.impl.EparakstaLogsCRUDService;
 
 
 @Controller
-@RequestMapping("crud/eparakstalogs")
+@RequestMapping("crud")
 public class EparakstaLogsCRUDController {
 
 
@@ -30,7 +30,7 @@ public class EparakstaLogsCRUDController {
             model.addAttribute("error", e.getMessage());
             return "error-page";
         }
-    }  
+    }  // sis strada
     
     @GetMapping("/eparakstalogs/{id}")
     public String getEparakstaLogById(@PathVariable("id") int id, Model model) {

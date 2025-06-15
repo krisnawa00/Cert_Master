@@ -6,14 +6,14 @@
             <tr>
                 <th>ID</th>
                 <th>Kursa ID</th>
-                <th>Macibu_rezultats</th>
+                <th>Mācību rezultāts</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td th:text="${rezultats.id}"></td>
-                <td th:text="${rezultats.kursa_id}"></td>
-                <td th:text="${rezultats.macibu_rezultats}"></td>
+                <td th:text="${rezultats.mrId}"></td>
+                <td th:text="${rezultats.kurss.kId}"></td>
+                <td th:text="${rezultats.macibuRezultats} ? 'Iziets' : 'Neiziets'"></td>
             </tr>
         </tbody>
     </table>

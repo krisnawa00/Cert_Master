@@ -1,24 +1,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-    <p>E-parakstaLogs</p>
-    
-    <table border="1px">
-        <thead>
-            <tr>
-                <th>E-paraksta ID</th>
-                <th>Sertifikāta ID</th>
-                <th>Parakstīšanas datums</th>
-                <th>Statuss</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="eparaksts : ${eparakstalogs}">
-                    <td th:text="${eparaksts.id}"></td>
-                    <td th:text="${eparaksts.sertId}"></td>
-                    <td th:text="${#temporals.format(eparaksts.parakstisanasDatums, 'dd-MM-yyyy')}"></td>
-                    <td th:text="${eparaksts.status}"></td>
-            </tr>
-        </tbody>
-    </table>
+<h2>EParaksta Logs</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Sertifikāta ID</th>
+            <th>Parakstīšanas datums</th>
+            <th>Statuss</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="log : ${eparaksts}">
+            <td th:text="${log.eId}"></td>
+            <td th:text="${log.sertifikati.sertId}"></td> 
+            <td th:text="${log.parakstisanasDatums}"></td>
+            <td th:text="${log.statuss}"></td>
+        </tr>
+    </tbody>
+</table>
 </body>
 </html>

@@ -18,7 +18,7 @@ import lv.venta.model.MacibuRezultati;
 import lv.venta.model.Pasniedzeji;
 import lv.venta.model.Sertifikatu_registracijas_tabula;
 import lv.venta.model.Vertejums;
-import lv.venta.model.sertifikati;
+import lv.venta.model.Sertifikati;
 import lv.venta.model.enums.Limenis;
 import lv.venta.model.enums.Pilseta;
 import lv.venta.model.enums.Valsts;
@@ -46,7 +46,7 @@ public class SertMaster1Application {
 	
 	@Bean
 	public CommandLineRunner testModel(IEParakstaLogsRepo EPRepo, IKursaDalibnieksRepo KDalRepo, IKursaDatumiRepo KDatRepo, IKurssRepo KRepo, ILietotajsRepo LietRepo, 
-			IMacibuRezultatiRepo MacRezRepo, IPasniedzejiRepo PasRepo, ISertifikatiRepo SertRepo, ISertRegTab SertRegRepo, IVertejumsRepo VertRepo) {
+			IMacibuRezultatiRepo MacRezRepo, IPasniedzejiRepo PasRepo, ISertifikatiRepo sertRepo, ISertRegTab SertRegRepo, IVertejumsRepo VertRepo) {
 		
 		return new CommandLineRunner() {
 			
@@ -97,12 +97,12 @@ public class SertMaster1Application {
 		        
 		        	KDatRepo.saveAll(Arrays.asList(kursaDatums1, kursaDatums2, kursaDatums3, kursaDatums4));
 				
-			        sertifikati Sert1 = new sertifikati(KD1, kursaDatums1, LocalDate.of(2024, 5, 10), true);
-			        sertifikati Sert2 = new sertifikati(KD2, kursaDatums2, LocalDate.of(2024, 5, 11), false);
-			        sertifikati Sert3 = new sertifikati(KD3, kursaDatums3, LocalDate.of(2024, 5, 12), true);
-			        sertifikati Sert4 = new sertifikati(KD4, kursaDatums4, LocalDate.of(2024, 5, 13), false);
+			        Sertifikati Sert1 = new Sertifikati(KD1, kursaDatums1, LocalDate.of(2024, 5, 10), true);
+			        Sertifikati Sert2 = new Sertifikati(KD2, kursaDatums2, LocalDate.of(2024, 5, 11), false);
+			        Sertifikati Sert3 = new Sertifikati(KD3, kursaDatums3, LocalDate.of(2024, 5, 12), true);
+			        Sertifikati Sert4 = new Sertifikati(KD4, kursaDatums4, LocalDate.of(2024, 5, 13), false);
 
-			        SertRepo.saveAll(Arrays.asList(Sert1, Sert2, Sert3, Sert4));
+			        sertRepo.saveAll(Arrays.asList(Sert1, Sert2, Sert3, Sert4));
 				
 				
 		        Vertejums V1 = new Vertejums(kursaDatums1, KD1, "10", LocalDate.of(2025, 6, 15));
