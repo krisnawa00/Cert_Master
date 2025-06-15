@@ -1,7 +1,18 @@
 package lv.venta.model;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
@@ -23,10 +34,11 @@ public class MacibuRezultati {
 
     @NotNull
     @Column(name = "Macibu_rezultats")
-    private String macibuRezultats;
+    private boolean  macibuRezultats;
     
     @Builder
-    public MacibuRezultati(Kurss kurss, String macibuRezultats) {
+    public MacibuRezultati(Kurss kurss, boolean
+     macibuRezultats) {
         this.kurss = kurss;
         this.macibuRezultats = macibuRezultats;
     }
