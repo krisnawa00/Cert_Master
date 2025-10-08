@@ -62,6 +62,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.deepl.api</groupId>
+			<artifactId>deepl-java</artifactId>
+			<version>1.10.3</version>
+		</dependency>
+
+		
 	</dependencies>
 
 	<build>
