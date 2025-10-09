@@ -7,6 +7,21 @@
 <body>
     <h1>Sertifikātu saraksts</h1>
 
+    <form method="get" th:action="@{/crud/sertifikati/show/all}">
+        <label for="lang">Select language:</label>
+        <select name="lang" id="lang" onchange="this.form.submit()">
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}"> 
+            </option>
+        </select>
+    </form>
+    
+    
+    
+    
+    
     <table border="1">
         <thead>
             <tr>

@@ -60,6 +60,15 @@ public class TranslatorService {
     }
 
 
+    public String translateText(String text, String targetLang) {
+    if (text == null || text.trim().isEmpty() || targetLang.equals("lv")) {
+        return text;
+    }
+    // Use the batch method for single text translation
+    List<String> resultList = translateBatch(List.of(text), targetLang);
+    return resultList.get(0);
+}
+
 
     public Map<String, String> getAvailableLanguages(){
         Map<String, String> langs = new LinkedHashMap<>();

@@ -8,6 +8,22 @@
 
     <h1>Sertifikāta Detalizēta Informācija</h1>
 
+        
+    <form method="get">
+        <label for="languageSelector">Select a Language:</label>
+        <select id="languageSelector" name="lang" onchange="this.form.submit()">
+            <option value="">Select a Language</option>
+            <option th:each="lang : ${languages}"  
+                    th:value="${lang.key}" 
+                    th:text="${lang.value}"
+                    th:selected="${currentLanguage == lang.key}"> 
+            </option>
+        </select>
+    </form>
+    
+    
+    
+    
     <ul>
         <li>ID: <span th:text="${sertifikats.sertId}">Id</span></li>
         <li>Izsniegts: <span th:text="${sertifikats.izsniegtsDatums}">Izsniegts</span></li>

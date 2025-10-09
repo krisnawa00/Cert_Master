@@ -1,6 +1,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <p>Mācību rezultāts</p>
+    
+    
+    <form method="get">
+        <label for="lang">Valodas izvēle:</label>
+        <select name="lang" id="lang" onchange="this.form.submit()">
+            <option value="">Select a Language</option>
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}">
+            </option>
+        </select>
+    </form>
+    
+    
+    
+    
+    
     <table border="1px">
         <thead>
             <tr>

@@ -1,6 +1,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <h2>EParaksta Logs</h2>
+
+
+<form method="get">
+    <label for="lang">Select language:</label>
+    <select id="lang" name="lang" onchange="this.form.submit()">
+        <option value="">Select a Language</option>
+        <option th:each="entry : ${languages}"
+                th:value="${entry.key}"
+                th:text="${entry.value}"
+                th:selected="${currentLanguage == entry.key}"> 
+        </option>
+    </select>
+</form>
+
+
+
+
+
+
+
 <table border="1">
     <thead>
         <tr>
