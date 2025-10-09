@@ -39,6 +39,14 @@ public class SertifikatiCRUDController {
                 sertifikati = translateSertifikatiList(sertifikati, lang);
             }
            
+            
+            model.addAttribute("header_id", translatorService.translateText("ID", lang));
+            model.addAttribute("header_izsniegts", translatorService.translateText("Izsniegts", lang));
+            model.addAttribute("header_parakstits", translatorService.translateText("Parakstīts", lang));
+            model.addAttribute("header_dalibnieks", translatorService.translateText("Dalībnieks", lang));
+            model.addAttribute("header_kursa_datums", translatorService.translateText("Kursa Datums", lang));
+            model.addAttribute("header_skatit", translatorService.translateText("Skatīt", lang));
+
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
@@ -59,9 +67,16 @@ public class SertifikatiCRUDController {
            if (!"lv".equals(lang)) {
                 s = translateSingleSertifikats(s, lang);
             }
+            
+            model.addAttribute("label_id", translatorService.translateText("ID", lang));
+            model.addAttribute("label_izsniegts", translatorService.translateText("Izsniegts", lang));
+            model.addAttribute("label_parakstits", translatorService.translateText("Parakstīts", lang));
+            model.addAttribute("label_dalibnieks", translatorService.translateText("Dalībnieks", lang));
+            model.addAttribute("label_kursa_datums", translatorService.translateText("Kursa Datums", lang));
+            
             model.addAttribute("sertifikats", s);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
-             model.addAttribute("currentLanguage", lang);
+            model.addAttribute("currentLanguage", lang);
             return "sertifikats-one-page";
         } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
@@ -111,6 +126,15 @@ public class SertifikatiCRUDController {
         
         return sertifikati;
     }
+
+
+
+        
+        
+        
+      
+
+
 
 
 

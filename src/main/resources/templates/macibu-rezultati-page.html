@@ -19,11 +19,11 @@
 
     <table border="1">
         <tr>
-			<td>Rezultāta ID</td>
-			<td>Kursa nosaukums</td>
-			<td>Stundas</td>
-			<td>Līmenis</td>
-			<td>Izieta</td>
+			<td th:text="${header_rezultata_id}">Rezultāta ID</td>
+            <td th:text="${header_kursa_nosaukums}">Kursa nosaukums</td>
+            <td th:text="${header_stundas}">Stundas</td>
+            <td th:text="${header_limenis}">Līmenis</td>
+            <td th:text="${header_izieta}">Izieta</td>
         </tr>
         <tr th:each="result : ${rezultati}">
             <td th:text="${result.mrId}"></td>

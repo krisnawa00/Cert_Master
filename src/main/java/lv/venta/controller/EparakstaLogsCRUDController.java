@@ -38,13 +38,20 @@ public class EparakstaLogsCRUDController {
             List<EParakstaLogs> eparakstsList = new ArrayList<>();
             eparaksts.forEach(eparakstsList::add);
         
-        // Simple translation - only status field
+        
         if (!"lv".equals(lang)) {
             eparakstsList = translateEparakstaLogsList(eparakstsList, lang);
         }
 
+        
+            model.addAttribute("header_id", translatorService.translateText("ID", lang));
+            model.addAttribute("header_sertifikata_id", translatorService.translateText("Sertifikāta ID", lang));
+            model.addAttribute("header_parakstisanas_datums", translatorService.translateText("Parakstīšanas datums", lang));
+            model.addAttribute("header_statuss", translatorService.translateText("Statuss", lang));
+
+
             model.addAttribute("eparaksts", eparakstsList);
-            model.addAttribute("selectedLang", lang);
+            model.addAttribute("currentLanguage", lang);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             return "eparaksta-logs-page";
         } catch (Exception e) {
@@ -63,7 +70,10 @@ public class EparakstaLogsCRUDController {
             eparakstaLogs.setStatuss(translatedStatus);
         }
         
-        
+            model.addAttribute("header_eparaksta_id", translatorService.translateText("E-paraksta ID", lang));
+            model.addAttribute("header_sertifikata_id", translatorService.translateText("Sertifikāta ID", lang));
+            model.addAttribute("header_parakstisanas_datums", translatorService.translateText("Parakstīšanas datums", lang));
+            model.addAttribute("header_statuss", translatorService.translateText("Statuss", lang));
         
         model.addAttribute("eparaksts", eparakstaLogs);
         model.addAttribute("currentLanguage", lang);
@@ -91,12 +101,12 @@ public class EparakstaLogsCRUDController {
     }
 
 private List<EParakstaLogs> translateEparakstaLogsList(List<EParakstaLogs> originalList, String targetLang) {
-    // If target is Latvian or no translation needed, return original
+    
     if ("lv".equals(targetLang)) {
         return originalList;
     }
     
-    // Only translate the status field
+    
     for (EParakstaLogs log : originalList) {
         if (log.getStatuss() != null) {
             String translatedStatus = translatorService.translateText(log.getStatuss(), targetLang);

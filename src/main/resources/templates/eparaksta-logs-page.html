@@ -1,43 +1,40 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EParaksta Logs</title>
+</head>
 <body>
-<h2>EParaksta Logs</h2>
+    <h2>EParaksta Logs</h2>
 
+    <form method="get">
+        <label for="lang">Select language:</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}"> 
+            </option>
+        </select>
+    </form>
 
-<form method="get">
-    <label for="lang">Select language:</label>
-    <select id="lang" name="lang" onchange="this.form.submit()">
-        <option value="">Select a Language</option>
-        <option th:each="entry : ${languages}"
-                th:value="${entry.key}"
-                th:text="${entry.value}"
-                th:selected="${currentLanguage == entry.key}"> 
-        </option>
-    </select>
-</form>
-
-
-
-
-
-
-
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Sertifikāta ID</th>
-            <th>Parakstīšanas datums</th>
-            <th>Statuss</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="log : ${eparaksts}">
-            <td th:text="${log.eId}"></td>
-            <td th:text="${log.sertifikati.sertId}"></td> 
-            <td th:text="${log.parakstisanasDatums}"></td>
-            <td th:text="${log.statuss}"></td>
-        </tr>
-    </tbody>
-</table>
+    <table border="1">
+        <thead>
+            <tr>
+                <th th:text="${header_id}">ID</th>
+                <th th:text="${header_sertifikata_id}">Sertifikāta ID</th>
+                <th th:text="${header_parakstisanas_datums}">Parakstīšanas datums</th>
+                <th th:text="${header_statuss}">Statuss</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="log : ${eparaksts}">
+                <td th:text="${log.eId}"></td>
+                <td th:text="${log.sertifikati.sertId}"></td> 
+                <td th:text="${log.parakstisanasDatums}"></td>
+                <td th:text="${log.statuss}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

@@ -50,9 +50,16 @@ public class MacibuRezultatiCRUDController {
                 }
             }
         }
-            
+         
+            model.addAttribute("header_rezultata_id", translatorService.translateText("Rezultāta ID", lang));
+            model.addAttribute("header_kursa_nosaukums", translatorService.translateText("Kursa nosaukums", lang));
+            model.addAttribute("header_stundas", translatorService.translateText("Stundas", lang));
+            model.addAttribute("header_limenis", translatorService.translateText("Līmenis", lang));
+            model.addAttribute("header_izieta", translatorService.translateText("Izieta", lang));
+
+
             model.addAttribute("rezultati", rezultati);
-            model.addAttribute("currentLang", lang);
+            model.addAttribute("currentLanguage", lang);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             return "macibu-rezultati-page";
         } catch (Exception e) {
@@ -68,6 +75,11 @@ public class MacibuRezultatiCRUDController {
         try {
             MacibuRezultati rezultats = macibuRezultatiCRUDService.retrieveMacibuRezultatiById(id);
             
+
+            model.addAttribute("header_id", translatorService.translateText("ID", lang));
+            model.addAttribute("header_kursa_id", translatorService.translateText("Kursa ID", lang));
+            model.addAttribute("header_macibu_rezultats", translatorService.translateText("Mācību rezultāts", lang));
+
             model.addAttribute("rezultats", rezultats);
             model.addAttribute("currentLanguage", lang);
             model.addAttribute("languages", translatorService.getAvailableLanguages());

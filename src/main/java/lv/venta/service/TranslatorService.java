@@ -27,7 +27,7 @@ public class TranslatorService {
     public void init(){
 
         try{
-            if (deeplApiKey == null || deeplApiKey.isEmpty() || deeplApiKey.equals("1ea2f080-91ab-49a6-8fe6-abb2844c6043:fx")) {
+            if (deeplApiKey == null || deeplApiKey.isEmpty()) {
                 System.err.println("DeepL API key is not set. Please set the deeplApiKey variable.");
                 return;
             }
