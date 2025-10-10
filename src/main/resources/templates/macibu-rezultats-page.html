@@ -1,21 +1,35 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{results.title}">Study Result</title>
+</head>
 <body>
-    <p>Mācību rezultāts</p>
+    <!-- Valodas pārslēdzējs -->
+    <div style="text-align: right; padding: 10px;">
+        <a th:href="@{'/crud/maciburezultati/' + ${rezultats.mrId} + '?lang=lv'}">LV</a> | 
+        <a th:href="@{'/crud/maciburezultati/' + ${rezultats.mrId} + '?lang=en'}">EN</a>
+    </div>
+
+    <h1 th:text="#{results.title}">Mācību rezultāts</h1>
+    
     <table border="1px">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Kursa ID</th>
-                <th>Mācību rezultāts</th>
+                <th th:text="#{results.id}">ID</th>
+                <th th:text="#{results.course.name}">Kursa ID</th>
+                <th th:text="#{results.completed}">Mācību rezultāts</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td th:text="${rezultats.mrId}"></td>
                 <td th:text="${rezultats.kurss.kId}"></td>
-                <td th:text="${rezultats.macibuRezultats} ? 'Iziets' : 'Neiziets'"></td>
+                <td th:text="${rezultats.macibuRezultats} ? #{results.yes} : #{results.no}"></td>
             </tr>
         </tbody>
     </table>
+    
+    <a th:href="@{/crud/maciburezultati/show/all}" th:text="#{button.back}">Atpakaļ</a>
 </body>
 </html>
