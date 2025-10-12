@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.openpdf.text.Document;
 import org.openpdf.text.Element;
 import org.openpdf.text.Font;
@@ -22,6 +23,8 @@ import lv.venta.repo.IKurssRepo;
 import lv.venta.repo.IVertejumsRepo;
 import lv.venta.service.IPDFCreatorService;
 
+
+@Service
 public class PDFCreatorServiceImpl implements IPDFCreatorService {
 
 
