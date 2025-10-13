@@ -33,4 +33,23 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         }
         return sertRepo.findById(sertId).get();
     }
+
+
+    public void deleteSertifikatiById(int id) throws Exception {
+        if (id <= 0) {
+            throw new Exception("ID nevar būt negatīvs vai nulle");
+        }
+        if (!sertRepo.existsById((long) id)) {
+            throw new Exception("Sertifikāts ar ID " + id + " neeksistē");
+        }
+        sertRepo.deleteById((long) id);
+    }
+
+
+
+
+
+
+
+
 }

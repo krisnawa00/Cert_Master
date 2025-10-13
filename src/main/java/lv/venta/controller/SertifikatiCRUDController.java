@@ -41,5 +41,28 @@ public class SertifikatiCRUDController {
         }
     }
     
+
+    //added delete by id not tested though
+
+    @GetMapping("/sertifikati/delete/{id}")//localhost:8080/crud/sertifikati/delete/2
+    public String deleteSertifikatsById(@PathVariable("id") int id, Model model)
+    {
+
+        try
+        {
+            sertCrud.deleteSertifikatiById(id);
+            model.addAttribute("sertifikati", sertCrud.retrieveAllSertifikati());
+            return "sertifikatu-page";
+        }catch (Exception e) {
+            model.addAttribute("package", e.getMessage());
+            return "error-page";
+        }
+
+
+
+
+    }
+
+
     
 } // viss strada dievs palidz
