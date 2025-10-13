@@ -6,7 +6,10 @@ import lv.venta.service.impl.SertifikatiCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 import java.util.ArrayList;
 
@@ -42,6 +45,49 @@ public class SertifikatiCRUDController {
     }
     
 
+    @GetMapping("/sertifikati/update/{id}")
+    public String getUpdateSertifikatsById(@PathVariable(name="id") int id, Model model) {
+        try {
+            Sertifikati sertifikatsForUpdating = sertCrud.retrieveSertifikatiById(id);
+            model.addAttribute("sertifikats", sertifikatsForUpdating);
+            return "update-sertifikats";
+        } catch (Exception e) {
+            model.addAttribute("package", e.getMessage());
+            return "error-page";
+        }
+    }
+    
+    
+    @PostMapping("/sertifikati/update/{id}")
+     public String postUpdateSertifikatsById(@Valid Sertifikati sertifikats, BindingResult result,
+            Model model, @PathVariable(name = "id") int id)
+        {
+             if(result.hasErrors()) {
+            return "update-sertifikats";
+        } else {
+
+            try {
+                 sertCrud.updateById(id, sertifikats.getDalibnieks(), sertifikats.getKursaDatums(),
+                    sertifikats.getIzsniegtsDatums(), sertifikats.isParakstits());
+                model.addAttribute("sertifikati", sertCrud.retrieveAllSertifikati());
+                return "sertifikatu-page";
+
+            } catch (Exception e) {
+            model.addAttribute("package", e.getMessage());
+            return "error-page";
+        }
+
+
+
+        }
+
+
+
+        }
+    
+    
+    
+    
     //added delete by id not tested though
 
     @GetMapping("/sertifikati/delete/{id}")//localhost:8080/crud/sertifikati/delete/2
