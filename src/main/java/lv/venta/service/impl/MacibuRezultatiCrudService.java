@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lv.venta.model.Kurss;
 import lv.venta.model.MacibuRezultati;
 import lv.venta.repo.IMacibuRezultatiRepo;
 import lv.venta.service.IMacibuRezultatiService;
@@ -39,6 +40,18 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         return macibuRezultatiRepo.findById((long) id).get();
     }
     
+    @Override
+    public void updateById(int id, Kurss kurss, boolean macibuRezultats) throws Exception {
+    if (kurss == null) {
+        throw new Exception("Ievades parametri nav pareizi");
+    }
+    MacibuRezultati retrievedMacR = retrieveMacibuRezultatiById(id);
+    retrievedMacR.setKurss(kurss);
+    retrievedMacR.setMacibuRezultats(macibuRezultats);
+    macibuRezultatiRepo.save(retrievedMacR);
+}
+
+
     
     @Override
     public void deleteMacibuRezultatiById(int id) throws Exception {
