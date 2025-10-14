@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.openpdf.text.Document;
 import org.openpdf.text.Element;
 import org.openpdf.text.Font;
@@ -14,8 +12,8 @@ import org.openpdf.text.FontFactory;
 import org.openpdf.text.Image;
 import org.openpdf.text.Paragraph;
 import org.openpdf.text.pdf.PdfWriter;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import lv.venta.model.Vertejums;
 import lv.venta.repo.IKursaDalibnieksRepo;
@@ -52,7 +50,7 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
 
         
         
-        Vertejums vertejumsNoDB = vertejumsRepo.findByStudentKD_IDAndCourseK_ID(dalibnieksId, kurssId);
+        Vertejums vertejumsNoDB = vertejumsRepo.findByDalibnieks_KdIdAndKursaDatums_Kurss_KId((long)dalibnieksId, (long)kurssId);
 
         if(vertejumsNoDB == null) {
             throw new Exception("Nav pieejams vērtējums šim kursa dalībniekam" + dalibnieksId +  "un kursam" + kurssId);

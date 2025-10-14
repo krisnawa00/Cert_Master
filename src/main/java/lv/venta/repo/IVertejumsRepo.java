@@ -6,6 +6,6 @@ import lv.venta.model.Vertejums;
 
 public interface IVertejumsRepo extends CrudRepository<Vertejums, Long> {
 
-    public abstract Vertejums findByStudentKD_IDAndCourseK_ID(int dalibnieksId, int kurssId);
+    public abstract Vertejums findByDalibnieks_KdIdAndKursaDatums_Kurss_KId(long dalibnieksId, long kurssId);
 
 }
