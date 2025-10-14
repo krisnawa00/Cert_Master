@@ -7,6 +7,7 @@ import lv.venta.model.Sertifikati;
 
 public interface IEParakstaLogsRepo extends CrudRepository<EParakstaLogs, Long> {
 
-    void deleteByIDSertifikati(Sertifikati certificate);
+    void deleteBySertifikati(Sertifikati sertifikati);
+
 
 }

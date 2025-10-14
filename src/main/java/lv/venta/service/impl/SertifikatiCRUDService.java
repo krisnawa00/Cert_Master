@@ -1,17 +1,18 @@
 package lv.venta.service.impl;
 
-import lv.venta.model.KursaDalibnieks;
-import lv.venta.model.KursaDatumi;
-import lv.venta.model.Sertifikati;
-import lv.venta.repo.IEParakstaLogsRepo;
-import lv.venta.repo.ISertifikatiRepo;
-import lv.venta.service.ISertifikatiService;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import lv.venta.model.KursaDalibnieks;
+import lv.venta.model.KursaDatumi;
+import lv.venta.model.Sertifikati;
+import lv.venta.repo.IEParakstaLogsRepo;
+import lv.venta.repo.ISertRegTab;
+import lv.venta.repo.ISertifikatiRepo;
+import lv.venta.service.ISertifikatiService;
 
 @Service
 public class SertifikatiCRUDService implements ISertifikatiService {
@@ -21,6 +22,9 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
     @Autowired
     private IEParakstaLogsRepo eparakstaLogsRepo;
+
+    @Autowired
+    private ISertRegTab sertRegTabRepo;
 
 
     @Override
@@ -70,7 +74,9 @@ public class SertifikatiCRUDService implements ISertifikatiService {
             throw new Exception("Sertifikāts ar ID " + id + " neeksistē");
         }
         Sertifikati certificate = sertRepo.findById((long) id).get();
-        eparakstaLogsRepo.deleteByIDSertifikati(certificate);
+        
+        sertRegTabRepo.deleteAll(certificate.getSertifikatuRegistracijasTabula());
+        eparakstaLogsRepo.deleteAll(certificate.getEparakstsLogs());
         
         sertRepo.deleteById((long) id);
     }
