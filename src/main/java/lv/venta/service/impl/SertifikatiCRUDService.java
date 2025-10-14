@@ -3,6 +3,7 @@ package lv.venta.service.impl;
 import lv.venta.model.KursaDalibnieks;
 import lv.venta.model.KursaDatumi;
 import lv.venta.model.Sertifikati;
+import lv.venta.repo.IEParakstaLogsRepo;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.ISertifikatiService;
 
@@ -17,6 +18,10 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
     @Autowired
     private ISertifikatiRepo sertRepo;
+
+    @Autowired
+    private IEParakstaLogsRepo eparakstaLogsRepo;
+
 
     @Override
     public ArrayList<Sertifikati> retrieveAllSertifikati() throws Exception {
@@ -64,6 +69,9 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         if (!sertRepo.existsById((long) id)) {
             throw new Exception("Sertifikāts ar ID " + id + " neeksistē");
         }
+        Sertifikati certificate = sertRepo.findById((long) id).get();
+        eparakstaLogsRepo.deleteByIDSertifikati(certificate);
+        
         sertRepo.deleteById((long) id);
     }
 

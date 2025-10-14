@@ -50,7 +50,7 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
 
         
         
-        Vertejums vertejumsNoDB = vertejumsRepo.findByDalibnieks_KdIdAndKursaDatums_Kurss_KId((long)dalibnieksId, (long)kurssId);
+        Vertejums vertejumsNoDB = vertejumsRepo.findByDalibnieks_KdIdAndKursaDatums_Kurss_kId((long)dalibnieksId, (long)kurssId);
 
         if(vertejumsNoDB == null) {
             throw new Exception("Nav pieejams vērtējums šim kursa dalībniekam" + dalibnieksId +  "un kursam" + kurssId);
