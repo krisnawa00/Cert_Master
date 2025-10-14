@@ -7,7 +7,6 @@ import java.util.Random;
 
 import org.openpdf.text.Document;
 import org.openpdf.text.Element;
-import org.openpdf.text.Font;
 import org.openpdf.text.FontFactory;
 import org.openpdf.text.Image;
 import org.openpdf.text.Paragraph;
@@ -88,29 +87,58 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
             
                 document.open();
             
-                Image img = Image.getInstance("src/main/resources/Img/tdl_school_logo.png");
-            
+                Image img = Image.getInstance("src/main/resources/Img/tdl_school_logov2.png");
                 document.add(img);
+                
 
 
-                Paragraph p1 = new Paragraph("TDL School", 
-                        FontFactory.getFont(FontFactory.HELVETICA_BOLD, 36, Font.BOLD));
+                Paragraph p1 = new Paragraph( "TestDevLab Skola", 
+                        FontFactory.getFont(FontFactory.HELVETICA, 11));
+                Paragraph p2 = new Paragraph("CERTIFICATE", 
+                        FontFactory.getFont(FontFactory.HELVETICA, 23));
+                Paragraph p3 = new Paragraph("No." + certicateNo, FontFactory.getFont(FontFactory.HELVETICA, 13));
+                
+                Paragraph p4 = new Paragraph(dalibniekaVardsUnUzvards, FontFactory.getFont(FontFactory.HELVETICA_BOLD,38));
+                
+                Paragraph p5 = new Paragraph("has mastered non-formal education program", 
+                        FontFactory.getFont(FontFactory.HELVETICA, 18));
+                
+                Paragraph p6 = new Paragraph(kursaNosaukums, FontFactory.getFont(FontFactory.HELVETICA, 28));
+                
+                Paragraph p7 = new Paragraph(stundas + " hours", FontFactory.getFont(FontFactory.HELVETICA, 13));
+                
+                Paragraph p8 = new Paragraph("Assessment: " + vertejums + " out of 10", FontFactory.getFont(FontFactory.HELVETICA, 18));
+                
+                Paragraph p12 = new Paragraph("________________________________", FontFactory.getFont(FontFactory.HELVETICA, 13));
 
+                Paragraph p9 = new Paragraph("Raita Rollande", FontFactory.getFont(FontFactory.HELVETICA, 13));
+                
+                Paragraph p10 = new Paragraph("Head of eductional instution", FontFactory.getFont(FontFactory.HELVETICA, 13));
+                
+                Paragraph p11 = new Paragraph(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), FontFactory.getFont(FontFactory.HELVETICA, 13));
+                
+                Paragraph p13 = new Paragraph("\n");
+                                
+                // Center-aligned paragraphs
+                Paragraph[] centerParagraphs = {p13,p1,p13, p2, p3,p13, p4,p13, p5, p6, p7};
+                for (Paragraph p : centerParagraphs) {
+                    p.setAlignment(Element.ALIGN_CENTER);
+                    document.add(p);
+                }
 
-                p1.setAlignment(Element.ALIGN_CENTER);
-                document.add(p1);
+                // Left-aligned paragraphs
+                Paragraph[] leftParagraphs = {p8,p13,p12, p9, p10,p13, p11};
+                for (Paragraph p : leftParagraphs) {
+                    p.setAlignment(Element.ALIGN_LEFT);
+                    document.add(p);
+                }
                 
-                document.add(new Paragraph("Sertifikats", FontFactory.getFont(FontFactory.HELVETICA,25,Font.BOLD))); 
-                document.add(new Paragraph("No" + certicateNo, FontFactory.getFont(FontFactory.HELVETICA,20))); 
-                document.add(new Paragraph(dalibniekaVardsUnUzvards, FontFactory.getFont(FontFactory.HELVETICA,20))); 
-                document.add(new Paragraph("ir pabeidzis programmu",FontFactory.getFont(FontFactory.HELVETICA,15))); 
-                document.add(new Paragraph(kursaNosaukums, FontFactory.getFont(FontFactory.HELVETICA,20))); 
+                Image img2 = Image.getInstance("src/main/resources/Img/footer.png");
+                img2.scaleToFit(500, 100);
+                img2.setAlignment(Element.FOOTNOTE);
                 
-                document.add(new Paragraph(stundas + "stundas\n\n\n", FontFactory.getFont(FontFactory.HELVETICA,15))); 
-                
-                document.add(new Paragraph("Atdzime" + vertejums + "no 10", FontFactory.getFont(FontFactory.HELVETICA,17)));
-                document.add(new Paragraph(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),FontFactory.getFont(FontFactory.HELVETICA,15)));
-                
+                document.add(img2);
+
 
                 document.close();
             
