@@ -6,13 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
 import lv.venta.model.EParakstaLogs;
 import lv.venta.service.impl.EparakstaLogsCRUDService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -49,7 +48,7 @@ public class EparakstaLogsCRUDController {
     }
 }
 
-    @GetMapping("/eparakstalogs/update/{id}")
+    @GetMapping("/eparakstalogs/update/{id}") //  localhost:8080/crud/eparakstalogs/update/1
     public String getUpdateEparakstaLogsById(@PathVariable(name="id") int id, Model model) 
     {
         try
@@ -73,7 +72,7 @@ public class EparakstaLogsCRUDController {
             try {
                 eparakstaLogsCRUDService.updateById(id, eparakstaLogs.getSertifikati(), eparakstaLogs.getParakstisanasDatums(), eparakstaLogs.getStatuss());
                 model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
-                return "eparaksta-logs-page";
+                return "redirect:/crud/eparakstalogs/show/all";
             } catch (Exception e) {
                 model.addAttribute("error", e.getMessage());
                 return "error-page";
@@ -96,7 +95,7 @@ public class EparakstaLogsCRUDController {
         try {
             eparakstaLogsCRUDService.deleteMacibuRezultatiById(id);
             model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
-            return "eparaksta-logs-page";
+            return "redirect:/crud/eparakstalogs/show/all";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             return "error-page";

@@ -1,17 +1,19 @@
 package lv.venta.controller;
 
-import lv.venta.model.Sertifikati;
-import lv.venta.service.impl.SertifikatiCRUDService;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
-
-import java.util.ArrayList;
+import lv.venta.model.Sertifikati;
+import lv.venta.service.impl.SertifikatiCRUDService;
 
 @Controller
 @RequestMapping("crud")
@@ -45,7 +47,7 @@ public class SertifikatiCRUDController {
     }
     
 
-    @GetMapping("/sertifikati/update/{id}")
+    @GetMapping("/sertifikati/update/{id}") //  localhost:8080/crud/sertifikati/update/2
     public String getUpdateSertifikatsById(@PathVariable(name="id") int id, Model model) {
         try {
             Sertifikati sertifikatsForUpdating = sertCrud.retrieveSertifikatiById(id);
@@ -70,7 +72,7 @@ public class SertifikatiCRUDController {
                  sertCrud.updateById(id, sertifikats.getDalibnieks(), sertifikats.getKursaDatums(),
                     sertifikats.getIzsniegtsDatums(), sertifikats.isParakstits());
                 model.addAttribute("sertifikati", sertCrud.retrieveAllSertifikati());
-                return "sertifikatu-page";
+                return "redirect:/crud/sertifikati/show/all";
 
             } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
@@ -98,7 +100,7 @@ public class SertifikatiCRUDController {
         {
             sertCrud.deleteSertifikatiById(id);
             model.addAttribute("sertifikati", sertCrud.retrieveAllSertifikati());
-            return "sertifikatu-page";
+            return "redirect:/crud/sertifikati/show/all";
         }catch (Exception e) {
             model.addAttribute("package", e.getMessage());
             return "error-page";
