@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -38,34 +37,5 @@
     </form>
     
     <a href="/crud/eparakstalogs/show/all" th:text="${link_back}">Atpakaļ uz sarakstu</a>
-=======
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Pievienot Jaunu E-Paraksta Logu</title>
-</head>
-<body>
-    <h1>Pievienot Jaunu E-Paraksta Logu</h1>
-    
-    <form method="post" action="/crud/eparakstalogs/insert">
-        <label for="sertId">Sertifikāta ID:</label>
-        <input type="number" id="sertId" name="sertId" required min="1">
-        
-        <label for="parakstisanasDatums">Parakstīšanas Datums:</label>
-        <input type="date" id="parakstisanasDatums" name="parakstisanasDatums" required>
-        
-        <label for="statuss">Statuss:</label>
-        <select id="statuss" name="statuss" required>
-            <option value="">-- Izvēlēties --</option>
-            <option value="Parakstīts">Parakstīts</option>
-            <option value="Neparakstīts">Neparakstīts</option>
-            <option value="Gaida parakstu">Gaida parakstu</option>
-        </select>
-        
-        <button type="submit">Pievienot</button>
-    </form>
-    
-    <a href="/crud/eparakstalogs/show/all">Atpakaļ uz sarakstu</a>
->>>>>>> 899f503 (added create)
 </body>
 </html>

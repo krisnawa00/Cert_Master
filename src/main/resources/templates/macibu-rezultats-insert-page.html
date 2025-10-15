@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -21,23 +20,10 @@
     
     <form method="post" action="/crud/maciburezultati/insert">
         <label for="kId" th:text="${label_kursa_id} + ':'">Kursa ID:</label>
-=======
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Pievienot Jaunu Rezultātu</title>
-</head>
-<body>
-    <h1>Pievienot Jaunu Rezultātu</h1>
-    
-    <form method="post" action="/crud/maciburezultati/insert">
-        <label for="kId">Kursa ID:</label>
->>>>>>> 899f503 (added create)
         <input type="number" id="kId" name="kId" required min="1">
         
         <label>
             <input type="checkbox" name="macibuRezultats" value="true">
-<<<<<<< HEAD
             <span th:text="${label_kurss_iziets}">Kurss Iziets</span>
         </label>
         
@@ -45,14 +31,5 @@
     </form>
     
     <a href="/crud/maciburezultati/show/all" th:text="${link_back}">Atpakaļ uz sarakstu</a>
-=======
-            Kurss Iziets
-        </label>
-        
-        <button type="submit">Pievienot</button>
-    </form>
-    
-    <a href="/crud/maciburezultati/show/all">Atpakaļ uz sarakstu</a>
->>>>>>> 899f503 (added create)
 </body>
 </html>
