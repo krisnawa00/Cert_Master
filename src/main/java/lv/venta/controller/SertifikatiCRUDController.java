@@ -33,24 +33,23 @@ public class SertifikatiCRUDController {
     }
     
     @GetMapping("/sertifikati/show/{id}")
-    public String getSertifikatsById(@PathVariable long sertId, Model model) {
-    	try {
+    public String getSertifikatsById(@PathVariable("id") long sertId, Model model) {
+        try {
             sertifikati s = sertCrud.retrieveSertifikatsById(sertId);
             model.addAttribute("package", s);
             return "sertifikats-one-page";
         } catch (Exception e) {
-            model.addAttribute("package", e.getMessage());
+            model.addAttribute("error", e.getMessage());
             return "error-page";
         }
     }
     
-    @GetMapping("/sertifikati/add") // localhost:8080/crud/sertifikati/add
+    @GetMapping("/sertifikati/add") // localhost:8080/CRUD/sertifikati/add
     public String showAddSertifikatsForm(Model model) {
         model.addAttribute("sertifikats", new sertifikati());
         return "sertifikats-add-page";
     }
 
-    // ✅ Handle form submission
     @PostMapping("/sertifikati/add")
     public String addSertifikats(
             @RequestParam("kdId") KursaDalibnieks dalibnieks,
@@ -61,7 +60,7 @@ public class SertifikatiCRUDController {
         try {
             LocalDate datums = LocalDate.parse(izsniegtsDatums);
             sertCrud.create(dalibnieks, kursaDatums, datums, parakstits);
-            return "redirect:/crud/sertifikati/show/all";
+            return "redirect:/CRUD/sertifikati/show/all";
         } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
             return "error-page";

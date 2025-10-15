@@ -6,7 +6,7 @@
 <body>
 <h1>Pievienot jaunu sertifikātu</h1>
 
-<form th:action="@{/crud/sertifikati/add}" method="post">
+<form th:action="@{/CRUD/sertifikati/add}" method="post">
     <label>Dalībnieka ID:</label>
     <input type="number" name="kdId" required><br>
 
@@ -25,6 +25,6 @@
     <button type="submit">Saglabāt</button>
 </form>
 
-<a th:href="@{/crud/sertifikati/show/all}">← Atpakaļ</a>
+<a th:href="@{/CRUD/sertifikati/show/all}">← Atpakaļ</a>
 </body>
 </html>

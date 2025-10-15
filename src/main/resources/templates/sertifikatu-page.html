@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<title>Sertifikāts</title>
-	<link rel="stylesheet" href="./templates/style.css">
+    <meta charset="UTF-8">
+    <title>Sertifikātu saraksts</title>
 </head>
 <body>
-	<div class="sertifikats">
-		<h2>TestDevLab Skola</h2>
-		<h1>CERTIFICATE</h1>
-			<div class="cert-number">
-				No. <span th:text="${sertifikats.id}"></span>
-			</div>
-			<div class="name" th:text="${package.vards + ' ' + package.uzvards}"></div>
+    <h1>Sertifikātu saraksts</h1>
 
-			<div class="details">
-				ir sekmīgi pabeidzis kursu<br>
-				<strong th:text="${package.kurss.nosaukums}"></strong><br>
-				<span th:text="'Datums: ' + ${package.datums}"></span>
-			</div>
+    <div>
+        <a th:href="@{/CRUD/sertifikati/add}">+ Pievienot jaunu sertifikātu</a> |
+        <a th:href="@{/filter/sertifikati/form}">Filtrēt sertifikātus</a>
+    </div>
 
-			<div class="footer">
-				<div>
-					<div class="paraksts"></div>
-					<div>Raita Rollande<br>Head of educational institution</div>
-				</div>
-			</div>
-			
-	</div>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Izsniegts</th>
+                <th>Parakstīts</th>
+                <th>Dalībnieks</th>
+                <th>Kursa Datums</th>
+                <th>Skatīt</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="sert : ${package}">
+                <td th:text="${sert.sertId}">Id</td>
+                <td th:text="${#temporals.format(sert.izsniegtsDatums, 'dd.MM.yyyy')}">Izsniegts</td>
+                <td th:text="${sert.parakstits ? '✓ Parakstīts' : '✗ Neparakstīts'}">Parakstīts</td>
+                <td th:text="${sert.dalibnieks.vards + ' ' + sert.dalibnieks.uzvards}">Dalībnieks</td>
+                <td th:text="${sert.kursaDatums.sakumaDatums + ' līdz ' + sert.kursaDatums.beigadatums}">Kursa Datums</td>
+                <td>
+                    <a th:href="@{'/CRUD/sertifikati/show/' + ${sert.sertId}}">Skatīt</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 </body>
 </html>
