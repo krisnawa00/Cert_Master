@@ -63,31 +63,6 @@ public class MacibuRezultatiCRUDController {
     }
     }
     
-    @GetMapping("/maciburezultati/add")
-    public String showAddForm(Model model) {
-        model.addAttribute("rezultats", new MacibuRezultati());
-        return "macibu-rezultati-add-page";
-    }
-
-    // Handle form submission
-    @PostMapping("/maciburezultati/add")
-    public String addMacibuRezultati(
-            @RequestParam("kurssId") Kurss kurss,
-            @RequestParam("macibuRezultats") boolean macibuRezultats,
-            Model model) {
-        try {
-            macibuRezultatiCRUDService.create(kurss, macibuRezultats);
-            return "redirect:/crud/maciburezultati/show/all";
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "error-page";
-        }
-    }
-    
-
-
-
-
 
 
 
