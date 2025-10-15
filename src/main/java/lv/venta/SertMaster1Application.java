@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lv.venta.model.EParakstaLogs;
 import lv.venta.model.KursaDalibnieks;
@@ -15,6 +17,8 @@ import lv.venta.model.KursaDatumi;
 import lv.venta.model.Kurss;
 import lv.venta.model.Lietotajs;
 import lv.venta.model.MacibuRezultati;
+import lv.venta.model.MyAuthority;
+import lv.venta.model.MyUser;
 import lv.venta.model.Pasniedzeji;
 import lv.venta.model.Sertifikatu_registracijas_tabula;
 import lv.venta.model.Vertejums;
@@ -34,6 +38,8 @@ import lv.venta.repo.IPasniedzejiRepo;
 import lv.venta.repo.ISertRegTab;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.repo.IVertejumsRepo;
+import lv.venta.repo.IMyAuthorityRepo;
+import lv.venta.repo.IMyUserRepo;
 
 @SpringBootApplication
 public class SertMaster1Application {
@@ -46,7 +52,7 @@ public class SertMaster1Application {
 	
 	@Bean
 	public CommandLineRunner testModel(IEParakstaLogsRepo EPRepo, IKursaDalibnieksRepo KDalRepo, IKursaDatumiRepo KDatRepo, IKurssRepo KRepo, ILietotajsRepo LietRepo, 
-			IMacibuRezultatiRepo MacRezRepo, IPasniedzejiRepo PasRepo, ISertifikatiRepo sertRepo, ISertRegTab SertRegRepo, IVertejumsRepo VertRepo) {
+			IMacibuRezultatiRepo MacRezRepo, IPasniedzejiRepo PasRepo, ISertifikatiRepo sertRepo, ISertRegTab SertRegRepo, IVertejumsRepo VertRepo, IMyAuthorityRepo authRepo, IMyUserRepo userRepo) {
 		
 		return new CommandLineRunner() {
 			
@@ -138,7 +144,16 @@ public class SertMaster1Application {
 
 		        EPRepo.saveAll(Arrays.asList(log1, log2, log3, log4));
 
+		        MyAuthority auth1 = new MyAuthority("USER");
+				authRepo.save(auth1);
+				MyAuthority auth2 = new MyAuthority("ADMIN");
+				authRepo.save(auth2);
 				
+				PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+				MyUser u1 = new MyUser("kristers", encoder.encode("1234"), auth2);//admin
+				userRepo.save(u1);
+				MyUser u2 = new MyUser("janis", encoder.encode("4321"), auth1);//user
+				userRepo.save(u2);
 				
 				
 				
