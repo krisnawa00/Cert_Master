@@ -1,6 +1,6 @@
 package lv.venta.service.impl;
 
-import lv.venta.model.sertifikati;
+import lv.venta.model.Sertifikati;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.ISertifikatiFilterService;
 
@@ -18,14 +18,14 @@ public class SertifikatiFilterService implements ISertifikatiFilterService {
     private ISertifikatiRepo sertRepo;
 
     @Override
-    public ArrayList<sertifikati> filterByParakstitStatus(boolean parakstits) throws Exception {
-        ArrayList<sertifikati> allSerts = (ArrayList<sertifikati>) sertRepo.findAll();
+    public ArrayList<Sertifikati> filterByParakstitStatus(boolean parakstits) throws Exception {
+        ArrayList<Sertifikati> allSerts = (ArrayList<Sertifikati>) sertRepo.findAll();
         
         if (allSerts.isEmpty()) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
         
-        ArrayList<sertifikati> filtered = allSerts.stream()
+        ArrayList<Sertifikati> filtered = allSerts.stream()
                 .filter(s -> s.isParakstits() == parakstits)
                 .collect(Collectors.toCollection(ArrayList::new));
         
@@ -37,14 +37,14 @@ public class SertifikatiFilterService implements ISertifikatiFilterService {
     }
 
     @Override
-    public ArrayList<sertifikati> filterByDateRange(LocalDate startDate, LocalDate endDate) throws Exception {
-        ArrayList<sertifikati> allSerts = (ArrayList<sertifikati>) sertRepo.findAll();
+    public ArrayList<Sertifikati> filterByDateRange(LocalDate startDate, LocalDate endDate) throws Exception {
+        ArrayList<Sertifikati> allSerts = (ArrayList<Sertifikati>) sertRepo.findAll();
         
         if (allSerts.isEmpty()) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
         
-        ArrayList<sertifikati> filtered = allSerts.stream()
+        ArrayList<Sertifikati> filtered = allSerts.stream()
                 .filter(s -> {
                     LocalDate issueDate = s.getIzsniegtsDatums();
                     boolean afterStart = startDate == null || !issueDate.isBefore(startDate);
@@ -61,18 +61,18 @@ public class SertifikatiFilterService implements ISertifikatiFilterService {
     }
 
     @Override
-    public ArrayList<sertifikati> filterByParticipant(long kdId) throws Exception {
+    public ArrayList<Sertifikati> filterByParticipant(long kdId) throws Exception {
         if (kdId <= 0) {
             throw new Exception("Nederīgs dalībnieka ID");
         }
         
-        ArrayList<sertifikati> allSerts = (ArrayList<sertifikati>) sertRepo.findAll();
+        ArrayList<Sertifikati> allSerts = (ArrayList<Sertifikati>) sertRepo.findAll();
         
         if (allSerts.isEmpty()) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
         
-        ArrayList<sertifikati> filtered = allSerts.stream()
+        ArrayList<Sertifikati> filtered = allSerts.stream()
                 .filter(s -> s.getDalibnieks().getKdId() == kdId)
                 .collect(Collectors.toCollection(ArrayList::new));
         
@@ -84,18 +84,18 @@ public class SertifikatiFilterService implements ISertifikatiFilterService {
     }
 
     @Override
-    public ArrayList<sertifikati> filterByCourse(long kId) throws Exception {
+    public ArrayList<Sertifikati> filterByCourse(long kId) throws Exception {
         if (kId <= 0) {
             throw new Exception("Nederīgs kursa ID");
         }
         
-        ArrayList<sertifikati> allSerts = (ArrayList<sertifikati>) sertRepo.findAll();
+        ArrayList<Sertifikati> allSerts = (ArrayList<Sertifikati>) sertRepo.findAll();
         
         if (allSerts.isEmpty()) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
         
-        ArrayList<sertifikati> filtered = allSerts.stream()
+        ArrayList<Sertifikati> filtered = allSerts.stream()
                 .filter(s -> s.getKursaDatums().getKurss().getKId() == kId)
                 .collect(Collectors.toCollection(ArrayList::new));
         
@@ -107,15 +107,15 @@ public class SertifikatiFilterService implements ISertifikatiFilterService {
     }
 
     @Override
-    public ArrayList<sertifikati> combinedFilter(Boolean parakstits, LocalDate startDate, 
+    public ArrayList<Sertifikati> combinedFilter(Boolean parakstits, LocalDate startDate, 
                                                 LocalDate endDate, Long kdId, Long kId) throws Exception {
-        ArrayList<sertifikati> allSerts = (ArrayList<sertifikati>) sertRepo.findAll();
+        ArrayList<Sertifikati> allSerts = (ArrayList<Sertifikati>) sertRepo.findAll();
         
         if (allSerts.isEmpty()) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
         
-        ArrayList<sertifikati> filtered = allSerts.stream()
+        ArrayList<Sertifikati> filtered = allSerts.stream()
                 .filter(s -> {
                     // Filter by parakstits status
                     if (parakstits != null && s.isParakstits() != parakstits) {

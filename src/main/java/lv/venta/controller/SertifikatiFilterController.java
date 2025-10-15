@@ -1,6 +1,6 @@
 package lv.venta.controller;
 
-import lv.venta.model.sertifikati;
+import lv.venta.model.Sertifikati;
 import lv.venta.service.impl.SertifikatiFilterService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class SertifikatiFilterController {
     @GetMapping("/sertifikati/parakstits/{status}")
     public String filterByParakstitStatus(@PathVariable boolean status, Model model) {
         try {
-            ArrayList<sertifikati> sertifikati = filterService.filterByParakstitStatus(status);
+            ArrayList<Sertifikati> sertifikati = filterService.filterByParakstitStatus(status);
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("filterType", status ? "Parakstīti" : "Neparakstīti");
             return "sertifikatu-filtered-page";
@@ -48,7 +48,7 @@ public class SertifikatiFilterController {
             LocalDate start = startDate != null ? LocalDate.parse(startDate) : null;
             LocalDate end = endDate != null ? LocalDate.parse(endDate) : null;
             
-            ArrayList<sertifikati> sertifikati = filterService.filterByDateRange(start, end);
+            ArrayList<Sertifikati> sertifikati = filterService.filterByDateRange(start, end);
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("filterType", "Datumu diapazons: " + startDate + " līdz " + endDate);
             return "sertifikatu-filtered-page";
@@ -62,7 +62,7 @@ public class SertifikatiFilterController {
     @GetMapping("/sertifikati/dalibnieks/{kdId}")
     public String filterByParticipant(@PathVariable long kdId, Model model) {
         try {
-            ArrayList<sertifikati> sertifikati = filterService.filterByParticipant(kdId);
+            ArrayList<Sertifikati> sertifikati = filterService.filterByParticipant(kdId);
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("filterType", "Dalībnieka ID: " + kdId);
             return "sertifikatu-filtered-page";
@@ -76,7 +76,7 @@ public class SertifikatiFilterController {
     @GetMapping("/sertifikati/kurss/{kId}")
     public String filterByCourse(@PathVariable long kId, Model model) {
         try {
-            ArrayList<sertifikati> sertifikati = filterService.filterByCourse(kId);
+            ArrayList<Sertifikati> sertifikati = filterService.filterByCourse(kId);
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("filterType", "Kursa ID: " + kId);
             return "sertifikatu-filtered-page";
@@ -99,7 +99,7 @@ public class SertifikatiFilterController {
             LocalDate start = startDate != null && !startDate.isEmpty() ? LocalDate.parse(startDate) : null;
             LocalDate end = endDate != null && !endDate.isEmpty() ? LocalDate.parse(endDate) : null;
             
-            ArrayList<sertifikati> sertifikati = filterService.combinedFilter(parakstits, start, end, kdId, kId);
+            ArrayList<Sertifikati> sertifikati = filterService.combinedFilter(parakstits, start, end, kdId, kId);
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("filterType", "Kombinētā meklēšana");
             return "sertifikatu-filtered-page";

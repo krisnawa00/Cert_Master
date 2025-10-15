@@ -2,7 +2,7 @@ package lv.venta.service.impl;
 
 import lv.venta.model.KursaDalibnieks;
 import lv.venta.model.KursaDatumi;
-import lv.venta.model.sertifikati;
+import lv.venta.model.Sertifikati;
 import lv.venta.repo.IKursaDalibnieksRepo;
 import lv.venta.repo.IKursaDatumiRepo;
 import lv.venta.repo.ISertifikatiRepo;
@@ -31,16 +31,16 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
     @Override
     @Cacheable(value = "sertifikati", unless = "#result == null || #result.isEmpty()")
-    public ArrayList<sertifikati> retrieveAllSertifikati() throws Exception {
+    public ArrayList<Sertifikati> retrieveAllSertifikati() throws Exception {
         if (sertRepo.count() == 0) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
-        return (ArrayList<sertifikati>) sertRepo.findAll();
+        return (ArrayList<Sertifikati>) sertRepo.findAll();
     }
 
     @Override
     @Cacheable(value = "sertifikats", key = "#sertId", unless = "#result == null")
-    public sertifikati retrieveSertifikatiById(long sertId) throws Exception {
+    public Sertifikati retrieveSertifikatiById(long sertId) throws Exception {
         if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
@@ -56,7 +56,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
             @CacheEvict(value = "sertifikati", allEntries = true),
             @CacheEvict(value = "sertifikats", key = "#result.sertId")
         })
-    public sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception {
+    public Sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception {
         if (kdId <= 0 || kdatId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
@@ -74,7 +74,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         
         LocalDate date = LocalDate.parse(izsniegtsDatums);
         
-        sertifikati newSert = new sertifikati(dalibnieks, datumi, date, parakstits);
+        Sertifikati newSert = new Sertifikati(dalibnieks, datumi, date, parakstits);
         return sertRepo.save(newSert);
     }
     }

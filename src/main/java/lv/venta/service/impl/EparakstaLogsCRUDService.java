@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.CacheEvict;
 
 import lv.venta.model.EParakstaLogs;
-import lv.venta.model.sertifikati;
+import lv.venta.model.Sertifikati;
 import lv.venta.repo.IEParakstaLogsRepo;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.IEParakstaLogsService;
@@ -83,7 +83,7 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
             throw new Exception("Sertifikāts ar ID " + sertId + " neeksistē");
         }
         
-        sertifikati sert = sertifikatiRepo.findById(sertId).get();
+        Sertifikati sert = sertifikatiRepo.findById(sertId).get();
         LocalDate date = LocalDate.parse(parakstisanasDatums);
         
         EParakstaLogs newLog = new EParakstaLogs(sert, date, statuss);
