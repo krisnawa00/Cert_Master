@@ -44,26 +44,5 @@ public class SertifikatiCRUDController {
         }
     }
     
-    @GetMapping("/sertifikati/add") // localhost:8080/CRUD/sertifikati/add
-    public String showAddSertifikatsForm(Model model) {
-        model.addAttribute("sertifikats", new sertifikati());
-        return "sertifikats-add-page";
-    }
 
-    @PostMapping("/sertifikati/add")
-    public String addSertifikats(
-            @RequestParam("kdId") KursaDalibnieks dalibnieks,
-            @RequestParam("kursaDatumsId") KursaDatumi kursaDatums,
-            @RequestParam("izsniegtsDatums") String izsniegtsDatums,
-            @RequestParam("parakstits") boolean parakstits,
-            Model model) {
-        try {
-            LocalDate datums = LocalDate.parse(izsniegtsDatums);
-            sertCrud.create(dalibnieks, kursaDatums, datums, parakstits);
-            return "redirect:/CRUD/sertifikati/show/all";
-        } catch (Exception e) {
-            model.addAttribute("package", e.getMessage());
-            return "error-page";
-        }
-    }
 }
