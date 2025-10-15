@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pievienot mācību rezultātu</title>
+</head>
+<body>
+<h1>Pievienot jaunu mācību rezultātu</h1>
+
+<form th:action="@{/crud/maciburezultati/add}" method="post">
+    <label for="kurssId">Kursa ID:</label>
+    <input type="number" id="kurssId" name="kurssId" required><br><br>
+
+    <label for="macibuRezultats">Rezultāts (apgūts?):</label>
+    <select id="macibuRezultats" name="macibuRezultats">
+        <option value="true">Jā</option>
+        <option value="false">Nē</option>
+    </select><br><br>
+
+    <button type="submit">Saglabāt</button>
+</form>
+
+<br>
+<a th:href="@{/crud/maciburezultati/show/all}">← Atpakaļ uz sarakstu</a>
+</body>
+</html>

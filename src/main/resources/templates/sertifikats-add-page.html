@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pievienot sertifikātu</title>
+</head>
+<body>
+<h1>Pievienot jaunu sertifikātu</h1>
+
+<form th:action="@{/crud/sertifikati/add}" method="post">
+    <label>Dalībnieka ID:</label>
+    <input type="number" name="kdId" required><br>
+
+    <label>Kursa datuma ID:</label>
+    <input type="number" name="kursaDatumsId" required><br>
+
+    <label>Izsniegšanas datums:</label>
+    <input type="date" name="izsniegtsDatums" required><br>
+
+    <label>Parakstīts:</label>
+    <select name="parakstits">
+        <option value="true">Jā</option>
+        <option value="false">Nē</option>
+    </select><br><br>
+
+    <button type="submit">Saglabāt</button>
+</form>
+
+<a th:href="@{/crud/sertifikati/show/all}">← Atpakaļ</a>
+</body>
+</html>

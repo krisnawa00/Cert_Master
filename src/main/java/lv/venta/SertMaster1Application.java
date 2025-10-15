@@ -90,9 +90,9 @@ public class SertMaster1Application {
 			        
 			        
 				KursaDatumi kursaDatums1 = new KursaDatumi(K1, P1, "2025-06-15", "2025-06-30");
-		        KursaDatumi kursaDatums2 = new KursaDatumi(K1, P2, "2025-07-01", "2025-07-15");
-		        KursaDatumi kursaDatums3 = new KursaDatumi(K1, P3, "2025-07-16", "2025-07-31");
-		        KursaDatumi kursaDatums4 = new KursaDatumi(K1, P4, "2025-08-01", "2025-08-15");
+		        KursaDatumi kursaDatums2 = new KursaDatumi(K2, P2, "2025-07-01", "2025-07-15");
+		        KursaDatumi kursaDatums3 = new KursaDatumi(K3, P3, "2025-07-16", "2025-07-31");
+		        KursaDatumi kursaDatums4 = new KursaDatumi(K4, P4, "2025-08-01", "2025-08-15");
 		        
 		        
 		        	KDatRepo.saveAll(Arrays.asList(kursaDatums1, kursaDatums2, kursaDatums3, kursaDatums4));

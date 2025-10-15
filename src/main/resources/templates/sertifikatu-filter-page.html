@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sertifikātu Filtrs</title>
+</head>
+<body>
+    <h1>Sertifikātu Filtrs</h1>
+
+    <h2>Ātrā meklēšana</h2>
+    <div>
+        <a th:href="@{/filter/sertifikati/parakstits/true}">Parakstīti sertifikāti</a> |
+        <a th:href="@{/filter/sertifikati/parakstits/false}">Neparakstīti sertifikāti</a> |
+        <a th:href="@{/crud/sertifikati/show/all}">Visi sertifikāti</a>
+    </div>
+
+    <h2>Meklēšana pēc datuma</h2>
+    <form th:action="@{/filter/sertifikati/datums}" method="get">
+        <label for="startDate">Sākuma datums:</label>
+        <input type="date" id="startDate" name="startDate">
+        <label for="endDate">Beigu datums:</label>
+        <input type="date" id="endDate" name="endDate">
+        <button type="submit">Meklēt pēc datuma</button>
+    </form>
+
+    <h2>Meklēšana pēc dalībnieka</h2>
+    <form th:action="@{/filter/sertifikati/dalibnieks/{kdId}(kdId=${kdId})}" method="get">
+        <label for="kdId">Dalībnieka ID:</label>
+        <input type="number" id="kdId" name="kdId" min="1" required>
+        <button type="submit">Meklēt pēc dalībnieka</button>
+    </form>
+
+    <h2>Meklēšana pēc kursa</h2>
+    <form th:action="@{/filter/sertifikati/kurss/{kId}(kId=${kId})}" method="get">
+        <label for="kId">Kursa ID:</label>
+        <input type="number" id="kId" name="kId" min="1" required>
+        <button type="submit">Meklēt pēc kursa</button>
+    </form>
+
+    <h2>Kombinētā meklēšana</h2>
+    <form th:action="@{/filter/sertifikati/search}" method="post">
+        <label for="parakstits">Parakstīšanas statuss:</label>
+        <select id="parakstits" name="parakstits">
+            <option value="">-- Visi --</option>
+            <option value="true">Parakstīts</option>
+            <option value="false">Neparakstīts</option>
+        </select>
+
+        <label for="combStartDate">Sākuma datums:</label>
+        <input type="date" id="combStartDate" name="startDate">
+        <label for="combEndDate">Beigu datums:</label>
+        <input type="date" id="combEndDate" name="endDate">
+
+        <label for="combKdId">Dalībnieka ID (neobligāts):</label>
+        <input type="number" id="combKdId" name="kdId" min="1">
+
+        <label for="combKId">Kursa ID (neobligāts):</label>
+        <input type="number" id="combKId" name="kId" min="1">
+
+        <button type="submit">Meklēt ar visiem kritērijiem</button>
+    </form>
+
+    <p><a th:href="@{/crud/sertifikati/show/all}">Atpakaļ uz sertifikātu sarakstu</a></p>
+
+    <script>
+        document.querySelectorAll('form').forEach(form => {
+            if (form.action.includes('{kdId}')) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const kdId = document.getElementById('kdId').value;
+                    window.location.href = `/filter/sertifikati/dalibnieks/${kdId}`;
+                });
+            }
+            if (form.action.includes('{kId}')) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const kId = document.getElementById('kId').value;
+                    window.location.href = `/filter/sertifikati/kurss/${kId}`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

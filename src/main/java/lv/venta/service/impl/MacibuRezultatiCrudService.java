@@ -5,20 +5,17 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lv.venta.model.Kurss;
 import lv.venta.model.MacibuRezultati;
 import lv.venta.repo.IMacibuRezultatiRepo;
 import lv.venta.service.IMacibuRezultatiService;
-
-
 
 @Service
 public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
 
     @Autowired
-    private IMacibuRezultatiRepo macibuRezultatiRepo; 
+    private IMacibuRezultatiRepo macibuRezultatiRepo;
 
-
-    //retrieve all
     @Override
     public ArrayList<MacibuRezultati> retrieveAllMacibuRezultati() throws Exception {
         if (macibuRezultatiRepo.count() == 0) {
@@ -29,7 +26,6 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
 
     @Override
     public MacibuRezultati retrieveMacibuRezultatiById(int id) throws Exception {
-
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
@@ -38,8 +34,7 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         }
         return macibuRezultatiRepo.findById((long) id).get();
     }
-    
-    
+
     @Override
     public void deleteMacibuRezultatiById(int id) throws Exception {
         if (id <= 0) {
@@ -51,12 +46,14 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         macibuRezultatiRepo.deleteById((long) id);
     }
 
-    
-    
-    
+    @Override
+    public void create(Kurss kurss, boolean macibuRezultats) throws Exception {
+        if (kurss == null) {
+            throw new Exception("Ievades parametri nav pareizi");
+        }
 
-    
-
-
-    
+        MacibuRezultati newRezultats = new MacibuRezultati(kurss, macibuRezultats);
+        macibuRezultatiRepo.save(newRezultats);
+        System.out.println("Jauns mācību rezultāts izveidots");
+    }
 }

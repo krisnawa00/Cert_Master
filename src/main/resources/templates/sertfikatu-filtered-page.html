@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Filtrēti Sertifikāti</title>
+</head>
+<body>
+    <h1>Filtrēti Sertifikāti</h1>
+
+    <div>
+        <p>Filtrēšanas kritērijs: <span th:text="${filterType}">Filtrs</span></p>
+        <p>Atrasti: <span th:text="${#lists.size(sertifikati)}">0</span> sertifikāti</p>
+    </div>
+
+    <div>
+        <a th:href="@{/filter/sertifikati/form}">Atpakaļ uz filtru</a> |
+        <a th:href="@{/crud/sertifikati/show/all}">Visi sertifikāti</a>
+    </div>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Dalībnieks</th>
+                <th>Kurss</th>
+                <th>Kursa datumi</th>
+                <th>Izsniegts</th>
+                <th>Parakstīts</th>
+                <th>Darbības</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="sert : ${sertifikati}">
+                <td th:text="${sert.sertId}">1</td>
+                <td th:text="${sert.dalibnieks.vards + ' ' + sert.dalibnieks.uzvards}">Vārds Uzvārds</td>
+                <td th:text="${sert.kursaDatums.kurss.nosaukums}">Kursa nosaukums</td>
+                <td th:text="${sert.kursaDatums.sakumaDatums + ' līdz ' + sert.kursaDatums.beigadatums}">Datumi</td>
+                <td th:text="${#temporals.format(sert.izsniegtsDatums, 'dd.MM.yyyy')}">01.01.2024</td>
+                <td th:text="${sert.parakstits ? '✓ Parakstīts' : '✗ Neparakstīts'}">Statuss</td>
+                <td><a th:href="@{'/crud/sertifikati/show/' + ${sert.sertId}}">Skatīt</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <a th:href="@{/filter/sertifikati/form}">Jauna meklēšana</a>
+    </div>
+</body>
+</html>
