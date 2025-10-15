@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sertifikāta Detalizēta Informācija</title>
+</head>
+<body>
+
+    <h1>Sertifikāta Detalizēta Informācija</h1>
+
+    <ul>
+        <li>ID: <span th:text="${sertifikats.sertId}">Id</span></li>
+        <li>Izsniegts: <span th:text="${sertifikats.izsniegtsDatums}">Izsniegts</span></li>
+        <li>Parakstīts: <span th:text="${sertifikats.parakstits}">Parakstīts</span></li>
+        <li>Dalībnieks: <span th:text="${sertifikats.dalibnieks.vards + ' ' + sertifikats.dalibnieks.uzvards}">Dalībnieks</span></li>
+        <li>Kursa Datums: <span th:text="${sertifikats.kursaDatums.sakumaDatums + ' lidz ' + sertifikats.kursaDatums.beigadatums}">Kursa Datums</span></li>
+    </ul>
+
+    <a th:href="@{/crud/sertifikati/show/all}">Atpakaļ</a>
+
+</body>
+</html>
