@@ -2,6 +2,7 @@ package lv.venta.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class Vertejums {
     private KursaDalibnieks dalibnieks;
 
     @NotNull
+    @Pattern(regexp = "^(10|[1-9])$", message = "Vertejumam jabut 1-10 skalā")
     @Column(name = "Vertejums")
     private String vertejums;
 

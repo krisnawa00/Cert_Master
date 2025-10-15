@@ -68,14 +68,17 @@ public class KursaDalibnieks {
     Valsts valsts;
 
     @NotNull
+    @Pattern(regexp = "^[A-ZĀČĒĢĪĶĻŅŠŪŽ][a-zāčēģīķļņšūž\\\\s\\\\-]+[ A-Za-zĀČĒĢĪĶĻŅŠŪŽa-zāčēģīķļņšūž\\\\-]*+[0-9\\\\A-Z\\\\-]*", message = "Ielas nosaukums un numurs must start with a capital letter and include a street name followed by a number (e.g. Brīvības iela 45A)")
     @Column(name = "Iela_nosaukums_numurs")
     private String ielaNosaukumsNumurs;
 
     @NotNull
+    @Pattern(regexp = "^[0-9]{1,3}+[A-Za-zĀČĒĢĪĶĻŅŠŪŽa-zāčēģīķļņšūž\\\\-]?$", message = "Dzīvokļa numuram jābūt skaitlim ar iespējamu burtu vai simbolu beigās (piemēram, 12A vai 5/2)")
     @Column(name = "Dzivokla_nummurs")
     private String dzivoklaNummurs;
 
     @NotNull
+    @Pattern(regexp = "^[LV-]+[0-9]{4}$", message = "Pasta indeksam jābūt formātā LV-XXXX")
     @Column(name = "Pasta_indekss")
     private String pastaIndekss;
 
