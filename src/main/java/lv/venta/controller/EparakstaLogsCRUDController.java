@@ -64,28 +64,5 @@ public class EparakstaLogsCRUDController {
 
     }
 
-    @GetMapping("/eparakstalogs/add") // localhost:8080/crud/eparakstalogs/add
-    public String showAddEParakstaLogForm(Model model) {
-        model.addAttribute("eparaksts", new EParakstaLogs());
-        return "eparaksta-logs-add-page";
-    }
-
-
-    @PostMapping("/eparakstalogs/add")
-    public String addEParakstaLog(
-            @RequestParam("sertifikataId") sertifikati sertifikats,
-            @RequestParam("parakstisanasDatums") String parakstisanasDatums,
-            @RequestParam("statuss") String statuss,
-            Model model) {
-        try {
-            LocalDate datums = LocalDate.parse(parakstisanasDatums);
-            eparakstaLogsCRUDService.create(sertifikats, datums, statuss);
-            return "redirect:/crud/eparakstalogs/show/all";
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "error-page";
-        }
-    }
-
 
 }
