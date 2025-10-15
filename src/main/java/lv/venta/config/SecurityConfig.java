@@ -63,7 +63,7 @@ public class SecurityConfig {
         .requestMatchers("/filter/sertifikati/kurss/**").hasAuthority("ADMIN")
         .requestMatchers("/filter/sertifikati/kurss").hasAuthority("ADMIN")
         .requestMatchers("/filter/sertifikati/search").hasAuthority("ADMIN")
-
+        .requestMatchers("/cache-status").hasAuthority("ADMIN")
 				);
 		
 		

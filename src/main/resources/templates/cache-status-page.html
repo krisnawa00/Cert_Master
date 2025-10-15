@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cache Status</title>
+</head>
+<body>
+    <h1>Cache Status</h1>
+
+    <p>Total caches: <span th:text="${totalCaches}">0</span></p>
+
+    <div th:if="${caches.isEmpty()}">
+        <p>No active caches</p>
+    </div>
+    <div th:unless="${caches.isEmpty()}">
+        <ul>
+            <li th:each="cache : ${caches}">
+                <span th:text="${cache.key}"></span> : <span th:text="${cache.value}"></span>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
