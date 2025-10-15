@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
 
 import lv.venta.model.EParakstaLogs;
 import lv.venta.model.sertifikati;
@@ -28,6 +31,7 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
 
     //retrieve all
     @Override
+    @Cacheable(value = "eparakstaLogs", unless = "#result == null || #result.isEmpty()")
     public ArrayList<EParakstaLogs> retrieveAllEParakstaLogs() throws Exception {
         if (eParakstaLogsRepo.count() == 0) {
             throw new Exception("Nav pieejami neviens eParaksta logs");
@@ -37,6 +41,7 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
 
 
     @Override
+    @Cacheable(value = "eparakstaLog", key = "#id", unless = "#result == null")
     public EParakstaLogs retrieveEParakstaLogById(int id) throws Exception {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
@@ -49,6 +54,10 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
 
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "eparakstaLogs", allEntries = true),
+            @CacheEvict(value = "eparakstaLog", key = "#id")
+        })
     public void deleteMacibuRezultatiById(int id) throws Exception {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
@@ -60,6 +69,11 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "eparakstaLogs", allEntries = true),
+            @CacheEvict(value = "eparakstaLog", key = "#result.eId"),
+            @CacheEvict(value = "sertifikats", key = "#sertId")
+        })
     public EParakstaLogs insertNewEParakstaLogs(long sertId, String parakstisanasDatums, String statuss) throws Exception {
         if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");

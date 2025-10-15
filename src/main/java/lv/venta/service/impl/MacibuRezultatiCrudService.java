@@ -3,6 +3,8 @@ package lv.venta.service.impl;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import lv.venta.model.Kurss;
@@ -10,6 +12,7 @@ import lv.venta.model.MacibuRezultati;
 import lv.venta.repo.IKurssRepo;
 import lv.venta.repo.IMacibuRezultatiRepo;
 import lv.venta.service.IMacibuRezultatiService;
+import org.springframework.cache.annotation.CacheEvict;
 
 
 
@@ -25,6 +28,7 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
 
     //retrieve all
     @Override
+    @Cacheable(value = "macibuRezultati", unless = "#result == null || #result.isEmpty()")
     public ArrayList<MacibuRezultati> retrieveAllMacibuRezultati() throws Exception {
         if (macibuRezultatiRepo.count() == 0) {
             throw new Exception("Nav pieejami neviens macību rezultāts");
@@ -33,6 +37,7 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
     }
 
     @Override
+    @Cacheable(value = "macibuRezultats", key = "#id", unless = "#result == null")
     public MacibuRezultati retrieveMacibuRezultatiById(int id) throws Exception {
 
         if (id <= 0) {
@@ -46,6 +51,10 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
     
     
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "macibuRezultati", allEntries = true),
+            @CacheEvict(value = "macibuRezultats", key = "#id")
+        })
     public void deleteMacibuRezultatiById(int id) throws Exception {
         if (id <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
@@ -57,6 +66,10 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
     }
 
     @Override
+    @Caching(evict = {
+        @CacheEvict(value = "macibuRezultati", allEntries = true),
+        @CacheEvict(value = "macibuRezultats", key = "#result.mrId")
+    })
     public MacibuRezultati insertNewMacibuRezultats(long kId, boolean macibuRezultats) throws Exception {
         if (kId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");

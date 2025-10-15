@@ -9,6 +9,9 @@ import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.ISertifikatiService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,6 +30,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     private IKursaDatumiRepo datumiRepo;
 
     @Override
+    @Cacheable(value = "sertifikati", unless = "#result == null || #result.isEmpty()")
     public ArrayList<sertifikati> retrieveAllSertifikati() throws Exception {
         if (sertRepo.count() == 0) {
             throw new Exception("Nav pieejams neviens sertifikāts");
@@ -35,6 +39,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     }
 
     @Override
+    @Cacheable(value = "sertifikats", key = "#sertId", unless = "#result == null")
     public sertifikati retrieveSertifikatiById(long sertId) throws Exception {
         if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
@@ -46,26 +51,30 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     }
 
 
-@Override
-public sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception {
-    if (kdId <= 0 || kdatId <= 0) {
-        throw new Exception("ID nevar būt negatīvs vai nulle");
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "sertifikati", allEntries = true),
+            @CacheEvict(value = "sertifikats", key = "#result.sertId")
+        })
+    public sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception {
+        if (kdId <= 0 || kdatId <= 0) {
+            throw new Exception("ID nevar būt negatīvs vai nulle");
+        }
+        
+        if (!dalibnieksRepo.existsById(kdId)) {
+            throw new Exception("Kursa dalībnieks ar ID " + kdId + " neeksistē");
+        }
+        
+        if (!datumiRepo.existsById(kdatId)) {
+            throw new Exception("Kursa datumi ar ID " + kdatId + " neeksistē");
+        }
+        
+        KursaDalibnieks dalibnieks = dalibnieksRepo.findById(kdId).get();
+        KursaDatumi datumi = datumiRepo.findById(kdatId).get();
+        
+        LocalDate date = LocalDate.parse(izsniegtsDatums);
+        
+        sertifikati newSert = new sertifikati(dalibnieks, datumi, date, parakstits);
+        return sertRepo.save(newSert);
     }
-    
-    if (!dalibnieksRepo.existsById(kdId)) {
-        throw new Exception("Kursa dalībnieks ar ID " + kdId + " neeksistē");
     }
-    
-    if (!datumiRepo.existsById(kdatId)) {
-        throw new Exception("Kursa datumi ar ID " + kdatId + " neeksistē");
-    }
-    
-    KursaDalibnieks dalibnieks = dalibnieksRepo.findById(kdId).get();
-    KursaDatumi datumi = datumiRepo.findById(kdatId).get();
-    
-    LocalDate date = LocalDate.parse(izsniegtsDatums);
-    
-    sertifikati newSert = new sertifikati(dalibnieks, datumi, date, parakstits);
-    return sertRepo.save(newSert);
-}
-}
