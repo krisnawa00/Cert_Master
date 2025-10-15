@@ -55,7 +55,6 @@ public class SecurityConfig {
 		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN"));
 		
 		
-		
 		http.formLogin(auth -> auth.permitAll());
 		
 		http.csrf(auth -> auth.disable());
