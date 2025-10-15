@@ -1,6 +1,6 @@
 package lv.venta.controller;
 
-import lv.venta.model.sertifikati;
+import lv.venta.model.Sertifikati;
 import lv.venta.service.impl.SertifikatiCRUDService;
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class SertifikatiCRUDController {
     @GetMapping("/sertifikati/show/all")//localhost:8080/crud/sertifikati/show/all
     public String getAllSertifikati(Model model) {
         try {
-        	ArrayList<sertifikati> sertifikati = sertCrud.retrieveAllSertifikati();
+        	ArrayList<Sertifikati> sertifikati = sertCrud.retrieveAllSertifikati();
             model.addAttribute("sertifikati", sertifikati);
             return "sertifikatu-page";
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class SertifikatiCRUDController {
     @GetMapping("/sertifikati/show/{id}")//localhost:8080/crud/sertifikati/show/2
     public String getSertifikatsById(@PathVariable int id, Model model) {
     	try {
-            sertifikati s = sertCrud.retrieveSertifikatiById(id);
+            Sertifikati s = sertCrud.retrieveSertifikatiById(id);
             model.addAttribute("sertifikats", s);
             return "sertifikats-one-page";
         } catch (Exception e) {

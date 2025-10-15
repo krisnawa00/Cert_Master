@@ -1,8 +1,5 @@
 package lv.venta.service.impl;
 
-import lv.venta.model.sertifikati;
-import lv.venta.repo.ISertifikatiRepo;
-import lv.venta.service.ISertifikatiService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -31,15 +28,15 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
 
     @Override
-    public ArrayList<sertifikati> retrieveAllSertifikati() throws Exception {
+    public ArrayList<Sertifikati> retrieveAllSertifikati() throws Exception {
         if (sertRepo.count() == 0) {
             throw new Exception("Nav pieejams neviens sertifikāts");
         }
-        return (ArrayList<sertifikati>) sertRepo.findAll();
+        return (ArrayList<Sertifikati>) sertRepo.findAll();
     }
 
     @Override
-    public sertifikati retrieveSertifikatiById(long sertId) throws Exception {
+    public Sertifikati retrieveSertifikatiById(long sertId) throws Exception {
         if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
         }
