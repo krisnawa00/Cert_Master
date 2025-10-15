@@ -37,7 +37,7 @@ public class Lietotajs {
 
 
     @NotNull
-    @Pattern(regexp = "[A-ZĀČĒĢĪĶĻŅŠŪŽ a-zāčēģīķļņšūž@#$%^&*:;<>?!0-9]", message = "Parole nedrikst būt īsāka nekā 5 rakstzimes vai garāka nekā 40 rakstzimes")
+    //@Pattern(regexp = "[A-ZĀČĒĢĪĶĻŅŠŪŽ a-zāčēģīķļņšūž@#$%^&*:;<>?!0-9]", message = "Parole nedrikst būt īsāka nekā 5 rakstzimes vai garāka nekā 40 rakstzimes")
     @Column(name = "Parole")
     @Size(min = 5, max = 40)
     private String parole;
