@@ -30,27 +30,4 @@ public class CacheMonitorController {
         return "cache-status-page";
     }
 
-    @PostMapping("/cache-clear")
-    public String clearAllCaches(Model model) {
-        try {
-            for (String cacheName : cacheManager.getCacheNames()) {
-                cacheManager.getCache(cacheName).clear();
-            }
-            model.addAttribute("message", "Visi kešatmiņas notīrīti veiksmīgi!");
-            model.addAttribute("messageType", "success");
-        } catch (Exception e) {
-            model.addAttribute("message", "Kļūda notīrot kešatmiņu: " + e.getMessage());
-            model.addAttribute("messageType", "error");
-        }
-        
-
-        Map<String, String> cacheInfo = new HashMap<>();
-        for (String cacheName : cacheManager.getCacheNames()) {
-            cacheInfo.put(cacheName, "✓ Active");
-        }
-        model.addAttribute("caches", cacheInfo);
-        model.addAttribute("totalCaches", cacheInfo.size());
-        
-        return "cache-status-page";
-    }
 }
