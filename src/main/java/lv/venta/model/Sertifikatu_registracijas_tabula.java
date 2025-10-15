@@ -49,4 +49,3 @@ public class Sertifikatu_registracijas_tabula {
         this.registracijas_datums = registracijas_datums;
     }
 }
-
