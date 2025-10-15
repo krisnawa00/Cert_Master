@@ -88,6 +88,7 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
             @CacheEvict(value = "eparakstaLog", key = "#result.eId"),
             @CacheEvict(value = "sertifikats", key = "#sertId")
         })
+
     public EParakstaLogs insertNewEParakstaLogs(long sertId, String parakstisanasDatums, String statuss) throws Exception {
         if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
@@ -97,6 +98,7 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
             throw new Exception("Sertifikāts ar ID " + sertId + " neeksistē");
         }
         
+
         Sertifikati sert = sertifikatiRepo.findById(sertId).get();
         LocalDate date = LocalDate.parse(parakstisanasDatums);
         

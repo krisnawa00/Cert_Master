@@ -14,4 +14,5 @@ public interface ISertifikatiService {
 
     Sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception;
 
+
 }

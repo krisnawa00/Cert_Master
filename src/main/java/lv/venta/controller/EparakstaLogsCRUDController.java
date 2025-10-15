@@ -200,4 +200,3 @@ private List<EParakstaLogs> translateEparakstaLogsList(List<EParakstaLogs> origi
 
 
 }
-

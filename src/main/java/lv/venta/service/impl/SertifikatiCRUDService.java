@@ -19,10 +19,8 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 
-
 import lv.venta.repo.IEParakstaLogsRepo;
 import lv.venta.repo.ISertRegTab;
-
 
 @Service
 public class SertifikatiCRUDService implements ISertifikatiService {
@@ -41,6 +39,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
     @Autowired
     private ISertRegTab sertRegTabRepo;
+
 
 
     @Override
@@ -65,6 +64,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         }
         return sertRepo.findById(sertId).get();
     }
+
 
 
 
@@ -132,10 +132,4 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
 
 
-
-
-
-
-
 }
-
