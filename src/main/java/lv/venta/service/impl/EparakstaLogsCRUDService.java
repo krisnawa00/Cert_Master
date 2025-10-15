@@ -1,12 +1,15 @@
 package lv.venta.service.impl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lv.venta.model.EParakstaLogs;
+import lv.venta.model.sertifikati;
 import lv.venta.repo.IEParakstaLogsRepo;
+import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.IEParakstaLogsService;
 
 
@@ -18,6 +21,9 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
 
     @Autowired
     private IEParakstaLogsRepo eParakstaLogsRepo;
+
+    @Autowired
+    private ISertifikatiRepo sertifikatiRepo;
 
 
     //retrieve all
@@ -53,9 +59,21 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
         eParakstaLogsRepo.deleteById((long) id);
     }
 
-
-    
-
-
-
+    @Override
+    public EParakstaLogs insertNewEParakstaLogs(long sertId, String parakstisanasDatums, String statuss) throws Exception {
+        if (sertId <= 0) {
+            throw new Exception("ID nevar būt negatīvs vai nulle");
+        }
+        
+        if (!sertifikatiRepo.existsById(sertId)) {
+            throw new Exception("Sertifikāts ar ID " + sertId + " neeksistē");
+        }
+        
+        sertifikati sert = sertifikatiRepo.findById(sertId).get();
+        LocalDate date = LocalDate.parse(parakstisanasDatums);
+        
+        EParakstaLogs newLog = new EParakstaLogs(sert, date, statuss);
+        return eParakstaLogsRepo.save(newLog);
+    }
 }
+    

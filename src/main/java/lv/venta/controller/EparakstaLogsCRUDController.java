@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lv.venta.model.EParakstaLogs;
 import lv.venta.service.impl.EparakstaLogsCRUDService;
@@ -18,6 +20,7 @@ public class EparakstaLogsCRUDController {
 
     @Autowired
     private EparakstaLogsCRUDService eparakstaLogsCRUDService; 
+    
 
     @GetMapping("/eparakstalogs/show/all")//localhost:8080/crud/eparakstalogs/show/all
     public String getAllEparakstaLogs(Model model){
@@ -60,6 +63,24 @@ public class EparakstaLogsCRUDController {
     }
 
 // viss strada
-
-
+    @GetMapping("/eparakstalogs/insert")//localhost:8080/crud/eparakstalogs/insert
+    public String getInsertEparakstaLogs(Model model) {
+        return "eparaksta-logs-insert-page";
+    }
+    
+    @PostMapping("/eparakstalogs/insert")//localhost:8080/crud/eparakstalogs/insert
+    public String postInsertEparakstaLogs(@RequestParam("sertId") long sertId,
+                                          @RequestParam("parakstisanasDatums") String parakstisanasDatums,
+                                          @RequestParam("statuss") String statuss,
+                                          Model model) {
+        try {
+            eparakstaLogsCRUDService.insertNewEParakstaLogs(sertId, parakstisanasDatums, statuss);
+            model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
+            return "eparaksta-logs-page";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error-page";
+        }
+    }
 }
+

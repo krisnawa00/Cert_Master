@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pievienot Jaunu Sertifikātu</title>
+</head>
+<body>
+    <h1>Pievienot Jaunu Sertifikātu</h1>
+    
+    <form method="post" action="/crud/sertifikati/insert">
+        <label for="kdId">Kursa Dalībnieka ID:</label>
+        <input type="number" id="kdId" name="kdId" required min="1">
+        
+        <label for="kdatId">Kursa Datuma ID:</label>
+        <input type="number" id="kdatId" name="kdatId" required min="1">
+        
+        <label for="izsniegtsDatums">Izsniegšanas Datums:</label>
+        <input type="date" id="izsniegtsDatums" name="izsniegtsDatums" required>
+        
+        <label>
+            <input type="checkbox" name="parakstits" value="true">
+            Parakstīts
+        </label>
+        
+        <button type="submit">Pievienot</button>
+    </form>
+    
+    <a href="/crud/sertifikati/show/all">Atpakaļ uz sarakstu</a>
+</body>
+</html>

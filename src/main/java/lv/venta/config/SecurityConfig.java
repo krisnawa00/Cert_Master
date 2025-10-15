@@ -48,11 +48,14 @@ public class SecurityConfig {
 		.requestMatchers("/crud/eparakstalogs/show/all").hasAnyAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/delete/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/eparakstalogs/insert").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/delete/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/insert").hasAuthority("ADMIN")
 		.requestMatchers("/crud/sertifikati/show/all").hasAuthority("ADMIN")
-		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN"));
+		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/sertifikati/insert").hasAuthority("ADMIN"));
 		
 		
 		

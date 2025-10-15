@@ -42,4 +42,26 @@ public class SertifikatiCRUDController {
     }
     
     
-} // viss strada dievs palidz
+    @GetMapping("/sertifikati/insert")//localhost:8080/crud/sertifikati/insert
+    public String getInsertSertifikats(Model model) {
+        return "sertifikats-insert-page";
+    }
+    
+    @PostMapping("/sertifikati/insert")//localhost:8080/crud/sertifikati/insert
+    public String postInsertSertifikats(@RequestParam("kdId") long kdId,
+                                        @RequestParam("kdatId") long kdatId,
+                                        @RequestParam("izsniegtsDatums") String izsniegtsDatums,
+                                        @RequestParam("parakstits") boolean parakstits,
+                                        Model model) {
+        try {
+            sertCrud.insertNewSertifikats(kdId, kdatId, izsniegtsDatums, parakstits);
+            model.addAttribute("sertifikati", sertCrud.retrieveAllSertifikati());
+            return "sertifikatu-page";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error-page";
+        }
+    }
+}
+    
+ // viss strada dievs palidz

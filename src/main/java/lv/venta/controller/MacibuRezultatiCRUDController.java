@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lv.venta.model.MacibuRezultati;
 import lv.venta.service.impl.MacibuRezultatiCrudService;
@@ -63,10 +65,23 @@ public class MacibuRezultatiCRUDController {
 
 // viss iet
 
-
-
-
-
-
-
+    @GetMapping("/maciburezultati/insert")//localhost:8080/crud/maciburezultati/insert
+    public String getInsertMacibuRezultati(Model model) {
+        return "macibu-rezultats-insert-page";
+    }
+    
+    @PostMapping("/maciburezultati/insert")//localhost:8080/crud/maciburezultati/insert
+    public String postInsertMacibuRezultati(@RequestParam("kId") long kId,
+                                            @RequestParam("macibuRezultats") boolean macibuRezultats,
+                                            Model model) {
+        try {
+            macibuRezultatiCRUDService.insertNewMacibuRezultats(kId, macibuRezultats);
+            model.addAttribute("rezultati", macibuRezultatiCRUDService.retrieveAllMacibuRezultati());
+            return "macibu-rezultati-page";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error-page";
+        }
+    }
 }
+

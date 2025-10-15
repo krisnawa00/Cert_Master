@@ -1,12 +1,17 @@
 package lv.venta.service.impl;
 
+import lv.venta.model.KursaDalibnieks;
+import lv.venta.model.KursaDatumi;
 import lv.venta.model.sertifikati;
+import lv.venta.repo.IKursaDalibnieksRepo;
+import lv.venta.repo.IKursaDatumiRepo;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.ISertifikatiService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
@@ -14,6 +19,12 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
     @Autowired
     private ISertifikatiRepo sertRepo;
+    
+    @Autowired
+    private IKursaDalibnieksRepo dalibnieksRepo;
+    
+    @Autowired
+    private IKursaDatumiRepo datumiRepo;
 
     @Override
     public ArrayList<sertifikati> retrieveAllSertifikati() throws Exception {
@@ -33,4 +44,28 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         }
         return sertRepo.findById(sertId).get();
     }
+
+
+@Override
+public sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception {
+    if (kdId <= 0 || kdatId <= 0) {
+        throw new Exception("ID nevar būt negatīvs vai nulle");
+    }
+    
+    if (!dalibnieksRepo.existsById(kdId)) {
+        throw new Exception("Kursa dalībnieks ar ID " + kdId + " neeksistē");
+    }
+    
+    if (!datumiRepo.existsById(kdatId)) {
+        throw new Exception("Kursa datumi ar ID " + kdatId + " neeksistē");
+    }
+    
+    KursaDalibnieks dalibnieks = dalibnieksRepo.findById(kdId).get();
+    KursaDatumi datumi = datumiRepo.findById(kdatId).get();
+    
+    LocalDate date = LocalDate.parse(izsniegtsDatums);
+    
+    sertifikati newSert = new sertifikati(dalibnieks, datumi, date, parakstits);
+    return sertRepo.save(newSert);
+}
 }

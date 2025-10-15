@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lv.venta.model.Kurss;
 import lv.venta.model.MacibuRezultati;
+import lv.venta.repo.IKurssRepo;
 import lv.venta.repo.IMacibuRezultatiRepo;
 import lv.venta.service.IMacibuRezultatiService;
 
@@ -16,7 +18,10 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
 
     @Autowired
     private IMacibuRezultatiRepo macibuRezultatiRepo; 
-
+    
+    
+    @Autowired
+    private IKurssRepo kurssRepo;
 
     //retrieve all
     @Override
@@ -51,12 +56,26 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         macibuRezultatiRepo.deleteById((long) id);
     }
 
-    
-    
-    
-
-    
-
-
-    
+    @Override
+    public MacibuRezultati insertNewMacibuRezultats(long kId, boolean macibuRezultats) throws Exception {
+        if (kId <= 0) {
+            throw new Exception("ID nevar būt negatīvs vai nulle");
+        }
+        
+        if (!kurssRepo.existsById(kId)) {
+            throw new Exception("Kurss ar ID " + kId + " neeksistē");
+        }
+        
+        Kurss kurss = kurssRepo.findById(kId).get();
+        MacibuRezultati newRezultats = new MacibuRezultati(kurss, macibuRezultats);
+        
+        return macibuRezultatiRepo.save(newRezultats);
+    }
 }
+    
+    
+
+    
+
+
+    
