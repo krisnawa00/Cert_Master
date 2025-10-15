@@ -1,11 +1,11 @@
 package lv.venta.service;
 
-import lv.venta.model.Sertifikati;
+import lv.venta.model.sertifikati;
 import java.util.ArrayList;
 
 public interface ISertifikatiService {
     
-    ArrayList<Sertifikati> retrieveAllSertifikati() throws Exception;
+    ArrayList<sertifikati> retrieveAllSertifikati() throws Exception;
 
-    Sertifikati retrieveSertifikatiById(long sertId) throws Exception;
+    sertifikati retrieveSertifikatiById(long sertId) throws Exception;
 }

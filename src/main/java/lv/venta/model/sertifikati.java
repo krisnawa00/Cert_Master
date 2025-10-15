@@ -25,7 +25,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Sertifikati {
+public class sertifikati {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -58,7 +58,7 @@ public class Sertifikati {
     private boolean parakstits;
 
     @Builder
-    public Sertifikati(KursaDalibnieks dalibnieks, KursaDatumi kursaDatums, LocalDate izsniegtsDatums, boolean parakstits) {
+    public sertifikati(KursaDalibnieks dalibnieks, KursaDatumi kursaDatums, LocalDate izsniegtsDatums, boolean parakstits) {
         this.dalibnieks = dalibnieks;
         this.kursaDatums = kursaDatums;
         this.izsniegtsDatums = izsniegtsDatums;

@@ -36,14 +36,14 @@ public class Sertifikatu_registracijas_tabula {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "Sert_ID", nullable = false)
-    private Sertifikati sertifikati;
+    private sertifikati sertifikati;
 
     @NotNull
     @Column(name = "Registracijas_datums")
     private String registracijas_datums;
 
     @Builder
-    public Sertifikatu_registracijas_tabula(Lietotajs lietotajs, Sertifikati sertifikati, String registracijas_datums) {
+    public Sertifikatu_registracijas_tabula(Lietotajs lietotajs, sertifikati sertifikati, String registracijas_datums) {
         this.lietotajs = lietotajs;
         this.sertifikati = sertifikati;
         this.registracijas_datums = registracijas_datums;

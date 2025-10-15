@@ -2,10 +2,10 @@ package lv.venta.repo;
 
 import org.springframework.data.repository.CrudRepository;
 
-import lv.venta.model.Sertifikati;
+import lv.venta.model.sertifikati;
 
-public interface ISertifikatiRepo extends CrudRepository<Sertifikati, Long> {
+public interface ISertifikatiRepo extends CrudRepository<sertifikati, Long> {
     
-    public abstract Sertifikati findBySertId(long sertId);
+    public abstract sertifikati findBySertId(long sertId);
 
 }

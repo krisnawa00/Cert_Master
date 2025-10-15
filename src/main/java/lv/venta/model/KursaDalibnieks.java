@@ -88,7 +88,7 @@ public class KursaDalibnieks {
 
     @OneToMany(mappedBy = "dalibnieks")
     @ToString.Exclude
-    private Collection<Sertifikati> sertifikati;
+    private Collection<sertifikati> sertifikati;
     
     @Builder
     public KursaDalibnieks(String vards, String uzvards, String ePasts, String telefonaNr,

@@ -63,7 +63,7 @@ public class KursaDatumi {
 
     @OneToMany(mappedBy = "kursaDatums")
     @ToString.Exclude
-    private Collection<Sertifikati> sertifikati;
+    private Collection<sertifikati> sertifikati;
 
 
 
