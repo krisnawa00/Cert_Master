@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Atjaunināt E-paraksta Logu</title>
+</head>
+<body>
+    <h1>Atjaunināt E-paraksta Logu</h1>
+
+    <form th:action="@{'/crud/eparakstalogs/update/' + ${eparaksts.eId}}" 
+          th:object="${eparaksts}" 
+          method="post">
+        
+        <div>
+            <label>E-paraksta ID:</label>
+            <input type="text" th:value="${eparaksts.eId}" disabled />
+        </div>
+
+        <div>
+            <label>Sertifikāta ID:</label>
+            <input type="number" 
+                   th:field="*{sertifikati.sertId}" 
+                   readonly 
+                   required />
+            <p th:if="${#fields.hasErrors('sertifikati')}" 
+               th:errors="*{sertifikati}">Sertifikāta kļūda</p>
+        </div>
+
+        <div>
+            <label>Sertifikāts:</label>
+            <span th:text="'Sertifikāts Nr. ' + ${eparaksts.sertifikati.sertId}"></span>
+        </div>
+
+        <div>
+            <label for="parakstisanasDatums">Parakstīšanas Datums:</label>
+            <input type="date" 
+                   id="parakstisanasDatums" 
+                   th:field="*{parakstisanasDatums}" 
+                   required />
+            <p th:if="${#fields.hasErrors('parakstisanasDatums')}" 
+               th:errors="*{parakstisanasDatums}">Datuma kļūda</p>
+        </div>
+
+        <div>
+            <label for="statuss">Statuss:</label>
+            <input type="text" 
+                   id="statuss" 
+                   th:field="*{statuss}" 
+                   required />
+            <p th:if="${#fields.hasErrors('statuss')}" 
+               th:errors="*{statuss}">Statusa kļūda</p>
+        </div>
+
+        <div>
+            <button type="submit">Saglabāt izmaiņas</button>
+            <a th:href="@{/crud/eparakstalogs/show/all}">Atcelt</a>
+        </div>
+    </form>
+
+</body>
+</html>
