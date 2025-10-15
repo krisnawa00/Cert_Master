@@ -25,7 +25,7 @@ public class PDFTestController {
         try
         {
             pdfCreatorService.createCertificateAsPDF(dalibnieksId, kurssId);
-            model.addAttribute("message", "PDF izveidots veiksmīgi");
+            model.addAttribute("package", "PDF izveidots veiksmīgi");
             return "data-page";
         }
         	catch (Exception e) {

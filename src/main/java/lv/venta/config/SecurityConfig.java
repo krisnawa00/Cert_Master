@@ -58,7 +58,7 @@ public class SecurityConfig {
 		.requestMatchers("/crud/sertifikati/delete/**").hasAuthority("ADMIN")
 		
 
-		.requestMatchers("/pdf/**/**").hasAuthority("ADMIN"));
+		.requestMatchers("/pdf/**").hasAuthority("ADMIN"));
 		
 		http.formLogin(auth -> auth.permitAll());
 		
