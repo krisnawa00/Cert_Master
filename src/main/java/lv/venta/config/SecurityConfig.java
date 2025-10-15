@@ -50,7 +50,7 @@ public class SecurityConfig {
 		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/delete/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/maciburezultati/delete/**").hasAnyAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/update/**").hasAnyAuthority("ADMIN")
 		
 		.requestMatchers("/crud/sertifikati/show/all").hasAuthority("ADMIN")
 		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN")
