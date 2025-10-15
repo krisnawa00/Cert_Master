@@ -1,0 +1,22 @@
+<html xmlns:th="https://www.thymeleaf.org">
+<body>
+    <p>Study Results:</p>
+
+    <table border="1">
+        <tr>
+			<td>Rezultāta ID</td>
+			<td>Kursa nosaukums</td>
+			<td>Stundas</td>
+			<td>Līmenis</td>
+			<td>Izieta</td>
+        </tr>
+        <tr th:each="result : ${rezultati}">
+            <td th:text="${result.mrId}"></td>
+            <td th:text="${result.kurss.nosaukums}"></td>
+            <td th:text="${result.kurss.stundas}"></td>
+            <td th:text="${result.kurss.limenis}"></td>
+            <td th:text="${result.macibuRezultats} ? 'Yes' : 'No'"></td>
+        </tr>
+    </table>
+</body>
+</html>
