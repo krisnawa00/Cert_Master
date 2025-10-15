@@ -55,7 +55,17 @@ public class SecurityConfig {
 		.requestMatchers("/crud/maciburezultati/insert").hasAuthority("ADMIN")
 		.requestMatchers("/crud/sertifikati/show/all").hasAuthority("ADMIN")
 		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/sertifikati/insert").hasAuthority("ADMIN"));
+		.requestMatchers("/crud/sertifikati/insert").hasAuthority("ADMIN")
+		.requestMatchers("/filter/sertifikati/**").hasAuthority("ADMIN")
+        .requestMatchers("/filter/sertifikati/form").hasAuthority("ADMIN")
+        .requestMatchers("/filter/sertifikati/dalibnieks", "/filter/sertifikati/dalibnieks/**")
+        .hasRole("ADMIN")
+        .requestMatchers("/filter/sertifikati/kurss/**").hasAuthority("ADMIN")
+        .requestMatchers("/filter/sertifikati/kurss").hasAuthority("ADMIN")
+        .requestMatchers("/filter/sertifikati/search").hasAuthority("ADMIN")
+
+				);
+		
 		
 		
 		
