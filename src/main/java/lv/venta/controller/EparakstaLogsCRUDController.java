@@ -32,7 +32,7 @@ public class EparakstaLogsCRUDController {
     private TranslatorService translatorService;
     
     
-    @GetMapping("/show/all")
+    @GetMapping("/show/all") // 
     public String getAllEparakstaLogs( @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang, Model model) {
         try {
             Iterable<EParakstaLogs> eparaksts = eparakstaLogsCRUDService.retrieveAllEParakstaLogs();
