@@ -90,9 +90,27 @@ public class EparakstaLogsCRUDController {
     }
 
     @GetMapping("/update/{id}")
-    public String getUpdateEparakstaLogsById(@PathVariable(name = "id") int id, Model model) {
+    public String getUpdateEparakstaLogsById(@PathVariable(name = "id") int id, @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang, Model model) {
         try {
             EParakstaLogs eparakstaLogsUpdate = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
+            
+            model.addAttribute("title", translatorService.translateText("Atjaunināt E-paraksta Logu", lang));
+            model.addAttribute("label_eparaksta_id", translatorService.translateText("E-paraksta ID", lang));
+            model.addAttribute("label_sertifikata_id", translatorService.translateText("Sertifikāta ID", lang));
+            model.addAttribute("label_sertifikats", translatorService.translateText("Sertifikāts", lang));
+            model.addAttribute("label_sertifikats_nr", translatorService.translateText("Sertifikāts Nr.", lang));
+            model.addAttribute("label_parakstisanas_datums", translatorService.translateText("Parakstīšanas Datums", lang));
+            model.addAttribute("label_statuss", translatorService.translateText("Statuss", lang));
+            model.addAttribute("error_sertifikata", translatorService.translateText("Sertifikāta kļūda", lang));
+            model.addAttribute("error_datuma", translatorService.translateText("Datuma kļūda", lang));
+            model.addAttribute("error_statusa", translatorService.translateText("Statusa kļūda", lang));
+            model.addAttribute("button_save", translatorService.translateText("Saglabāt izmaiņas", lang));
+            model.addAttribute("button_cancel", translatorService.translateText("Atcelt", lang));
+            
+            model.addAttribute("eparaksts", eparakstaLogsUpdate);
+            model.addAttribute("currentLanguage", lang);
+            model.addAttribute("languages", translatorService.getAvailableLanguages());
+            
             model.addAttribute("eparaksts", eparakstaLogsUpdate);
             return "update-eparaksta-logs-page";
         } catch (Exception e) {
@@ -129,7 +147,21 @@ public class EparakstaLogsCRUDController {
     }
 
     @GetMapping("/insert")
-    public String getInsertEparakstaLogs(Model model) {
+    public String getInsertEparakstaLogs(@RequestParam(name = "lang", required = false, defaultValue = "lv") String lang, Model model) {
+        
+        model.addAttribute("title", translatorService.translateText("Pievienot Jaunu E-Paraksta Logu", lang));
+        model.addAttribute("label_sertifikata_id", translatorService.translateText("Sertifikāta ID", lang));
+        model.addAttribute("label_parakstisanas_datums", translatorService.translateText("Parakstīšanas Datums", lang));
+        model.addAttribute("label_statuss", translatorService.translateText("Statuss", lang));
+        model.addAttribute("option_choose", translatorService.translateText("-- Izvēlēties --", lang));
+        model.addAttribute("option_parakstits", translatorService.translateText("Parakstīts", lang));
+        model.addAttribute("option_neparakstits", translatorService.translateText("Neparakstīts", lang));
+        model.addAttribute("option_gaida", translatorService.translateText("Gaida parakstu", lang));
+        model.addAttribute("button_add", translatorService.translateText("Pievienot", lang));
+        model.addAttribute("link_back", translatorService.translateText("Atpakaļ uz sarakstu", lang));
+        
+        model.addAttribute("currentLanguage", lang);
+        model.addAttribute("languages", translatorService.getAvailableLanguages());
         return "eparaksta-logs-insert-page";
     }
 

@@ -1,58 +1,73 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Atjaunināt E-paraksta Logu</title>
+    <title th:text="${title}">Atjaunināt E-paraksta Logu</title>
 </head>
 <body>
-    <h1>Atjaunināt E-paraksta Logu</h1>
+    <h1 th:text="${title}">Atjaunināt E-paraksta Logu</h1>
+
+    <form method="get">
+        <label for="lang">Select language:</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}"> 
+            </option>
+        </select>
+    </form>
 
     <form th:action="@{'/crud/eparakstalogs/update/' + ${eparaksts.eId}}" 
           th:object="${eparaksts}" 
           method="post">
         
         <div>
-            <label>E-paraksta ID:</label>
+            <label th:text="${label_eparaksta_id} + ':'">E-paraksta ID:</label>
             <input type="text" th:value="${eparaksts.eId}" disabled />
         </div>
 
         <div>
-            <label>Sertifikāta ID:</label>
+            <label th:text="${label_sertifikata_id} + ':'">Sertifikāta ID:</label>
             <input type="number" 
                    th:field="*{sertifikati.sertId}" 
                    readonly 
                    required />
             <p th:if="${#fields.hasErrors('sertifikati')}" 
-               th:errors="*{sertifikati}">Sertifikāta kļūda</p>
+               th:errors="*{sertifikati}"
+               th:text="${error_sertifikata}">Sertifikāta kļūda</p>
         </div>
 
         <div>
-            <label>Sertifikāts:</label>
-            <span th:text="'Sertifikāts Nr. ' + ${eparaksts.sertifikati.sertId}"></span>
+            <label th:text="${label_sertifikats} + ':'">Sertifikāts:</label>
+            <span th:text="${label_sertifikats_nr} + ' ' + ${eparaksts.sertifikati.sertId}">Sertifikāts Nr.</span>
         </div>
 
         <div>
-            <label for="parakstisanasDatums">Parakstīšanas Datums:</label>
+            <label for="parakstisanasDatums" th:text="${label_parakstisanas_datums} + ':'">Parakstīšanas Datums:</label>
             <input type="date" 
                    id="parakstisanasDatums" 
                    th:field="*{parakstisanasDatums}" 
                    required />
             <p th:if="${#fields.hasErrors('parakstisanasDatums')}" 
-               th:errors="*{parakstisanasDatums}">Datuma kļūda</p>
+               th:errors="*{parakstisanasDatums}"
+               th:text="${error_datuma}">Datuma kļūda</p>
         </div>
 
         <div>
-            <label for="statuss">Statuss:</label>
+            <label for="statuss" th:text="${label_statuss} + ':'">Statuss:</label>
             <input type="text" 
                    id="statuss" 
                    th:field="*{statuss}" 
                    required />
             <p th:if="${#fields.hasErrors('statuss')}" 
-               th:errors="*{statuss}">Statusa kļūda</p>
+               th:errors="*{statuss}"
+               th:text="${error_statusa}">Statusa kļūda</p>
         </div>
 
         <div>
-            <button type="submit">Saglabāt izmaiņas</button>
-            <a th:href="@{/crud/eparakstalogs/show/all}">Atcelt</a>
+            <button type="submit" th:text="${button_save}">Saglabāt izmaiņas</button>
+            <a th:href="@{/crud/eparakstalogs/show/all}" th:text="${button_cancel}">Atcelt</a>
         </div>
     </form>
 
