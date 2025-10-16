@@ -49,6 +49,18 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         return macibuRezultatiRepo.findById((long) id).get();
     }
     
+    @Override
+    public void updateById(int id, Kurss kurss, boolean macibuRezultats) throws Exception {
+    if (kurss == null) {
+        throw new Exception("Ievades parametri nav pareizi");
+    }
+    MacibuRezultati retrievedMacR = retrieveMacibuRezultatiById(id);
+    retrievedMacR.setKurss(kurss);
+    retrievedMacR.setMacibuRezultats(macibuRezultats);
+    macibuRezultatiRepo.save(retrievedMacR);
+}
+
+
     
     @Override
     @Caching(evict = {

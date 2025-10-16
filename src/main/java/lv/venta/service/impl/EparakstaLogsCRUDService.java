@@ -54,6 +54,20 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
 
 
     @Override
+    public void updateById(int id, Sertifikati sertifikati, LocalDate parakstisanasDatums, String statuss) throws Exception {
+    if (sertifikati == null || parakstisanasDatums == null || statuss == null) {
+        throw new Exception("Ievades parametri nav pareizi");
+    }
+        EParakstaLogs retrievedLog = retrieveEParakstaLogById(id);
+        retrievedLog.setSertifikati(sertifikati);
+        retrievedLog.setParakstisanasDatums(parakstisanasDatums);
+        retrievedLog.setStatuss(statuss);
+        eParakstaLogsRepo.save(retrievedLog);
+    }
+    
+    
+    
+    @Override
     @Caching(evict = {
             @CacheEvict(value = "eparakstaLogs", allEntries = true),
             @CacheEvict(value = "eparakstaLog", key = "#id")

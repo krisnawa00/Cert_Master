@@ -1,7 +1,10 @@
 package lv.venta.service;
 
+
 import lv.venta.model.Sertifikati;
+
 import java.util.ArrayList;
+
 
 public interface ISertifikatiService {
     
@@ -10,4 +13,5 @@ public interface ISertifikatiService {
     Sertifikati retrieveSertifikatiById(long sertId) throws Exception;
 
     Sertifikati insertNewSertifikats(long kdId, long kdatId, String izsniegtsDatums, boolean parakstits) throws Exception;
+
 }

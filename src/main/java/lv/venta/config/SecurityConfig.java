@@ -5,12 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lv.venta.service.impl.MyUserDetailsManegerServiceImpl;
@@ -45,9 +41,11 @@ public class SecurityConfig {
 	public SecurityFilterChain configureUrlssecurity(HttpSecurity http) throws Exception{
 		http.authorizeHttpRequests(auth -> auth
 		.requestMatchers("/send-email").hasAnyAuthority("USER","ADMIN")
+		
 		.requestMatchers("/crud/eparakstalogs/show/all").hasAnyAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/delete/**").hasAuthority("ADMIN")
+
 		.requestMatchers("/crud/eparakstalogs/insert").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")
@@ -65,11 +63,28 @@ public class SecurityConfig {
         .requestMatchers("/filter/sertifikati/search").hasAuthority("ADMIN")
         .requestMatchers("/cache-status").hasAuthority("ADMIN")
         .requestMatchers("/cache-clear").hasAuthority("ADMIN")
+		.requestMatchers("/crud/eparakstalogs/update/**").hasAuthority("ADMIN")
+		
+		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/delete/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/update/**").hasAnyAuthority("ADMIN")
+		
+		.requestMatchers("/crud/sertifikati/show/all").hasAuthority("ADMIN")
+		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/sertifikati/update/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/sertifikati/delete/**").hasAuthority("ADMIN")
+
+		
+
+		.requestMatchers("/pdf/**").hasAuthority("ADMIN")
+        
         .anyRequest().authenticated()
+				
 				);
 		
 		
-		
+
 		
 		http.formLogin(auth -> auth.permitAll());
 		

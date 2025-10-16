@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Atjaunināt Sertifikātu</title>
+</head>
+<body>
+    <h1>Atjaunināt Sertifikātu</h1>
+
+    <form th:action="@{'/crud/sertifikati/update/' + ${sertifikats.sertId}}" 
+          th:object="${sertifikats}" 
+          method="post">
+        
+        <div>
+            <label>ID:</label>
+            <input type="text" th:value="${sertifikats.sertId}" disabled />
+        </div>
+
+        <div>
+            <label>Dalībnieka ID:</label>
+            <input type="number" 
+                   th:field="*{dalibnieks.kdId}" 
+                   readonly 
+                   required />
+            <p th:if="${#fields.hasErrors('dalibnieks')}" 
+               th:errors="*{dalibnieks}">Dalībnieka kļūda</p>
+        </div>
+
+        <div>
+            <label>Dalībnieks:</label>
+            <span th:text="${sertifikats.dalibnieks.vards + ' ' + sertifikats.dalibnieks.uzvards}"></span>
+        </div>
+
+        <div>
+            <label>Kursa Datuma ID:</label>
+            <input type="number" 
+                   th:field="*{kursaDatums.kdatId}" 
+                   readonly 
+                   required />
+            <p th:if="${#fields.hasErrors('kursaDatums')}" 
+               th:errors="*{kursaDatums}">Kursa datuma kļūda</p>
+        </div>
+
+        <div>
+            <label>Kursa Datums:</label>
+            <span th:text="${sertifikats.kursaDatums.sakumaDatums + ' līdz ' + sertifikats.kursaDatums.beigadatums}"></span>
+        </div>
+
+        <div>
+            <label for="izsniegtsDatums">Izsniegts Datums:</label>
+            <input type="date" 
+                   id="izsniegtsDatums" 
+                   th:field="*{izsniegtsDatums}" 
+                   required />
+            <p th:if="${#fields.hasErrors('izsniegtsDatums')}" 
+               th:errors="*{izsniegtsDatums}">Datuma kļūda</p>
+        </div>
+
+        <div>
+            <label for="parakstits">Parakstīts:</label>
+            <input type="checkbox" 
+                   id="parakstits" 
+                   th:field="*{parakstits}" />
+        </div>
+
+        <div>
+            <button type="submit">Saglabāt izmaiņas</button>
+            <a th:href="@{/crud/sertifikati/show/all}">Atcelt</a>
+        </div>
+    </form>
+
+</body>
+</html>

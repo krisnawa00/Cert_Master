@@ -8,14 +8,21 @@ import lv.venta.repo.IKursaDatumiRepo;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.ISertifikatiService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
+
+import lv.venta.repo.IEParakstaLogsRepo;
+import lv.venta.repo.ISertRegTab;
+
 
 @Service
 public class SertifikatiCRUDService implements ISertifikatiService {
@@ -29,8 +36,16 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     @Autowired
     private IKursaDatumiRepo datumiRepo;
 
+    @Autowired
+    private IEParakstaLogsRepo eparakstaLogsRepo;
+
+    @Autowired
+    private ISertRegTab sertRegTabRepo;
+
+
     @Override
     @Cacheable(value = "sertifikati", unless = "#result == null || #result.isEmpty()")
+
     public ArrayList<Sertifikati> retrieveAllSertifikati() throws Exception {
         if (sertRepo.count() == 0) {
             throw new Exception("Nav pieejams neviens sertifikāts");
@@ -40,6 +55,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
 
     @Override
     @Cacheable(value = "sertifikats", key = "#sertId", unless = "#result == null")
+
     public Sertifikati retrieveSertifikatiById(long sertId) throws Exception {
         if (sertId <= 0) {
             throw new Exception("ID nevar būt negatīvs vai nulle");
@@ -49,6 +65,7 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         }
         return sertRepo.findById(sertId).get();
     }
+
 
 
     @Override
@@ -77,4 +94,48 @@ public class SertifikatiCRUDService implements ISertifikatiService {
         Sertifikati newSert = new Sertifikati(dalibnieks, datumi, date, parakstits);
         return sertRepo.save(newSert);
     }
+    
+
+    public void updateById(int id,KursaDalibnieks dalibnieks, KursaDatumi kursaDatums,LocalDate izsniegtsDatums,boolean parakstits)throws Exception
+    {
+        if (dalibnieks == null || kursaDatums == null || izsniegtsDatums == null) {
+        throw new Exception("Ievades parametri nav pareizi");
     }
+        Sertifikati retrievedSert = retrieveSertifikatiById(id);
+        retrievedSert.setDalibnieks(dalibnieks);
+        retrievedSert.setKursaDatums(kursaDatums);
+        retrievedSert.setIzsniegtsDatums(izsniegtsDatums);
+        retrievedSert.setParakstits(parakstits);
+        sertRepo.save(retrievedSert);
+
+
+    }
+    
+    
+    
+    
+    
+    public void deleteSertifikatiById(int id) throws Exception {
+        if (id <= 0) {
+            throw new Exception("ID nevar būt negatīvs vai nulle");
+        }
+        if (!sertRepo.existsById((long) id)) {
+            throw new Exception("Sertifikāts ar ID " + id + " neeksistē");
+        }
+        Sertifikati certificate = sertRepo.findById((long) id).get();
+        
+        sertRegTabRepo.deleteAll(certificate.getSertifikatuRegistracijasTabula());
+        eparakstaLogsRepo.deleteAll(certificate.getEparakstsLogs());
+        
+        sertRepo.deleteById((long) id);
+    }
+
+
+
+
+
+
+
+
+}
+
