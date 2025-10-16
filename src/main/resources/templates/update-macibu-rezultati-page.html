@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Atjaunināt Mācību Rezultātu</title>
+</head>
+<body>
+    <h1>Atjaunināt Mācību Rezultātu</h1>
+
+    <form th:action="@{'/crud/maciburezultati/update/' + ${rezultats.mrId}}" 
+          th:object="${rezultats}" 
+          method="post">
+        
+        <div>
+            <label>Rezultāta ID:</label>
+            <input type="text" th:value="${rezultats.mrId}" disabled />
+        </div>
+
+        <div>
+            <label>Kursa ID:</label>
+            <input type="number" 
+                   th:field="*{kurss.kId}" 
+                   readonly 
+                   required />
+            <p th:if="${#fields.hasErrors('kurss')}" 
+               th:errors="*{kurss}">Kursa kļūda</p>
+        </div>
+
+        <div>
+            <label>Kursa Nosaukums:</label>
+            <span th:text="${rezultats.kurss.nosaukums}"></span>
+        </div>
+
+        <div>
+            <label>Stundas:</label>
+            <span th:text="${rezultats.kurss.stundas}"></span>
+        </div>
+
+        <div>
+            <label>Līmenis:</label>
+            <span th:text="${rezultats.kurss.limenis}"></span>
+        </div>
+
+        <div>
+            <label for="macibuRezultats">Mācību Rezultāts (Iziets):</label>
+            <input type="checkbox" 
+                   id="macibuRezultats" 
+                   th:field="*{macibuRezultats}" />
+            <span>Atzīmēt, ja kurss ir sekmīgi pabeigts</span>
+        </div>
+
+        <div>
+            <button type="submit">Saglabāt izmaiņas</button>
+            <a th:href="@{/crud/maciburezultati/show/all}">Atcelt</a>
+        </div>
+    </form>
+
+</body>
+</html>
