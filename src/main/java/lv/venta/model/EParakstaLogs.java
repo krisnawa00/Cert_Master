@@ -1,14 +1,21 @@
 package lv.venta.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,7 +33,7 @@ public class EParakstaLogs {
 
     @ManyToOne
     @JoinColumn(name = "Sert_ID", nullable = false)
-    private sertifikati sertifikati;
+    private Sertifikati sertifikati;
 
     @NotNull
     @Column(name = "Parakstisanas_datums")
@@ -37,7 +44,7 @@ public class EParakstaLogs {
     private String statuss;
 
     @Builder
-    public EParakstaLogs(sertifikati sertifikati,
+    public EParakstaLogs(Sertifikati sertifikati,
                            LocalDate parakstisanasDatums,
                            String statuss) {
         this.sertifikati = sertifikati;
