@@ -1,30 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Pievienot Jaunu Sertifikātu</title>
+    <title th:text="${title}">Pievienot Jaunu Sertifikātu</title>
 </head>
 <body>
-    <h1>Pievienot Jaunu Sertifikātu</h1>
+    <h1 th:text="${title}">Pievienot Jaunu Sertifikātu</h1>
+    
+    <form method="get">
+        <label for="lang">Select language:</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}"> 
+            </option>
+        </select>
+    </form>
     
     <form method="post" action="/crud/sertifikati/insert">
-        <label for="kdId">Kursa Dalībnieka ID:</label>
+        <label for="kdId" th:text="${label_kursa_dalibnieka_id}">Kursa Dalībnieka ID:</label>
         <input type="number" id="kdId" name="kdId" required min="1">
         
-        <label for="kdatId">Kursa Datuma ID:</label>
+        <label for="kdatId" th:text="${label_kursa_datuma_id}">Kursa Datuma ID:</label>
         <input type="number" id="kdatId" name="kdatId" required min="1">
         
-        <label for="izsniegtsDatums">Izsniegšanas Datums:</label>
+        <label for="izsniegtsDatums" th:text="${label_izsniegts_datums}">Izsniegšanas Datums:</label>
         <input type="date" id="izsniegtsDatums" name="izsniegtsDatums" required>
         
         <label>
             <input type="checkbox" name="parakstits" value="true">
-            Parakstīts
+            <span th:text="${label_parakstits}">Parakstīts</span>
         </label>
         
-        <button type="submit">Pievienot</button>
+        <button type="submit" th:text="${button_add}">Pievienot</button>
     </form>
     
-    <a href="/crud/sertifikati/show/all">Atpakaļ uz sarakstu</a>
+    <a href="/crud/sertifikati/show/all" th:text="${link_back}">Atpakaļ uz sarakstu</a>
 </body>
 </html>

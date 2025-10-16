@@ -95,10 +95,33 @@ public class MacibuRezultatiCRUDController {
     }
 
     @GetMapping("/update/{id}")
-    public String getUpdateMacibuRezultati(@PathVariable(name = "id") int id, Model model) {
+    public String getUpdateMacibuRezultati(@PathVariable(name = "id") int id, 
+            @RequestParam(value = "lang", defaultValue = "lv") String lang,
+            Model model) {
         try {
             MacibuRezultati rezultatiupd = macibuRezultatiCRUDService.retrieveMacibuRezultatiById(id);
+            
+            if (!"lv".equals(lang) && rezultatiupd.getKurss() != null) {
+                String translatedNosaukums = translatorService.translateText(rezultatiupd.getKurss().getNosaukums(), lang);
+                rezultatiupd.getKurss().setNosaukums(translatedNosaukums);
+            }
+            
+            
+            model.addAttribute("title", translatorService.translateText("Atjaunināt Mācību Rezultātu", lang));
+            model.addAttribute("label_rezultata_id", translatorService.translateText("Rezultāta ID", lang));
+            model.addAttribute("label_kursa_id", translatorService.translateText("Kursa ID", lang));
+            model.addAttribute("label_kursa_nosaukums", translatorService.translateText("Kursa Nosaukums", lang));
+            model.addAttribute("label_stundas", translatorService.translateText("Stundas", lang));
+            model.addAttribute("label_limenis", translatorService.translateText("Līmenis", lang));
+            model.addAttribute("label_macibu_rezultats", translatorService.translateText("Mācību Rezultāts (Iziets)", lang));
+            model.addAttribute("text_iziets_info", translatorService.translateText("Atzīmēt, ja kurss ir sekmīgi pabeigts", lang));
+            model.addAttribute("button_save", translatorService.translateText("Saglabāt izmaiņas", lang));
+            model.addAttribute("button_cancel", translatorService.translateText("Atcelt", lang));
+            model.addAttribute("error_kursa", translatorService.translateText("Kursa kļūda", lang));
+            
             model.addAttribute("rezultats", rezultatiupd);
+            model.addAttribute("currentLanguage", lang);
+            model.addAttribute("languages", translatorService.getAvailableLanguages());
             return "update-macibu-rezultati-page";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -134,7 +157,20 @@ public class MacibuRezultatiCRUDController {
     }
 
     @GetMapping("/insert")
-    public String getInsertMacibuRezultati(Model model) {
+    public String getInsertMacibuRezultati(@RequestParam(value = "lang", defaultValue = "lv") String lang,
+            Model model) {
+        
+        
+        
+        model.addAttribute("title", translatorService.translateText("Pievienot Jaunu Rezultātu", lang));
+        model.addAttribute("label_kursa_id", translatorService.translateText("Kursa ID", lang));
+        model.addAttribute("label_kurss_iziets", translatorService.translateText("Kurss Iziets", lang));
+        model.addAttribute("button_add", translatorService.translateText("Pievienot", lang));
+        model.addAttribute("link_back", translatorService.translateText("Atpakaļ uz sarakstu", lang));
+        
+        model.addAttribute("currentLanguage", lang);
+        model.addAttribute("languages", translatorService.getAvailableLanguages());
+
         return "macibu-rezultats-insert-page";
     }
 

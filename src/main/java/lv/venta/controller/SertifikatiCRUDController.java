@@ -90,10 +90,32 @@ public class SertifikatiCRUDController {
     }
 
     @GetMapping("/update/{id}")
-    public String getUpdateSertifikatsById(@PathVariable(name = "id") int id, Model model) {
+    public String getUpdateSertifikatsById(@PathVariable(name = "id") int id, 
+    @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
+    Model model) {
         try {
             Sertifikati sertifikatsForUpdating = sertCrud.retrieveSertifikatiById(id);
+            
+            
+            
+            
+            model.addAttribute("title", translatorService.translateText("Atjaunināt Sertifikātu", lang));
+            model.addAttribute("label_id", translatorService.translateText("ID", lang));
+            model.addAttribute("label_dalibnieka_id", translatorService.translateText("Dalībnieka ID", lang));
+            model.addAttribute("label_dalibnieks", translatorService.translateText("Dalībnieks", lang));
+            model.addAttribute("label_kursa_datuma_id", translatorService.translateText("Kursa Datuma ID", lang));
+            model.addAttribute("label_kursa_datums", translatorService.translateText("Kursa Datums", lang));
+            model.addAttribute("label_izsniegts_datums", translatorService.translateText("Izsniegts Datums", lang));
+            model.addAttribute("label_parakstits", translatorService.translateText("Parakstīts", lang));
+            model.addAttribute("button_save", translatorService.translateText("Saglabāt izmaiņas", lang));
+            model.addAttribute("button_cancel", translatorService.translateText("Atcelt", lang));
+            model.addAttribute("error_dalibnieka", translatorService.translateText("Dalībnieka kļūda", lang));
+            model.addAttribute("error_kursa_datuma", translatorService.translateText("Kursa datuma kļūda", lang));
+            model.addAttribute("error_datuma", translatorService.translateText("Datuma kļūda", lang));
+            
             model.addAttribute("sertifikats", sertifikatsForUpdating);
+            model.addAttribute("languages", translatorService.getAvailableLanguages());
+            model.addAttribute("currentLanguage", lang);
             return "update-sertifikats";
         } catch (Exception e) {
             model.addAttribute("package", e.getMessage());
@@ -129,7 +151,20 @@ public class SertifikatiCRUDController {
     }
 
     @GetMapping("/insert")
-    public String getInsertSertifikats(Model model) {
+    public String getInsertSertifikats(@RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
+    Model model) {
+        
+        
+        model.addAttribute("title", translatorService.translateText("Pievienot Jaunu Sertifikātu", lang));
+        model.addAttribute("label_kursa_dalibnieka_id", translatorService.translateText("Kursa Dalībnieka ID", lang));
+        model.addAttribute("label_kursa_datuma_id", translatorService.translateText("Kursa Datuma ID", lang));
+        model.addAttribute("label_izsniegts_datums", translatorService.translateText("Izsniegšanas Datums", lang));
+        model.addAttribute("label_parakstits", translatorService.translateText("Parakstīts", lang));
+        model.addAttribute("button_add", translatorService.translateText("Pievienot", lang));
+        model.addAttribute("link_back", translatorService.translateText("Atpakaļ uz sarakstu", lang));
+        
+        model.addAttribute("languages", translatorService.getAvailableLanguages());
+        model.addAttribute("currentLanguage", lang);
         return "sertifikats-insert-page";
     }
 

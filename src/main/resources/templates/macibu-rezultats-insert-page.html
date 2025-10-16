@@ -1,24 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Pievienot Jaunu Rezultātu</title>
+    <title th:text="${title}">Pievienot Jaunu Rezultātu</title>
 </head>
 <body>
-    <h1>Pievienot Jaunu Rezultātu</h1>
+    <h1 th:text="${title}">Pievienot Jaunu Rezultātu</h1>
+    
+    <form method="get">
+        <label for="lang">Select language:</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}"> 
+            </option>
+        </select>
+    </form>
     
     <form method="post" action="/crud/maciburezultati/insert">
-        <label for="kId">Kursa ID:</label>
+        <label for="kId" th:text="${label_kursa_id} + ':'">Kursa ID:</label>
         <input type="number" id="kId" name="kId" required min="1">
         
         <label>
             <input type="checkbox" name="macibuRezultats" value="true">
-            Kurss Iziets
+            <span th:text="${label_kurss_iziets}">Kurss Iziets</span>
         </label>
         
-        <button type="submit">Pievienot</button>
+        <button type="submit" th:text="${button_add}">Pievienot</button>
     </form>
     
-    <a href="/crud/maciburezultati/show/all">Atpakaļ uz sarakstu</a>
+    <a href="/crud/maciburezultati/show/all" th:text="${link_back}">Atpakaļ uz sarakstu</a>
 </body>
 </html>

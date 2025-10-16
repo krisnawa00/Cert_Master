@@ -1,71 +1,85 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Atjaunināt Sertifikātu</title>
+    <title th:text="${title}">Atjaunināt Sertifikātu</title>
 </head>
 <body>
-    <h1>Atjaunināt Sertifikātu</h1>
+    <h1 th:text="${title}">Atjaunināt Sertifikātu</h1>
 
-    <form th:action="@{'/crud/sertifikati/update/' + ${sertifikats.sertId}}" 
+    <form method="get">
+        <label for="lang">Select language:</label>
+        <select id="lang" name="lang" onchange="this.form.submit()">
+            <option th:each="entry : ${languages}"
+                    th:value="${entry.key}"
+                    th:text="${entry.value}"
+                    th:selected="${currentLanguage == entry.key}"> 
+            </option>
+        </select>
+    </form>
+
+    <form th:action="@{'/crud/sertifikati/update/' + ${sertifikats.sertId}(lang=${currentLanguage})}" 
           th:object="${sertifikats}" 
           method="post">
         
         <div>
-            <label>ID:</label>
+            <label th:text="${label_id} + ':'">ID:</label>
             <input type="text" th:value="${sertifikats.sertId}" disabled />
         </div>
 
         <div>
-            <label>Dalībnieka ID:</label>
+            <label th:text="${label_dalibnieka_id} + ':'">Dalībnieka ID:</label>
             <input type="number" 
                    th:field="*{dalibnieks.kdId}" 
                    readonly 
                    required />
             <p th:if="${#fields.hasErrors('dalibnieks')}" 
-               th:errors="*{dalibnieks}">Dalībnieka kļūda</p>
+               th:errors="*{dalibnieks}"
+               th:text="${error_dalibnieka}">Dalībnieka kļūda</p>
         </div>
 
         <div>
-            <label>Dalībnieks:</label>
+            <label th:text="${label_dalibnieks} + ':'">Dalībnieks:</label>
             <span th:text="${sertifikats.dalibnieks.vards + ' ' + sertifikats.dalibnieks.uzvards}"></span>
         </div>
 
         <div>
-            <label>Kursa Datuma ID:</label>
+            <label th:text="${label_kursa_datuma_id} + ':'">Kursa Datuma ID:</label>
             <input type="number" 
                    th:field="*{kursaDatums.kdatId}" 
                    readonly 
                    required />
             <p th:if="${#fields.hasErrors('kursaDatums')}" 
-               th:errors="*{kursaDatums}">Kursa datuma kļūda</p>
+               th:errors="*{kursaDatums}"
+               th:text="${error_kursa_datuma}">Kursa datuma kļūda</p>
         </div>
 
         <div>
-            <label>Kursa Datums:</label>
+            <label th:text="${label_kursa_datums} + ':'">Kursa Datums:</label>
             <span th:text="${sertifikats.kursaDatums.sakumaDatums + ' līdz ' + sertifikats.kursaDatums.beigadatums}"></span>
         </div>
 
         <div>
-            <label for="izsniegtsDatums">Izsniegts Datums:</label>
+            <label for="izsniegtsDatums" th:text="${label_izsniegts_datums} + ':'">Izsniegts Datums:</label>
             <input type="date" 
                    id="izsniegtsDatums" 
                    th:field="*{izsniegtsDatums}" 
                    required />
             <p th:if="${#fields.hasErrors('izsniegtsDatums')}" 
-               th:errors="*{izsniegtsDatums}">Datuma kļūda</p>
+               th:errors="*{izsniegtsDatums}"
+               th:text="${error_datuma}">Datuma kļūda</p>
         </div>
 
         <div>
-            <label for="parakstits">Parakstīts:</label>
+            <label for="parakstits" th:text="${label_parakstits} + ':'">Parakstīts:</label>
             <input type="checkbox" 
                    id="parakstits" 
                    th:field="*{parakstits}" />
         </div>
 
         <div>
-            <button type="submit">Saglabāt izmaiņas</button>
-            <a th:href="@{/crud/sertifikati/show/all}">Atcelt</a>
+            <button type="submit" th:text="${button_save}">Saglabāt izmaiņas</button>
+            <a th:href="@{/crud/sertifikati/show/all}" th:text="${button_cancel}">Atcelt</a>
         </div>
     </form>
 
