@@ -17,17 +17,14 @@ import lv.venta.service.impl.EparakstaLogsCRUDService;
 
 
 @Controller
-@RequestMapping("crud")
+@RequestMapping("/crud/eparakstalogs")
 public class EparakstaLogsCRUDController {
 
-
     @Autowired
-    private EparakstaLogsCRUDService eparakstaLogsCRUDService; 
-    
+    private EparakstaLogsCRUDService eparakstaLogsCRUDService;
 
-    @GetMapping("/eparakstalogs/show/all")//localhost:8080/crud/eparakstalogs/show/all
-    public String getAllEparakstaLogs(Model model){
-
+    @GetMapping("/show/all")
+    public String getAllEparakstaLogs(Model model) {
         try {
             Iterable<EParakstaLogs> eparaksts = eparakstaLogsCRUDService.retrieveAllEParakstaLogs();
             model.addAttribute("eparaksts", eparaksts);
@@ -36,25 +33,23 @@ public class EparakstaLogsCRUDController {
             model.addAttribute("error", e.getMessage());
             return "error-page";
         }
-    }  // sis strada
-    
-    @GetMapping("/eparakstalogs/{id}")//localhost:8080/crud/eparakstalogs/1
-    public String getEparakstaLogById(@PathVariable("id") int id, Model model) {
-    try {
-        EParakstaLogs eparakstaLogs = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
-        model.addAttribute("eparaksts", eparakstaLogs);
-        return "one-eparaksta-logs-page";
-    } catch (Exception e) {
-        model.addAttribute("error", e.getMessage());
-        return "error-page";
     }
-}
 
-    @GetMapping("/eparakstalogs/update/{id}") //  localhost:8080/crud/eparakstalogs/update/1
-    public String getUpdateEparakstaLogsById(@PathVariable(name="id") int id, Model model) 
-    {
-        try
-        {
+    @GetMapping("/{id}")
+    public String getEparakstaLogById(@PathVariable("id") int id, Model model) {
+        try {
+            EParakstaLogs eparakstaLogs = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
+            model.addAttribute("eparaksts", eparakstaLogs);
+            return "one-eparaksta-logs-page";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "error-page";
+        }
+    }
+
+    @GetMapping("/update/{id}")
+    public String getUpdateEparakstaLogsById(@PathVariable(name = "id") int id, Model model) {
+        try {
             EParakstaLogs eparakstaLogsUpdate = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
             model.addAttribute("eparaksts", eparakstaLogsUpdate);
             return "update-eparaksta-logs-page";
@@ -62,66 +57,48 @@ public class EparakstaLogsCRUDController {
             model.addAttribute("error", e.getMessage());
             return "error-page";
         }
-}
-
-    @PostMapping("/eparakstalogs/update/{id}")
-    public String postMethodName(@Valid EParakstaLogs eparakstaLogs, BindingResult result,
-            Model model, @PathVariable(name = "id") int id) {
-       if (result.hasErrors()) {
-            return "update-eparaksta-logs-page";
-        } else {
-
-            try {
-                eparakstaLogsCRUDService.updateById(id, eparakstaLogs.getSertifikati(), eparakstaLogs.getParakstisanasDatums(), eparakstaLogs.getStatuss());
-                model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
-                return "redirect:/crud/eparakstalogs/show/all";
-            } catch (Exception e) {
-                model.addAttribute("error", e.getMessage());
-                return "error-page";
-
-
-            }
-
-        }
     }
-    
 
-
-
-
-
-
-
-    @GetMapping("/eparakstalogs/delete/{id}")//localhost:8080/crud/eparakstalogs/delete/1
-    public String deleteEparakstaLogs(@PathVariable("id") int id,Model model){
+    @PostMapping("/update/{id}")
+    public String postUpdateEparakstaLogs(@Valid EParakstaLogs eparakstaLogs, BindingResult result,
+            Model model, @PathVariable(name = "id") int id) {
+        if (result.hasErrors()) {
+            return "update-eparaksta-logs-page";
+        }
         try {
-            eparakstaLogsCRUDService.deleteMacibuRezultatiById(id);
-            model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
+            eparakstaLogsCRUDService.updateById(id, eparakstaLogs.getSertifikati(),
+                    eparakstaLogs.getParakstisanasDatums(), eparakstaLogs.getStatuss());
             return "redirect:/crud/eparakstalogs/show/all";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             return "error-page";
         }
-
-
-
     }
 
-// viss strada
-    @GetMapping("/eparakstalogs/insert")//localhost:8080/crud/eparakstalogs/insert
+    @GetMapping("/delete/{id}")
+    public String deleteEparakstaLogs(@PathVariable("id") int id, Model model) {
+        try {
+            eparakstaLogsCRUDService.deleteMacibuRezultatiById(id);
+            return "redirect:/crud/eparakstalogs/show/all";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "error-page";
+        }
+    }
+
+    @GetMapping("/insert")
     public String getInsertEparakstaLogs(Model model) {
         return "eparaksta-logs-insert-page";
     }
-    
-    @PostMapping("/eparakstalogs/insert")//localhost:8080/crud/eparakstalogs/insert
+
+    @PostMapping("/insert")
     public String postInsertEparakstaLogs(@RequestParam("sertId") long sertId,
-                                          @RequestParam("parakstisanasDatums") String parakstisanasDatums,
-                                          @RequestParam("statuss") String statuss,
-                                          Model model) {
+            @RequestParam("parakstisanasDatums") String parakstisanasDatums,
+            @RequestParam("statuss") String statuss,
+            Model model) {
         try {
             eparakstaLogsCRUDService.insertNewEParakstaLogs(sertId, parakstisanasDatums, statuss);
-            model.addAttribute("eparaksts", eparakstaLogsCRUDService.retrieveAllEParakstaLogs());
-            return "eparaksta-logs-page";
+            return "redirect:/crud/eparakstalogs/show/all";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "error-page";
