@@ -42,43 +42,44 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(auth -> auth
 		.requestMatchers("/send-email").hasAnyAuthority("USER","ADMIN")
 		
-		.requestMatchers("/crud/eparakstalogs/show/all").hasAnyAuthority("ADMIN")
-		.requestMatchers("/crud/eparakstalogs/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/eparakstalogs/delete/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/eparakstalogs/show/all").hasAnyAuthority("ADMIN") //
+		.requestMatchers("/crud/eparakstalogs/**").hasAuthority("ADMIN") //
+		.requestMatchers("/crud/eparakstalogs/delete/**").hasAuthority("ADMIN") //
 
-		.requestMatchers("/crud/eparakstalogs/insert").hasAuthority("ADMIN")
+		.requestMatchers("/crud/eparakstalogs/insert").hasAuthority("ADMIN")//
 		
 		
 		
-		.requestMatchers("/crud/maciburezultati/insert").hasAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/insert").hasAuthority("ADMIN")//
 		
 		
-		.requestMatchers("/crud/sertifikati/insert").hasAuthority("ADMIN")
+		.requestMatchers("/crud/sertifikati/insert").hasAuthority("ADMIN")//
 		.requestMatchers("/filter/sertifikati/**").hasAuthority("ADMIN")
         .requestMatchers("/filter/sertifikati/form").hasAuthority("ADMIN")
         .requestMatchers("/filter/sertifikati/dalibnieks", "/filter/sertifikati/dalibnieks/**")
         .hasRole("ADMIN")
-        .requestMatchers("/filter/sertifikati/kurss/**").hasAuthority("ADMIN")
-        .requestMatchers("/filter/sertifikati/kurss").hasAuthority("ADMIN")
-        .requestMatchers("/filter/sertifikati/search").hasAuthority("ADMIN")
-        .requestMatchers("/cache-status").hasAuthority("ADMIN")
-        .requestMatchers("/cache-clear").hasAuthority("ADMIN")
-		.requestMatchers("/crud/eparakstalogs/update/**").hasAuthority("ADMIN")
+        .requestMatchers("/filter/sertifikati/kurss/**").hasAuthority("ADMIN")//
+        .requestMatchers("/filter/sertifikati/kurss").hasAuthority("ADMIN") //n
+        .requestMatchers("/filter/sertifikati/search").hasAuthority("ADMIN") //n
+        .requestMatchers("/cache-status").hasAuthority("ADMIN") //
+        .requestMatchers("/cache-clear").hasAuthority("ADMIN") //n
+		
+		.requestMatchers("/crud/eparakstalogs/update/**").hasAuthority("ADMIN")  //n
 		
 		
-		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")
-		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/maciburezultati/delete/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/maciburezultati/update/**").hasAnyAuthority("ADMIN")
+		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")//
+		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")//
+		.requestMatchers("/crud/maciburezultati/delete/**").hasAuthority("ADMIN")//
+		.requestMatchers("/crud/maciburezultati/update/**").hasAnyAuthority("ADMIN") //n
 		
-		.requestMatchers("/crud/sertifikati/show/all").hasAuthority("ADMIN")
-		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/sertifikati/update/**").hasAuthority("ADMIN")
-		.requestMatchers("/crud/sertifikati/delete/**").hasAuthority("ADMIN")
+		.requestMatchers("/crud/sertifikati/show/all").hasAuthority("ADMIN") //
+		.requestMatchers("/crud/sertifikati/show/**").hasAuthority("ADMIN") //
+		.requestMatchers("/crud/sertifikati/update/**").hasAuthority("ADMIN") //n
+		.requestMatchers("/crud/sertifikati/delete/**").hasAuthority("ADMIN") //n
 
 		
 
-		.requestMatchers("/pdf/**").hasAuthority("ADMIN")
+		.requestMatchers("/pdf/**").hasAuthority("ADMIN") //
         
         .anyRequest().authenticated()
 				

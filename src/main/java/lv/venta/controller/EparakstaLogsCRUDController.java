@@ -1,5 +1,6 @@
 package lv.venta.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,14 +121,22 @@ public class EparakstaLogsCRUDController {
     }
 
     @PostMapping("/update/{id}")
-    public String postUpdateEparakstaLogs(@Valid EParakstaLogs eparakstaLogs, BindingResult result,
-            Model model, @PathVariable(name = "id") int id) {
-        if (result.hasErrors()) {
-            return "update-eparaksta-logs-page";
-        }
+    public String postUpdateEparakstaLogs(
+        @PathVariable(name = "id") int id,
+        @RequestParam("parakstisanasDatums") String parakstisanasDatums,
+        @RequestParam("statuss") String statuss,
+        Model model) {
+        
+            
         try {
-            eparakstaLogsCRUDService.updateById(id, eparakstaLogs.getSertifikati(),
-                    eparakstaLogs.getParakstisanasDatums(), eparakstaLogs.getStatuss());
+        // Get the existing log entry
+        EParakstaLogs existingLog = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
+        
+        // Parse the date
+        LocalDate datums = LocalDate.parse(parakstisanasDatums);
+        
+        // Update with existing certificate
+        eparakstaLogsCRUDService.updateById(id, existingLog.getSertifikati(), datums, statuss);
             return "redirect:/crud/eparakstalogs/show/all";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

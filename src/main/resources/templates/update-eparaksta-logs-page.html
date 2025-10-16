@@ -18,9 +18,7 @@
         </select>
     </form>
 
-    <form th:action="@{'/crud/eparakstalogs/update/' + ${eparaksts.eId}}" 
-          th:object="${eparaksts}" 
-          method="post">
+    <form th:action="@{'/crud/eparakstalogs/update/' + ${eparaksts.eId}}" method="post">
         
         <div>
             <label th:text="${label_eparaksta_id} + ':'">E-paraksta ID:</label>
@@ -29,13 +27,7 @@
 
         <div>
             <label th:text="${label_sertifikata_id} + ':'">Sertifikāta ID:</label>
-            <input type="number" 
-                   th:field="*{sertifikati.sertId}" 
-                   readonly 
-                   required />
-            <p th:if="${#fields.hasErrors('sertifikati')}" 
-               th:errors="*{sertifikati}"
-               th:text="${error_sertifikata}">Sertifikāta kļūda</p>
+            <input type="number" th:value="${eparaksts.sertifikati.sertId}" disabled />
         </div>
 
         <div>
@@ -47,22 +39,18 @@
             <label for="parakstisanasDatums" th:text="${label_parakstisanas_datums} + ':'">Parakstīšanas Datums:</label>
             <input type="date" 
                    id="parakstisanasDatums" 
-                   th:field="*{parakstisanasDatums}" 
+                   name="parakstisanasDatums"
+                   th:value="${eparaksts.parakstisanasDatums}"
                    required />
-            <p th:if="${#fields.hasErrors('parakstisanasDatums')}" 
-               th:errors="*{parakstisanasDatums}"
-               th:text="${error_datuma}">Datuma kļūda</p>
         </div>
 
         <div>
             <label for="statuss" th:text="${label_statuss} + ':'">Statuss:</label>
             <input type="text" 
                    id="statuss" 
-                   th:field="*{statuss}" 
+                   name="statuss"
+                   th:value="${eparaksts.statuss}"
                    required />
-            <p th:if="${#fields.hasErrors('statuss')}" 
-               th:errors="*{statuss}"
-               th:text="${error_statusa}">Statusa kļūda</p>
         </div>
 
         <div>
