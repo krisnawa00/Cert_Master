@@ -2,20 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sertifikātu saraksts</title>
+    <title th:text="#{cert.title}">Certificate List</title>
 </head>
 <body>
-    <h1>Sertifikātu saraksts</h1>
+    <!-- Valodas pārslēdzējs -->
+    <div style="text-align: right; padding: 10px;">
+        <a th:href="@{/crud/sertifikati/show/all(lang='lv')}">LV</a> | 
+        <a th:href="@{/crud/sertifikati/show/all(lang='en')}">EN</a>
+    </div>
+
+    <h1 th:text="#{cert.title}">Sertifikātu saraksts</h1>
 
     <table border="1">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Izsniegts</th>
-                <th>Parakstīts</th>
-                <th>Dalībnieks</th>
-                <th>Kursa Datums</th>
-                <th>Skatīt</th>
+                <th th:text="#{cert.id}">ID</th>
+                <th th:text="#{cert.issued}">Izsniegts</th>
+                <th th:text="#{cert.signed}">Parakstīts</th>
+                <th th:text="#{cert.participant}">Dalībnieks</th>
+                <th th:text="#{cert.course.dates}">Kursa Datums</th>
+                <th th:text="#{button.view}">Skatīt</th>
             </tr>
         </thead>
         <tbody>
@@ -24,9 +30,10 @@
                 <td th:text="${sert.izsniegtsDatums}">Izsniegts</td>
                 <td th:text="${sert.parakstits}">Parakstīts</td>
                 <td th:text="${sert.dalibnieks.vards + ' ' + sert.dalibnieks.uzvards}">Dalībnieks</td>
-                <td th:text="${sert.kursaDatums.sakumaDatums + ' lidz ' + sert.kursaDatums.beigadatums}">Kursa Datums</td>
+                <td th:text="${sert.kursaDatums.sakumaDatums} + ' ' + ${#messages.msg('cert.from')} + ' ' + ${sert.kursaDatums.beigadatums}"></td>
                 <td>
-                    <a th:href="@{'/crud/sertifikati/show/' + ${sert.sertId}}">Skatīt</a>
+                    <a th:href="@{'/crud/sertifikati/show/' + ${sert.sertId}}" 
+                       th:text="#{button.view}">Skatīt</a>
                 </td>
             </tr>
         </tbody>

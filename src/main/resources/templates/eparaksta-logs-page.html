@@ -1,23 +1,35 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{eparaksts.title}">E-signature Log</title>
+</head>
 <body>
-<h2>EParaksta Logs</h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Sertifikāta ID</th>
-            <th>Parakstīšanas datums</th>
-            <th>Statuss</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="log : ${eparaksts}">
-            <td th:text="${log.eId}"></td>
-            <td th:text="${log.sertifikati.sertId}"></td> 
-            <td th:text="${log.parakstisanasDatums}"></td>
-            <td th:text="${log.statuss}"></td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Valodas pārslēdzējs -->
+    <div style="text-align: right; padding: 10px;">
+        <a th:href="@{/crud/eparakstalogs/show/all(lang='lv')}">LV</a> | 
+        <a th:href="@{/crud/eparakstalogs/show/all(lang='en')}">EN</a>
+    </div>
+
+    <h2 th:text="#{eparaksts.title}">EParaksta Logs</h2>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th th:text="#{eparaksts.id}">ID</th>
+                <th th:text="#{eparaksts.cert.id}">Sertifikāta ID</th>
+                <th th:text="#{eparaksts.date}">Parakstīšanas datums</th>
+                <th th:text="#{eparaksts.status}">Statuss</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="log : ${eparaksts}">
+                <td th:text="${log.eId}"></td>
+                <td th:text="${log.sertifikati.sertId}"></td> 
+                <td th:text="${log.parakstisanasDatums}"></td>
+                <td th:text="${log.statuss}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

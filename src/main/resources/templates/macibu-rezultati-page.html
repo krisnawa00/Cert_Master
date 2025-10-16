@@ -1,21 +1,32 @@
+<!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{results.title}">Study Results</title>
+</head>
 <body>
-    <p>Study Results:</p>
+    <!-- Valodas pārslēdzējs -->
+    <div style="text-align: right; padding: 10px;">
+        <a th:href="@{/crud/maciburezultati/show/all(lang='lv')}">LV</a> | 
+        <a th:href="@{/crud/maciburezultati/show/all(lang='en')}">EN</a>
+    </div>
+
+    <h1 th:text="#{results.title}">Mācību rezultāti</h1>
 
     <table border="1">
         <tr>
-			<td>Rezultāta ID</td>
-			<td>Kursa nosaukums</td>
-			<td>Stundas</td>
-			<td>Līmenis</td>
-			<td>Izieta</td>
+            <td th:text="#{results.id}">Rezultāta ID</td>
+            <td th:text="#{results.course.name}">Kursa nosaukums</td>
+            <td th:text="#{results.hours}">Stundas</td>
+            <td th:text="#{results.level}">Līmenis</td>
+            <td th:text="#{results.completed}">Izieta</td>
         </tr>
         <tr th:each="result : ${rezultati}">
             <td th:text="${result.mrId}"></td>
             <td th:text="${result.kurss.nosaukums}"></td>
             <td th:text="${result.kurss.stundas}"></td>
             <td th:text="${result.kurss.limenis}"></td>
-            <td th:text="${result.macibuRezultats} ? 'Yes' : 'No'"></td>
+            <td th:text="${result.macibuRezultats} ? #{results.yes} : #{results.no}"></td>
         </tr>
     </table>
 </body>

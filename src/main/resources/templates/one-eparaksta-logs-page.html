@@ -1,17 +1,25 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>E-parakstaLogs</title>
+    <meta charset="UTF-8">
+    <title th:text="#{eparaksts.title}">E-signature Log</title>
 </head>
 <body>
-    <h1>E-parakstaLogs</h1>
+    <!-- Valodas pārslēdzējs -->
+    <div style="text-align: right; padding: 10px;">
+        <a th:href="@{''(lang='lv')}">LV</a> | 
+        <a th:href="@{''(lang='en')}">EN</a>
+    </div>
+
+    <h1 th:text="#{eparaksts.title}">E-parakstaLogs</h1>
     
     <table border="1px">
         <thead>
             <tr>
-                <th>E-paraksta ID</th>
-                <th>Sertifikāta ID</th>
-                <th>Parakstīšanas datums</th>
-                <th>Statuss</th>
+                <th th:text="#{eparaksts.id}">E-paraksta ID</th>
+                <th th:text="#{eparaksts.cert.id}">Sertifikāta ID</th>
+                <th th:text="#{eparaksts.date}">Parakstīšanas datums</th>
+                <th th:text="#{eparaksts.status}">Statuss</th>
             </tr>
         </thead>
         <tbody>
@@ -23,5 +31,7 @@
             </tr>
         </tbody>
     </table>
+    
+    <a th:href="@{/crud/eparakstalogs/show/all}" th:text="#{button.back}">Atpakaļ</a>
 </body>
 </html>
