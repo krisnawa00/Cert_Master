@@ -5,13 +5,28 @@
 <body>
     <h1>E-parakstaLogs</h1>
     
+    <form method="get">
+    <label for="lang">Select language:</label>
+    <select id="lang" name="lang" onchange="this.form.submit()">
+        <option value="">Select a Language</option>
+        <option th:each="entry : ${languages}"
+                th:value="${entry.key}"
+                th:text="${entry.value}"
+                th:selected="${currentLanguage == entry.key}">
+        </option>
+    </select>
+</form>
+
+
+
+
     <table border="1px">
         <thead>
             <tr>
-                <th>E-paraksta ID</th>
-                <th>Sertifikāta ID</th>
-                <th>Parakstīšanas datums</th>
-                <th>Statuss</th>
+                <th th:text="${header_eparaksta_id}">E-paraksta ID</th>
+                <th th:text="${header_sertifikata_id}">Sertifikāta ID</th>
+                <th th:text="${header_parakstisanas_datums}">Parakstīšanas datums</th>
+                <th th:text="${header_statuss}">Statuss</th>
             </tr>
         </thead>
         <tbody>
