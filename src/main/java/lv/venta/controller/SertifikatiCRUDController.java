@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import lv.venta.model.KursaDalibnieks;
 import lv.venta.model.KursaDatumi;
 import lv.venta.model.Sertifikati;
 import lv.venta.service.TranslatorService;
 import lv.venta.service.impl.SertifikatiCRUDService;
 
+@Slf4j
 @Controller
 @RequestMapping("/crud/sertifikati")
 public class SertifikatiCRUDController {
@@ -34,10 +36,14 @@ public class SertifikatiCRUDController {
     
     @GetMapping("/show/all")
     public String getAllSertifikati(@RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,Model model) {
-        try {
+    	log.info("GET pieprasījums uz /crud/sertifikati/show/all ar valodu: {}", lang);
+    	
+    	try {
             ArrayList<Sertifikati> sertifikati = sertCrud.retrieveAllSertifikati();
+            log.debug("Iegūti {} sertifikāti", sertifikati.size());
             
             if (!"lv".equals(lang)) {
+            	log.debug("Tulkojam sertifikātus uz: {}", lang);
                 sertifikati = translateSertifikatiList(sertifikati, lang);
             }
 
@@ -53,8 +59,12 @@ public class SertifikatiCRUDController {
             model.addAttribute("sertifikati", sertifikati);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
+            
+            log.info("Veiksmīgi ielādēta sertifikātu lapa");
+            
             return "sertifikatu-page";
         } catch (Exception e) {
+        	log.error("Kļūda iegūstot visus sertifikātus: {}", e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -64,10 +74,13 @@ public class SertifikatiCRUDController {
     public String getSertifikatsById(@PathVariable int id, 
     @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
     Model model) {
-        try {
+    	log.info("GET pieprasījums sertifikātam ar ID: {}, valoda: {}", id, lang);
+    	
+    	try {
             Sertifikati s = sertCrud.retrieveSertifikatiById(id);
             
             if (!"lv".equals(lang)) {
+            	log.debug("Tulkojam sertifikātu ID={} uz: {}", id, lang);
                 s = translateSingleSertifikats(s, lang);
             }
             
@@ -82,8 +95,12 @@ public class SertifikatiCRUDController {
             model.addAttribute("sertifikats", s);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
+            
+            log.info("Veiksmīgi ielādēts sertifikāts ID: {}", id);
+            
             return "sertifikats-one-page";
         } catch (Exception e) {
+        	log.error("Kļūda iegūstot sertifikātu ar ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -93,7 +110,8 @@ public class SertifikatiCRUDController {
     public String getUpdateSertifikatsById(@PathVariable(name = "id") int id, 
     @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
     Model model) {
-        try {
+    	log.info("GET pieprasījums sertifikāta atjaunināšanai ID: {}", id);
+    	try {
             Sertifikati sertifikatsForUpdating = sertCrud.retrieveSertifikatiById(id);
             
             
@@ -116,8 +134,12 @@ public class SertifikatiCRUDController {
             model.addAttribute("sertifikats", sertifikatsForUpdating);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
+            
+            log.info("Ielādēta atjaunināšanas forma sertifikātam ID: {}", id);
+            
             return "update-sertifikats";
         } catch (Exception e) {
+        	log.error("Kļūda ielādējot atjaunināšanas formu sertifikātam ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -126,14 +148,19 @@ public class SertifikatiCRUDController {
     @PostMapping("/update/{id}")
     public String postUpdateSertifikatsById(@Valid Sertifikati sertifikats, BindingResult result,
             Model model, @PathVariable(name = "id") int id) {
+    	log.info("POST pieprasījums sertifikāta atjaunināšanai ID: {}", id);
         if (result.hasErrors()) {
+        	log.warn("Validācijas kļūdas atjauninot sertifikātu ID {}: {}", id, result.getAllErrors());
             return "update-sertifikats";
         }
         try {
             sertCrud.updateById(id, sertifikats.getDalibnieks(), sertifikats.getKursaDatums(),
                     sertifikats.getIzsniegtsDatums(), sertifikats.isParakstits());
+            
+            log.info("Veiksmīgi atjaunināts sertifikāts ID: {}", id);
             return "redirect:/crud/sertifikati/show/all";
         } catch (Exception e) {
+        	log.error("Kļūda atjauninot sertifikātu ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -141,10 +168,13 @@ public class SertifikatiCRUDController {
 
     @GetMapping("/delete/{id}")
     public String deleteSertifikatsById(@PathVariable("id") int id, Model model) {
+    	log.info("DELETE pieprasījums sertifikātam ID: {}", id);
         try {
             sertCrud.deleteSertifikatiById(id);
+            log.info("Veiksmīgi izdzēsts sertifikāts ID: {}", id);
             return "redirect:/crud/sertifikati/show/all";
         } catch (Exception e) {
+        	log.error("Kļūda dzēšot sertifikātu ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -154,6 +184,7 @@ public class SertifikatiCRUDController {
     public String getInsertSertifikats(@RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
     Model model) {
         
+    	log.info("GET pieprasījums jauna sertifikāta pievienošanai, valoda: {}", lang);
         
         model.addAttribute("title", translatorService.translateText("Pievienot Jaunu Sertifikātu", lang));
         model.addAttribute("label_kursa_dalibnieka_id", translatorService.translateText("Kursa Dalībnieka ID", lang));
@@ -174,7 +205,9 @@ public class SertifikatiCRUDController {
             @RequestParam("izsniegtsDatums") String izsniegtsDatums,
             @RequestParam("parakstits") boolean parakstits,
             Model model) {
-        try {
+    	log.info("POST pieprasījums jauna sertifikāta pievienošanai: kdId={}, kdatId={}, parakstīts={}", 
+                kdId, kdatId, parakstits);
+    	try {
             sertCrud.insertNewSertifikats(kdId, kdatId, izsniegtsDatums, parakstits);
             return "redirect:/crud/sertifikati/show/all";
         } catch (Exception e) {

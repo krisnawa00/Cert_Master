@@ -14,13 +14,14 @@ import org.openpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import lv.venta.model.Vertejums;
 import lv.venta.repo.IKursaDalibnieksRepo;
 import lv.venta.repo.IKurssRepo;
 import lv.venta.repo.IVertejumsRepo;
 import lv.venta.service.IPDFCreatorService;
 
-
+@Slf4j
 @Service
 public class PDFCreatorServiceImpl implements IPDFCreatorService {
 
@@ -38,12 +39,16 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
 
     @Override
     public void createCertificateAsPDF(int dalibnieksId, int kurssId) throws Exception {
-        
+    	
+    	log.info("Sākam ģenerēt PDF sertifikātu: dalībnieksID={}, kurssID={}", dalibnieksId, kurssId);
+    	
         if(!kurssRepo.existsById((long) kurssId)){
+        	log.error("Kurss ar ID {} neeksistē", kurssId);
 			throw new Exception("Kurss ar id: " + kurssId + " neeksistē");
 		}
 
         if(!kursaDalibnieksRepo.existsById((long) dalibnieksId)) {
+        	log.error("Kursa dalībnieks ar ID {} neeksistē", dalibnieksId);
 			throw new Exception("Kursa dalībnieks ar id: " + dalibnieksId + " neeksistē");
 		}
 
@@ -52,6 +57,7 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
         Vertejums vertejumsNoDB = vertejumsRepo.findByDalibnieks_KdIdAndKursaDatums_Kurss_kId((long)dalibnieksId, (long)kurssId);
 
         if(vertejumsNoDB == null) {
+        	log.error("Nav atrasts vērtējums dalībniekam ID={} un kursam ID={}", dalibnieksId, kurssId);
             throw new Exception("Nav pieejams vērtējums šim kursa dalībniekam" + dalibnieksId +  "un kursam" + kurssId);
         }
         else 
@@ -84,12 +90,13 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
                 PdfWriter writer = PdfWriter.getInstance(document, 
 						new FileOutputStream(certicateNo + "_" + dalibniekaVardsUnUzvards+".pdf"));
 
-            
+                
+                log.debug("PDF dokuments izveidots, sākam rakstīt saturu");
                 document.open();
             
                 Image img = Image.getInstance("src/main/resources/Img/tdl_school_logov2.png");
                 document.add(img);
-                
+                log.debug("Pievienots logo");
 
 
                 Paragraph p1 = new Paragraph( "TestDevLab Skola", 
@@ -142,7 +149,8 @@ public class PDFCreatorServiceImpl implements IPDFCreatorService {
 
                 document.close();
             
-            
+                log.debug("PDF sertifikāts veiksmīgi izveidots, PDF detaļas - Dalībnieks: {}, Kurss: {}, Vērtējums: {}/10", 
+                    dalibniekaVardsUnUzvards, kursaNosaukums, vertejums);
             
             
             

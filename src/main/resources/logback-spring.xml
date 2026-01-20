@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <!-- Console Appender - logs to console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender - logs to file -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/certmaster.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        
+        <!-- Rolling policy - creates new file daily and keeps 30 days -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/certmaster-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Error File Appender - only errors -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/certmaster-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/certmaster-error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Logger for your application -->
+    <logger name="lv.venta" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </logger>
+
+    <!-- Logger for Hibernate SQL -->
+    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
+
+    <!-- Logger for Spring Framework -->
+    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework.web" level="DEBUG" />
+    <logger name="org.springframework.security" level="DEBUG" />
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+
+</configuration>
