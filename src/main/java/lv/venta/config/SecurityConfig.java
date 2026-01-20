@@ -76,7 +76,7 @@ public class SecurityConfig {
 		.requestMatchers("/crud/sertifikati/update/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/sertifikati/delete/**").hasAuthority("ADMIN")
 
-		
+		.requestMatchers("/statistika/**").hasAuthority("ADMIN")
 
 		.requestMatchers("/pdf/**").hasAuthority("ADMIN")
         

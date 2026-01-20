@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistika pa Pilsētām</title>
+</head>
+<body>
+    <h1>Top 10 Pilsētas</h1>
+    
+    <p>
+        <a href="/statistika/dashboard">Pilns pārskats</a> | 
+        <a href="/crud/sertifikati/show/all">Atpakaļ</a>
+    </p>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Vieta</th>
+                <th>Pilsēta</th>
+                <th>Dalībnieku skaits</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry, iter : ${cityStats}">
+                <td th:text="${iter.index + 1}">1</td>
+                <td th:text="${entry.key}">Rīga</td>
+                <td th:text="${entry.value}">8</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
