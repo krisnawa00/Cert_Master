@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -42,7 +44,14 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     @Autowired
     private ISertRegTab sertRegTabRepo;
 
-
+    public Page<Sertifikati> retrieveAllSertifikatiPaginated(Pageable pageable) throws Exception {
+        Page<Sertifikati> page = sertRepo.findAll(pageable);
+        if (page.isEmpty()) {
+            throw new Exception("Nav pieejams neviens sertifikāts");
+        }
+        return page;
+    }
+    
     @Override
     @Cacheable(value = "sertifikati", unless = "#result == null || #result.isEmpty()")
 

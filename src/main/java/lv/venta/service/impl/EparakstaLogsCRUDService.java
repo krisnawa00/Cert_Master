@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.cache.annotation.CacheEvict;
 
 import lv.venta.model.EParakstaLogs;
 import lv.venta.model.Sertifikati;
@@ -15,12 +17,8 @@ import lv.venta.repo.IEParakstaLogsRepo;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.service.IEParakstaLogsService;
 
-
-
-
 @Service
-public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
-
+public class EparakstaLogsCRUDService implements IEParakstaLogsService {
 
     @Autowired
     private IEParakstaLogsRepo eParakstaLogsRepo;
@@ -28,8 +26,15 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
     @Autowired
     private ISertifikatiRepo sertifikatiRepo;
 
+    // Pagination metode
+    public Page<EParakstaLogs> retrieveAllEParakstaLogsPaginated(Pageable pageable) throws Exception {
+        Page<EParakstaLogs> page = eParakstaLogsRepo.findAll(pageable);
+        if (page.isEmpty()) {
+            throw new Exception("Nav pieejami neviens eParaksta logs");
+        }
+        return page;
+    }
 
-    //retrieve all
     @Override
     @Cacheable(value = "eparakstaLogs", unless = "#result == null || #result.isEmpty()")
     public ArrayList<EParakstaLogs> retrieveAllEParakstaLogs() throws Exception {
@@ -38,7 +43,6 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
         }
         return (ArrayList<EParakstaLogs>) eParakstaLogsRepo.findAll();
     }
-
 
     @Override
     @Cacheable(value = "eparakstaLog", key = "#id", unless = "#result == null")
@@ -52,20 +56,21 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
         return eParakstaLogsRepo.findById((long) id).get();
     }
 
-
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "eparakstaLogs", allEntries = true),
+            @CacheEvict(value = "eparakstaLog", key = "#id")
+        })
     public void updateById(int id, Sertifikati sertifikati, LocalDate parakstisanasDatums, String statuss) throws Exception {
-    if (sertifikati == null || parakstisanasDatums == null || statuss == null) {
-        throw new Exception("Ievades parametri nav pareizi");
-    }
+        if (sertifikati == null || parakstisanasDatums == null || statuss == null) {
+            throw new Exception("Ievades parametri nav pareizi");
+        }
         EParakstaLogs retrievedLog = retrieveEParakstaLogById(id);
         retrievedLog.setSertifikati(sertifikati);
         retrievedLog.setParakstisanasDatums(parakstisanasDatums);
         retrievedLog.setStatuss(statuss);
         eParakstaLogsRepo.save(retrievedLog);
     }
-    
-    
     
     @Override
     @Caching(evict = {
@@ -104,4 +109,3 @@ public  class EparakstaLogsCRUDService implements IEParakstaLogsService {
         return eParakstaLogsRepo.save(newLog);
     }
 }
-    

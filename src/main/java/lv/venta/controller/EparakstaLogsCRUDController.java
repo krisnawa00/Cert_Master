@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +22,6 @@ import lv.venta.model.EParakstaLogs;
 import lv.venta.service.TranslatorService;
 import lv.venta.service.impl.EparakstaLogsCRUDService;
 
-
-
 @Controller
 @RequestMapping("/crud/eparakstalogs")
 public class EparakstaLogsCRUDController {
@@ -27,32 +29,50 @@ public class EparakstaLogsCRUDController {
     @Autowired
     private EparakstaLogsCRUDService eparakstaLogsCRUDService;
 
-    
     @Autowired
     private TranslatorService translatorService;
     
-    
-    @GetMapping("/show/all") // 
-    public String getAllEparakstaLogs( @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang, Model model) {
+    @GetMapping("/show/all")
+    public String getAllEparakstaLogs(
+            @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sort", defaultValue = "eId") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "ASC") String direction,
+            Model model) {
         try {
-            Iterable<EParakstaLogs> eparaksts = eparakstaLogsCRUDService.retrieveAllEParakstaLogs();
+            // Izveidojam Sort objektu
+            Sort sort = direction.equalsIgnoreCase("DESC") 
+                ? Sort.by(sortBy).descending() 
+                : Sort.by(sortBy).ascending();
             
-            // Convert to list
-            List<EParakstaLogs> eparakstsList = new ArrayList<>();
-            eparaksts.forEach(eparakstsList::add);
+            // Izveidojam Pageable objektu
+            Pageable pageable = PageRequest.of(page, size, sort);
             
+            // Iegūstam lapoto rezultātu
+            Page<EParakstaLogs> eparakstsPage = eparakstaLogsCRUDService.retrieveAllEParakstaLogsPaginated(pageable);
+            
+            // Tulkojam, ja vajadzīgs
+            List<EParakstaLogs> eparakstsList = eparakstsPage.getContent();
             if (!"lv".equals(lang)) {
-            eparakstsList = translateEparakstaLogsList(eparakstsList, lang);
-        }
+                eparakstsList = translateEparakstaLogsList(new ArrayList<>(eparakstsList), lang);
+            }
 
+            // Pievienojam pagination info
+            model.addAttribute("eparaksts", eparakstsList);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", eparakstsPage.getTotalPages());
+            model.addAttribute("totalItems", eparakstsPage.getTotalElements());
+            model.addAttribute("pageSize", size);
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("sortDirection", direction);
 
+            // Tulkojam galvenes
             model.addAttribute("header_id", translatorService.translateText("ID", lang));
             model.addAttribute("header_sertifikata_id", translatorService.translateText("Sertifikāta ID", lang));
             model.addAttribute("header_parakstisanas_datums", translatorService.translateText("Parakstīšanas datums", lang));
             model.addAttribute("header_statuss", translatorService.translateText("Statuss", lang));
 
-
-            model.addAttribute("eparaksts", eparakstsList);
             model.addAttribute("currentLanguage", lang);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             return "eparaksta-logs-page";
@@ -68,10 +88,9 @@ public class EparakstaLogsCRUDController {
             EParakstaLogs eparakstaLogs = eparakstaLogsCRUDService.retrieveEParakstaLogById(id);
             
             if (!"lv".equals(lang) && eparakstaLogs.getStatuss() != null) {
-            String translatedStatus = translatorService.translateText(eparakstaLogs.getStatuss(), lang);
-            eparakstaLogs.setStatuss(translatedStatus);
+                String translatedStatus = translatorService.translateText(eparakstaLogs.getStatuss(), lang);
+                eparakstaLogs.setStatuss(translatedStatus);
             }
-            
             
             model.addAttribute("header_eparaksta_id", translatorService.translateText("E-paraksta ID", lang));
             model.addAttribute("header_sertifikata_id", translatorService.translateText("Sertifikāta ID", lang));
@@ -111,7 +130,6 @@ public class EparakstaLogsCRUDController {
             model.addAttribute("currentLanguage", lang);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             
-            model.addAttribute("eparaksts", eparakstaLogsUpdate);
             return "update-eparaksta-logs-page";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -179,24 +197,18 @@ public class EparakstaLogsCRUDController {
         }
     }
 
-
-private List<EParakstaLogs> translateEparakstaLogsList(List<EParakstaLogs> originalList, String targetLang) {
-    
-    if ("lv".equals(targetLang)) {
+    // Helper metode tulkošanai
+    private List<EParakstaLogs> translateEparakstaLogsList(List<EParakstaLogs> originalList, String targetLang) {
+        if ("lv".equals(targetLang)) {
+            return originalList;
+        }
+        
+        for (EParakstaLogs log : originalList) {
+            if (log.getStatuss() != null) {
+                String translatedStatus = translatorService.translateText(log.getStatuss(), targetLang);
+                log.setStatuss(translatedStatus);
+            }
+        }
         return originalList;
     }
-    
-    
-    for (EParakstaLogs log : originalList) {
-        if (log.getStatuss() != null) {
-            String translatedStatus = translatorService.translateText(log.getStatuss(), targetLang);
-            log.setStatuss(translatedStatus);
-        }
-    }
-    return originalList;
-}
-
-
-
-
 }
