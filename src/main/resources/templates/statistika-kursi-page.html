@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistika pa Kursiem</title>
+</head>
+<body>
+    <h1>Populārākie Kursi</h1>
+    
+    <p>
+        <a href="/statistika/dashboard">Pilns pārskats</a> | 
+        <a href="/crud/sertifikati/show/all">Atpakaļ</a>
+    </p>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Kursa nosaukums</th>
+                <th>Izsniegti sertifikāti</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${courseStats}">
+                <td th:text="${entry.key}">Java fundamentals</td>
+                <td th:text="${entry.value}">15</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

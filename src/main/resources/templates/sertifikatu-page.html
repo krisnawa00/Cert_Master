@@ -3,11 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>Sertifikātu saraksts</title>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+        }
+        .pagination a:hover {
+            background-color: #f0f0f0;
+        }
+        .pagination .active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .pagination .disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .sort-controls {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .sort-controls label {
+            margin-right: 10px;
+        }
+        .sort-controls select {
+            margin-right: 20px;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>Sertifikātu saraksts</h1>
+	
+	<div style="margin: 20px 0;">
+	    <a href="/statistika/dashboard" 
+	       style="padding: 10px 20px; background-color: #28a745; color: white; 
+	              text-decoration: none; border-radius: 5px;">
+	        📊 Skatīt statistiku
+	    </a>
+	</div>
 
+    <!-- Language selector -->
     <form method="get" th:action="@{/crud/sertifikati/show/all}">
+        <input type="hidden" name="page" th:value="${currentPage}">
+        <input type="hidden" name="size" th:value="${pageSize}">
+        <input type="hidden" name="sort" th:value="${sortBy}">
+        <input type="hidden" name="direction" th:value="${sortDirection}">
+        
         <label for="lang">Select language:</label>
         <select name="lang" id="lang" onchange="this.form.submit()">
             <option th:each="entry : ${languages}"
@@ -17,11 +71,44 @@
             </option>
         </select>
     </form>
-    
-    
-    
-    
-    
+
+    <!-- Sorting controls -->
+    <div class="sort-controls">
+        <form method="get" th:action="@{/crud/sertifikati/show/all}">
+            <input type="hidden" name="lang" th:value="${currentLanguage}">
+            <input type="hidden" name="page" value="0">
+            
+            <label for="sort">Kārtot pēc:</label>
+            <select name="sort" id="sort">
+                <option value="sertId" th:selected="${sortBy == 'sertId'}">ID</option>
+                <option value="izsniegtsDatums" th:selected="${sortBy == 'izsniegtsDatums'}">Izsniegšanas datums</option>
+                <option value="parakstits" th:selected="${sortBy == 'parakstits'}">Parakstīšanas statuss</option>
+            </select>
+            
+            <label for="direction">Virziens:</label>
+            <select name="direction" id="direction">
+                <option value="ASC" th:selected="${sortDirection == 'ASC'}">Augoši</option>
+                <option value="DESC" th:selected="${sortDirection == 'DESC'}">Dilstoši</option>
+            </select>
+            
+            <label for="size">Ieraksti lapā:</label>
+            <select name="size" id="size">
+                <option value="5" th:selected="${pageSize == 5}">5</option>
+                <option value="10" th:selected="${pageSize == 10}">10</option>
+                <option value="20" th:selected="${pageSize == 20}">20</option>
+                <option value="50" th:selected="${pageSize == 50}">50</option>
+            </select>
+            
+            <button type="submit">Pielietot</button>
+        </form>
+    </div>
+
+    <!-- Results info -->
+    <p>Parādīti <span th:text="${currentPage * pageSize + 1}">1</span> - 
+       <span th:text="${(currentPage + 1) * pageSize > totalItems ? totalItems : (currentPage + 1) * pageSize}">10</span> 
+       no <span th:text="${totalItems}">100</span> ierakstiem</p>
+
+    <!-- Table -->
     <table border="1">
         <thead>
             <tr>
@@ -37,15 +124,57 @@
             <tr th:each="sert : ${sertifikati}">
                 <td th:text="${sert.sertId}">Id</td>
                 <td th:text="${sert.izsniegtsDatums}">Izsniegts</td>
-                <td th:text="${sert.parakstits}">Parakstīts</td>
+                <td th:text="${sert.parakstits ? 'Jā' : 'Nē'}">Parakstīts</td>
                 <td th:text="${sert.dalibnieks.vards + ' ' + sert.dalibnieks.uzvards}">Dalībnieks</td>
                 <td th:text="${sert.kursaDatums.sakumaDatums + ' lidz ' + sert.kursaDatums.beigadatums}">Kursa Datums</td>
                 <td>
-                    <a th:href="@{'/crud/sertifikati/show/' + ${sert.sertId}}">Skatīt</a>
+                    <a th:href="@{'/crud/sertifikati/show/' + ${sert.sertId} + '?lang=' + ${currentLanguage}}">Skatīt</a>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <!-- Pagination controls -->
+    <div class="pagination" th:if="${totalPages > 1}">
+        <!-- First page -->
+        <a th:href="@{/crud/sertifikati/show/all(page=0, size=${pageSize}, sort=${sortBy}, direction=${sortDirection}, lang=${currentLanguage})}"
+           th:classappend="${currentPage == 0} ? 'disabled'"
+           th:if="${currentPage > 0}">«« Pirmā</a>
+        <span th:if="${currentPage == 0}" class="disabled">«« Pirmā</span>
+        
+        <!-- Previous page -->
+        <a th:href="@{/crud/sertifikati/show/all(page=${currentPage - 1}, size=${pageSize}, sort=${sortBy}, direction=${sortDirection}, lang=${currentLanguage})}"
+           th:classappend="${currentPage == 0} ? 'disabled'"
+           th:if="${currentPage > 0}">« Iepriekšējā</a>
+        <span th:if="${currentPage == 0}" class="disabled">« Iepriekšējā</span>
+        
+        <!-- Page numbers -->
+        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <th:block th:if="${i >= currentPage - 2 && i <= currentPage + 2}">
+                <a th:href="@{/crud/sertifikati/show/all(page=${i}, size=${pageSize}, sort=${sortBy}, direction=${sortDirection}, lang=${currentLanguage})}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? 'active'"
+                   th:if="${i != currentPage}">1</a>
+                <span th:if="${i == currentPage}" 
+                      th:text="${i + 1}" 
+                      class="active">1</span>
+            </th:block>
+        </th:block>
+        
+        <!-- Next page -->
+        <a th:href="@{/crud/sertifikati/show/all(page=${currentPage + 1}, size=${pageSize}, sort=${sortBy}, direction=${sortDirection}, lang=${currentLanguage})}"
+           th:classappend="${currentPage >= totalPages - 1} ? 'disabled'"
+           th:if="${currentPage < totalPages - 1}">Nākamā »</a>
+        <span th:if="${currentPage >= totalPages - 1}" class="disabled">Nākamā »</span>
+        
+        <!-- Last page -->
+        <a th:href="@{/crud/sertifikati/show/all(page=${totalPages - 1}, size=${pageSize}, sort=${sortBy}, direction=${sortDirection}, lang=${currentLanguage})}"
+           th:classappend="${currentPage >= totalPages - 1} ? 'disabled'"
+           th:if="${currentPage < totalPages - 1}">Pēdējā »»</a>
+        <span th:if="${currentPage >= totalPages - 1}" class="disabled">Pēdējā »»</span>
+    </div>
+
+    <p>Lapa <span th:text="${currentPage + 1}">1</span> no <span th:text="${totalPages}">10</span></p>
 
 </body>
 </html>

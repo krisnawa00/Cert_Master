@@ -3,8 +3,11 @@ package lv.venta.service.impl;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +16,6 @@ import lv.venta.model.MacibuRezultati;
 import lv.venta.repo.IKurssRepo;
 import lv.venta.repo.IMacibuRezultatiRepo;
 import lv.venta.service.IMacibuRezultatiService;
-import org.springframework.cache.annotation.CacheEvict;
 
 
 @Slf4j
@@ -23,11 +25,18 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
     @Autowired
     private IMacibuRezultatiRepo macibuRezultatiRepo; 
     
-    
     @Autowired
     private IKurssRepo kurssRepo;
 
-    //retrieve all
+    // Pagination metode
+    public Page<MacibuRezultati> retrieveAllMacibuRezultatiPaginated(Pageable pageable) throws Exception {
+        Page<MacibuRezultati> page = macibuRezultatiRepo.findAll(pageable);
+        if (page.isEmpty()) {
+            throw new Exception("Nav pieejami neviens mācību rezultāts");
+        }
+        return page;
+    }
+
     @Override
     @Cacheable(value = "macibuRezultati", unless = "#result == null || #result.isEmpty()")
     public ArrayList<MacibuRezultati> retrieveAllMacibuRezultati() throws Exception {
@@ -67,6 +76,10 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
     }
     
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "macibuRezultati", allEntries = true),
+            @CacheEvict(value = "macibuRezultats", key = "#id")
+        })
     public void updateById(int id, Kurss kurss, boolean macibuRezultats) throws Exception {
     if (kurss == null) {
     	log.error("Nederīgi parametri mācību rezultāta atjaunināšanai: kurss=null");
@@ -82,8 +95,6 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
     log.info("Veiksmīgi atjaunināts mācību rezultāts ar ID: {}", id);
 }
 
-
-    
     @Override
     @Caching(evict = {
             @CacheEvict(value = "macibuRezultati", allEntries = true),
@@ -132,10 +143,3 @@ public class MacibuRezultatiCrudService implements IMacibuRezultatiService {
         return savedRezultats;
     }
 }
-    
-    
-
-    
-
-
-    

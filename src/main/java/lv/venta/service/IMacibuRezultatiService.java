@@ -13,8 +13,8 @@ public interface IMacibuRezultatiService {
 
     void deleteMacibuRezultatiById(int id) throws Exception;
 
-
     void updateById(int id, Kurss kurss, boolean macibuRezultats) throws Exception;
+
 
     MacibuRezultati insertNewMacibuRezultats(long kId, boolean macibuRezultats) throws Exception;
 }

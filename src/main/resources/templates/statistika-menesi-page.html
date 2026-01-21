@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistika pa Mēnešiem</title>
+</head>
+<body>
+    <h1>Statistika pa Mēnešiem</h1>
+    
+    <p>
+        <a href="/statistika/dashboard">Pilns pārskats</a> | 
+        <a href="/crud/sertifikati/show/all">Atpakaļ</a>
+    </p>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Mēnesis</th>
+                <th>Sertifikātu skaits</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${monthlyStats}">
+                <td th:text="${entry.key}">2025-01</td>
+                <td th:text="${entry.value}">10</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -1,13 +1,5 @@
 package lv.venta.service.impl;
 
-import lv.venta.model.KursaDalibnieks;
-import lv.venta.model.KursaDatumi;
-import lv.venta.model.Sertifikati;
-import lv.venta.repo.IKursaDalibnieksRepo;
-import lv.venta.repo.IKursaDatumiRepo;
-import lv.venta.repo.ISertifikatiRepo;
-import lv.venta.service.ISertifikatiService;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -17,9 +9,16 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
-import lv.venta.repo.IEParakstaLogsRepo;
-import lv.venta.repo.ISertRegTab;
 import lombok.extern.slf4j.Slf4j;
+import lv.venta.model.KursaDalibnieks;
+import lv.venta.model.KursaDatumi;
+import lv.venta.model.Sertifikati;
+import lv.venta.repo.IEParakstaLogsRepo;
+import lv.venta.repo.IKursaDalibnieksRepo;
+import lv.venta.repo.IKursaDatumiRepo;
+import lv.venta.repo.ISertRegTab;
+import lv.venta.repo.ISertifikatiRepo;
+import lv.venta.service.ISertifikatiService;
 
 @Slf4j
 @Service
@@ -40,6 +39,14 @@ public class SertifikatiCRUDService implements ISertifikatiService {
     @Autowired
     private ISertRegTab sertRegTabRepo;
 
+    public Page<Sertifikati> retrieveAllSertifikatiPaginated(Pageable pageable) throws Exception {
+        Page<Sertifikati> page = sertRepo.findAll(pageable);
+        if (page.isEmpty()) {
+            throw new Exception("Nav pieejams neviens sertifikāts");
+        }
+        return page;
+    }
+    
     @Override
     @Cacheable(value = "sertifikati", unless = "#result == null || #result.isEmpty()")
     public ArrayList<Sertifikati> retrieveAllSertifikati() throws Exception {

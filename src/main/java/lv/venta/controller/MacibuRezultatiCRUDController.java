@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,37 +39,53 @@ public class MacibuRezultatiCRUDController {
     @Autowired
     private TranslatorService translatorService;
     
-    
     @GetMapping("/show/all")
-    public String getAllMacibuRezultati(@RequestParam(value = "lang", defaultValue = "lv") String lang,
+    public String getAllMacibuRezultati(
+            @RequestParam(value = "lang", defaultValue = "lv") String lang,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sort", defaultValue = "mrId") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "ASC") String direction,
             Model model) {
-    	log.info("GET pieprasījums uz /crud/maciburezultati/show/all ar valodu: {}", lang);
-    	try {
-            Iterable<MacibuRezultati> rezultati = macibuRezultatiCRUDService.retrieveAllMacibuRezultati();
+        try {
+            // Izveidojam Sort objektu
+            Sort sort = direction.equalsIgnoreCase("DESC") 
+                ? Sort.by(sortBy).descending() 
+                : Sort.by(sortBy).ascending();
             
-            List<MacibuRezultati> rezultatiList = new ArrayList<>();
-            rezultati.forEach(rezultatiList::add);
-
-            log.debug("Iegūti {} mācību rezultāti", rezultatiList.size());
+            // Izveidojam Pageable objektu
+            Pageable pageable = PageRequest.of(page, size, sort);
             
+            // Iegūstam lapoto rezultātu
+            Page<MacibuRezultati> rezultatiPage = macibuRezultatiCRUDService.retrieveAllMacibuRezultatiPaginated(pageable);
+            
+            // Tulkojam, ja vajadzīgs
+            List<MacibuRezultati> rezultatiList = rezultatiPage.getContent();
             if (!"lv".equals(lang)) {
-            for (MacibuRezultati mr : rezultatiList) {
-                // Just translate the course name
-                if (mr.getKurss() != null) {
-                    String translated = translatorService.translateText(mr.getKurss().getNosaukums(), lang);
-                    mr.getKurss().setNosaukums(translated);
+                for (MacibuRezultati mr : rezultatiList) {
+                    if (mr.getKurss() != null) {
+                        String translated = translatorService.translateText(mr.getKurss().getNosaukums(), lang);
+                        mr.getKurss().setNosaukums(translated);
+                    }
                 }
             }
-        }
 
+            // Pievienojam pagination info
+            model.addAttribute("rezultati", rezultatiList);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", rezultatiPage.getTotalPages());
+            model.addAttribute("totalItems", rezultatiPage.getTotalElements());
+            model.addAttribute("pageSize", size);
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("sortDirection", direction);
+
+            // Tulkojam galvenes
             model.addAttribute("header_rezultata_id", translatorService.translateText("Rezultāta ID", lang));
             model.addAttribute("header_kursa_nosaukums", translatorService.translateText("Kursa nosaukums", lang));
             model.addAttribute("header_stundas", translatorService.translateText("Stundas", lang));
             model.addAttribute("header_limenis", translatorService.translateText("Līmenis", lang));
             model.addAttribute("header_izieta", translatorService.translateText("Izieta", lang));
 
-
-            model.addAttribute("rezultati", rezultati);
             model.addAttribute("currentLanguage", lang);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             
@@ -85,7 +105,6 @@ public class MacibuRezultatiCRUDController {
     	log.info("GET pieprasījums mācību rezultātam ar ID: {}, valoda: {}", id, lang);
     	try {
             MacibuRezultati rezultats = macibuRezultatiCRUDService.retrieveMacibuRezultatiById(id);
-            
             
             model.addAttribute("header_id", translatorService.translateText("ID", lang));
             model.addAttribute("header_kursa_id", translatorService.translateText("Kursa ID", lang));
@@ -117,7 +136,6 @@ public class MacibuRezultatiCRUDController {
                 String translatedNosaukums = translatorService.translateText(rezultatiupd.getKurss().getNosaukums(), lang);
                 rezultatiupd.getKurss().setNosaukums(translatedNosaukums);
             }
-            
             
             model.addAttribute("title", translatorService.translateText("Atjaunināt Mācību Rezultātu", lang));
             model.addAttribute("label_rezultata_id", translatorService.translateText("Rezultāta ID", lang));
@@ -209,4 +227,3 @@ public class MacibuRezultatiCRUDController {
         }
     }
 }
-

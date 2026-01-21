@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <p>Mācību rezultāts</p>
+    <table border="1px">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kursa ID</th>
+                <th>Mācību rezultāts</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td th:text="${rezultats.mrId}"></td>
+                <td th:text="${rezultats.kurss.kId}"></td>
+                <td th:text="${rezultats.macibuRezultats} ? 'Iziets' : 'Neiziets'"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
