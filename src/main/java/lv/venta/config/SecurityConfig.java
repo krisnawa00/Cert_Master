@@ -46,7 +46,11 @@ public class SecurityConfig {
 		
 		// 2FA endpoints
 		.requestMatchers("/2fa/**").authenticated()
-		
+		// 2FA endpoints - allow access when authenticated
+		.requestMatchers("/2fa/setup", "/2fa/enable", "/2fa/disable", "/2fa/debug").authenticated()
+		.requestMatchers("/2fa/verify").permitAll() // Allow verify page access even during login
+
+
 		.requestMatchers("/crud/eparakstalogs/show/all").hasAnyAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/delete/**").hasAuthority("ADMIN")
@@ -89,7 +93,20 @@ public class SecurityConfig {
 		);
 		
 		http.csrf(auth -> auth.disable());
-		
+	
+				http.logout(logout -> logout
+			.logoutSuccessUrl("/login?logout")
+			.invalidateHttpSession(true)
+			.deleteCookies("JSESSIONID")
+			.permitAll()
+		);
+
+				// Enable session management
+		http.sessionManagement(session -> session
+			.maximumSessions(1)
+			.maxSessionsPreventsLogin(false)
+		);
+
 		return http.build();
 	}
 }

@@ -16,6 +16,37 @@
             max-width: 800px;
             margin: 0 auto;
         }
+        .expected-code {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .expected-code h2 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+        .code-display {
+            font-size: 72px;
+            font-weight: bold;
+            letter-spacing: 15px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        .countdown {
+            font-size: 18px;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
         pre {
             background: #f8f9fa;
             padding: 20px;
@@ -23,6 +54,7 @@
             border-left: 4px solid #007bff;
             white-space: pre-wrap;
             word-wrap: break-word;
+            font-size: 14px;
         }
         .button {
             display: inline-block;
@@ -39,6 +71,25 @@
             border-left: 4px solid #ffc107;
             margin: 20px 0;
         }
+        .refresh-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .refresh-btn:hover {
+            background: #218838;
+        }
+        .auto-refresh-info {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -49,12 +100,47 @@
             <strong>⚠️ WARNING:</strong> This page shows sensitive information. Remove this endpoint in production!
         </div>
         
-        <h2>User Information:</h2>
+        <div class="expected-code">
+            <h2>📱 Current Expected Code</h2>
+            <div class="code-display" th:text="${currentCode}">000000</div>
+            <p class="countdown">Enter this code in Google Authenticator verification</p>
+            <p style="font-size: 14px; opacity: 0.8; margin-top: 20px;">
+                This code changes every 30 seconds
+            </p>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Code</button>
+            <p class="auto-refresh-info">Page auto-refreshes every 10 seconds</p>
+        </div>
+        
+        <h2>Detailed Information:</h2>
         <pre th:text="${debugInfo}">Debug info here</pre>
         
         <h2>Actions:</h2>
         <a href="/2fa/setup" class="button">Go to 2FA Setup</a>
         <a href="/crud/sertifikati/show/all" class="button" style="background: #6c757d;">Back to Main</a>
     </div>
+
+    <script>
+        // Auto-refresh every 10 seconds to get new code
+        setTimeout(function() {
+            location.reload();
+        }, 10000);
+
+        // Show countdown timer
+        function updateCountdown() {
+            const now = Math.floor(Date.now() / 1000);
+            const timeLeft = 30 - (now % 30);
+            const countdownElements = document.querySelectorAll('.countdown');
+            countdownElements.forEach(el => {
+                el.textContent = `Code expires in ${timeLeft} seconds`;
+            });
+        }
+
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
 </body>
 </html>

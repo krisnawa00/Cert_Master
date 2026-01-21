@@ -20,6 +20,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.GoogleAuthenticatorConfig;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,17 @@ public class TwoFactorAuthService {
     @Autowired
     private IMyUserRepo userRepo;
 
-    private final GoogleAuthenticator gAuth = new GoogleAuthenticator();
+    private final GoogleAuthenticator gAuth;
+
+    // Constructor with custom config for more lenient verification
+    public TwoFactorAuthService() {
+        GoogleAuthenticatorConfig config = new GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder()
+                .setTimeStepSizeInMillis(30000) // 30 seconds
+                .setWindowSize(5) // Allow ±5 time windows (±2.5 minutes)
+                .setCodeDigits(6)
+                .build();
+        this.gAuth = new GoogleAuthenticator(config);
+    }
 
     /**
      * Generate a new secret key for a user
@@ -51,22 +62,24 @@ public class TwoFactorAuthService {
         final GoogleAuthenticatorKey key = gAuth.createCredentials();
         String secret = key.getKey();
         
-        // IMPORTANT: Save the secret key immediately
+        // CRITICAL: Save the secret key immediately and flush to database
         user.setSecretKey(secret);
-        // Don't enable 2FA yet - wait for successful verification
-        user.setTwoFactorEnabled(false);
+        user.setTwoFactorEnabled(false); // Don't enable yet
         userRepo.save(user);
         
-        log.info("Secret key generated and saved for user: {} (secret: {})", username, secret);
+        // Verify it was saved
+        MyUser verifyUser = userRepo.findByUsername(username);
+        log.info("Secret key saved for user: {} (verified secret exists: {})", 
+            username, verifyUser.getSecretKey() != null);
+        
         return secret;
     }
 
     /**
-     * Generate QR code URL for Google Authenticator - FIXED VERSION
+     * Generate QR code URL for Google Authenticator
      */
     public String getQRCodeUrl(String username, String secret) {
         try {
-            // Format: otpauth://totp/Issuer:Username?secret=SECRET&issuer=Issuer
             String issuer = "CertMaster";
             String encodedIssuer = URLEncoder.encode(issuer, "UTF-8");
             String encodedUsername = URLEncoder.encode(username, "UTF-8");
@@ -88,7 +101,7 @@ public class TwoFactorAuthService {
     }
 
     /**
-     * Generate QR code image as Base64 string - IMPROVED VERSION
+     * Generate QR code image as Base64 string
      */
     public String generateQRCodeImage(String username, String secret) throws WriterException, IOException {
         log.info("Generating QR code image for user: {}", username);
@@ -98,7 +111,6 @@ public class TwoFactorAuthService {
         
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         
-        // Add hints for better QR code generation
         Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
@@ -107,7 +119,7 @@ public class TwoFactorAuthService {
         BitMatrix bitMatrix = qrCodeWriter.encode(
             otpAuthUrl, 
             BarcodeFormat.QR_CODE, 
-            400,  // Increased size for better scanning
+            400,
             400,
             hints
         );
@@ -122,7 +134,7 @@ public class TwoFactorAuthService {
     }
 
     /**
-     * Verify the TOTP code entered by user
+     * Verify the TOTP code entered by user - FIXED VERSION
      */
     public boolean verifyCode(String username, int code) {
         log.info("Verifying 2FA code for user: {}", username);
@@ -133,25 +145,32 @@ public class TwoFactorAuthService {
             return false;
         }
         
-        if (user.getSecretKey() == null || user.getSecretKey().isEmpty()) {
-            log.warn("Secret key not set for user: {}", username);
+        String secretKey = user.getSecretKey();
+        if (secretKey == null || secretKey.isEmpty()) {
+            log.error("Secret key not set for user: {}", username);
             return false;
         }
 
-        log.info("Verifying code {} against secret {} for user {}", code, user.getSecretKey(), username);
+        log.info("Verifying code {} against secret for user {}", code, username);
+        log.debug("Secret key length: {}", secretKey.length());
         
-        // Allow larger time window (3 periods = ±90 seconds) for initial setup
-        boolean isValid = gAuth.authorize(user.getSecretKey(), code, 3);
+        // Use the configured GoogleAuthenticator with wider time window
+        boolean isValid = gAuth.authorize(secretKey, code);
         
         if (isValid) {
-            log.info("2FA code verified successfully for user: {}", username);
+            log.info("✓ 2FA code verified successfully for user: {}", username);
         } else {
-            log.warn("Invalid 2FA code for user: {} (code: {})", username, code);
+            log.warn("✗ Invalid 2FA code for user: {} (code: {})", username, code);
             
-            // Log current valid codes for debugging
-            long currentTime = System.currentTimeMillis() / 1000L / 30L;
+            // Additional debugging
+            long currentTime = System.currentTimeMillis() / 30000L;
             log.debug("Current time window: {}", currentTime);
-            log.debug("Expected codes for debugging: check Google Authenticator app");
+            
+            // Try to help debug by checking adjacent windows
+            for (int offset = -2; offset <= 2; offset++) {
+                int expectedCode = gAuth.getTotpPassword(secretKey, currentTime + offset);
+                log.debug("Time offset {}: expected code would be {}", offset, expectedCode);
+            }
         }
         
         return isValid;
@@ -162,9 +181,18 @@ public class TwoFactorAuthService {
      */
     public boolean is2FAEnabled(String username) {
         MyUser user = userRepo.findByUsername(username);
-        boolean enabled = user != null && user.isTwoFactorEnabled();
-        log.debug("2FA enabled check for user {}: {}", username, enabled);
-        return enabled;
+        if (user == null) {
+            log.warn("User not found when checking 2FA status: {}", username);
+            return false;
+        }
+        
+        boolean enabled = user.isTwoFactorEnabled();
+        boolean hasSecret = user.getSecretKey() != null && !user.getSecretKey().isEmpty();
+        
+        log.info("2FA status for user {}: enabled={}, hasSecret={}", username, enabled, hasSecret);
+        
+        // User must have BOTH flag enabled AND a secret key
+        return enabled && hasSecret;
     }
 
     /**
@@ -181,5 +209,16 @@ public class TwoFactorAuthService {
             userRepo.save(user);
             log.info("2FA disabled for user: {}", username);
         }
+    }
+    
+    /**
+     * Get current TOTP code for debugging (REMOVE IN PRODUCTION)
+     */
+    public int getCurrentCode(String username) {
+        MyUser user = userRepo.findByUsername(username);
+        if (user == null || user.getSecretKey() == null) {
+            return -1;
+        }
+        return gAuth.getTotpPassword(user.getSecretKey());
     }
 }
