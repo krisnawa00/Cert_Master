@@ -45,10 +45,23 @@ public class MyUser {
 	@JoinColumn(name = "AId")
 	private MyAuthority authority;
 	
-	public MyUser( String username, String password, MyAuthority authority) {
+	// public MyUser( String username, String password, MyAuthority authority) {
 
+	// 	this.username = username;
+	// 	this.password = password;
+	// 	this.authority = authority;
+
+
+	// 2FA fields
+	@Column(name = "TwoFactorEnabled")
+	private boolean twoFactorEnabled = false;
+	@Column(name = "SecretKey")
+	private String secretKey;
+	
+	public MyUser(String username, String password, MyAuthority authority) {
 		this.username = username;
 		this.password = password;
 		this.authority = authority;
+		this.twoFactorEnabled = false;
 	}
 }

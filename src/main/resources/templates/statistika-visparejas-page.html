@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vispārējā Statistika</title>
+</head>
+<body>
+    <h1>Vispārējā Statistika</h1>
+    
+    <p>
+        <a href="/statistika/dashboard">Pilns pārskats</a> | 
+        <a href="/crud/sertifikati/show/all">Atpakaļ</a>
+    </p>
+
+    <ul>
+        <li>Kopā sertifikāti: <strong th:text="${statistics.total}">0</strong></li>
+        <li>Parakstīti: <strong th:text="${statistics.parakstiti}">0</strong> (<span th:text="${statistics.parakstitiProcenti}">0%</span>)</li>
+        <li>Neparakstīti: <strong th:text="${statistics.neparakstiti}">0</strong></li>
+        <li>Šomēnes izsniegti: <strong th:text="${statistics.soMenes}">0</strong></li>
+        <li>Šogad izsniegti: <strong th:text="${statistics.soGad}">0</strong></li>
+    </ul>
+
+</body>
+</html>

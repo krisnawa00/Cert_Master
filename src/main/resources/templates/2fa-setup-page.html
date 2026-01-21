@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup Two-Factor Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #002147;
+            text-align: center;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #002147;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+        }
+        .qr-code img {
+            border: 3px solid #002147;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        .secret-key {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 2px dashed #ffc107;
+        }
+        .secret-key code {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #002147;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            word-break: break-all;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 8px 0;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #002147;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #003366;
+        }
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .verification-form {
+            margin-top: 20px;
+        }
+        .code-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 8px;
+            border: 3px solid #002147;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+        .code-input:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .copy-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .copy-button:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Setup Two-Factor Authentication</h1>
+        
+        <div class="instructions">
+            <h3>What you'll need:</h3>
+            <ol>
+                <li><strong>Google Authenticator</strong> app (available on Google Play Store or Apple App Store)</li>
+                <li>Your smartphone with camera for scanning QR code</li>
+                <li>A few minutes to complete the setup</li>
+            </ol>
+        </div>
+
+        <!-- Step 1: Scan QR Code -->
+        <div class="step">
+            <h3>Step 1: Scan QR Code</h3>
+            <div class="qr-code">
+                <img th:src="${qrCode}" alt="QR Code" width="400" height="400" id="qrImage">
+                <p style="color: #666; margin-top: 15px;">Scan this with Google Authenticator app</p>
+            </div>
+        </div>
+
+        <!-- Alternative: Manual Entry -->
+        <div class="step">
+            <h3>Alternative: Manual Entry</h3>
+            <div class="warning">
+                <strong>⚠️ Can't scan the QR code?</strong> You can manually enter this secret key in Google Authenticator:
+            </div>
+            <div class="secret-key">
+                <strong>Secret Key:</strong>
+                <code th:text="${secretKey}" id="secretKey">SECRET_KEY_HERE</code>
+                <button type="button" class="copy-button" onclick="copySecret()">📋 Copy</button>
+            </div>
+            <div class="info-box">
+                <p><strong>Account name:</strong> <span th:text="${username}">username</span></p>
+                <p><strong>Issuer:</strong> CertMaster</p>
+                <p><strong>Type:</strong> Time-based (TOTP)</p>
+            </div>
+        </div>
+
+        <!-- Step 2: Verify and Enable -->
+        <div class="step">
+            <h3>Step 2: Verify and Enable 2FA</h3>
+            <p>After scanning the QR code or entering the secret manually, your Google Authenticator app will show a 6-digit code that changes every 30 seconds.</p>
+            <p><strong>Enter that code below to enable 2FA:</strong></p>
+            
+            <div th:if="${error}" class="error" th:text="${error}">
+                Error message
+            </div>
+            
+            <div class="verification-form">
+                <form method="post" th:action="@{/2fa/enable}" id="verifyForm">
+                    <input type="text" 
+                           name="code" 
+                           id="codeInput"
+                           class="code-input" 
+                           placeholder="000000" 
+                           maxlength="6" 
+                           pattern="[0-9]{6}"
+                           required 
+                           autofocus
+                           autocomplete="off">
+                    
+                    <button type="submit" class="button" id="submitButton">
+                        ✓ Verify Code and Enable 2FA
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <a th:href="@{/crud/sertifikati/show/all}" class="button" style="background-color: #6c757d; margin-top: 20px;">
+            ← Skip for now (Set up later)
+        </a>
+    </div>
+
+    <script>
+        // Copy secret key to clipboard
+        function copySecret() {
+            const secretText = document.getElementById('secretKey').textContent;
+            navigator.clipboard.writeText(secretText).then(() => {
+                alert('Secret key copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Handle code input
+        const codeInput = document.getElementById('codeInput');
+        const submitButton = document.getElementById('submitButton');
+        const verifyForm = document.getElementById('verifyForm');
+
+        // Only allow digits
+        codeInput.addEventListener('input', function(e) {
+            // Remove any non-digit characters
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+            
+            // Enable/disable submit button
+            if (value.length === 6) {
+                submitButton.disabled = false;
+                submitButton.style.backgroundColor = '#28a745';
+                submitButton.textContent = '✓ Click to Verify';
+            } else {
+                submitButton.disabled = false; // Keep enabled for manual submission
+                submitButton.style.backgroundColor = '#002147';
+                submitButton.textContent = '✓ Verify Code and Enable 2FA';
+            }
+        });
+
+        // Prevent form auto-submit, let user click button
+        verifyForm.addEventListener('submit', function(e) {
+            const code = codeInput.value;
+            if (code.length !== 6) {
+                e.preventDefault();
+                alert('Please enter a 6-digit code');
+                return false;
+            }
+            
+            // Show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = '⏳ Verifying...';
+            submitButton.style.backgroundColor = '#6c757d';
+            
+            // Let form submit normally
+            return true;
+        });
+
+        // Log QR code data URL length for debugging
+        const qrImage = document.getElementById('qrImage');
+        console.log('QR Code loaded, data URL length:', qrImage.src.length);
+    </script>
+</body>
+</html>

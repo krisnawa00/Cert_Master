@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>2FA Enabled Successfully</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .success-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #002147;
+            margin-bottom: 20px;
+        }
+        .message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .info h3 {
+            margin-top: 0;
+            color: #002147;
+        }
+        .info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info li {
+            margin: 8px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #002147;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background-color: #003366;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        
+        <h1>Two-Factor Authentication Enabled!</h1>
+        
+        <div class="message">
+            <strong>Success!</strong> Your account is now protected with two-factor authentication.
+        </div>
+        
+        <div class="info">
+            <h3>What happens next?</h3>
+            <ul>
+                <li><strong>Logging in:</strong> You'll need both your password AND the 6-digit code from Google Authenticator</li>
+                <li><strong>Keep your phone safe:</strong> Make sure you don't lose access to Google Authenticator</li>
+                <li><strong>Security:</strong> Your account is now much more secure against unauthorized access</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>Important Notes:</h3>
+            <ul>
+                <li>The 6-digit code changes every 30 seconds</li>
+                <li>You can disable 2FA anytime from your account settings</li>
+                <li>Don't share your secret key with anyone</li>
+            </ul>
+        </div>
+        
+        <a href="/crud/sertifikati/show/all" class="button">
+            Continue to Dashboard
+        </a>
+        
+        <p style="margin-top: 30px; color: #666;">
+            <a href="/2fa/debug" style="color: #666; text-decoration: underline;">
+                View 2FA Status (Debug)
+            </a>
+        </p>
+    </div>
+</body>
+</html>

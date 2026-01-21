@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import lv.venta.model.KursaDalibnieks;
 import lv.venta.model.KursaDatumi;
 import lv.venta.model.Sertifikati;
 import lv.venta.service.TranslatorService;
 import lv.venta.service.impl.SertifikatiCRUDService;
 
+@Slf4j
 @Controller
 @RequestMapping("/crud/sertifikati")
 public class SertifikatiCRUDController {
@@ -27,22 +33,52 @@ public class SertifikatiCRUDController {
     @Autowired
     private SertifikatiCRUDService sertCrud;
 
-    
     @Autowired
     private TranslatorService translatorService;
     
     
     @GetMapping("/show/all")
-    public String getAllSertifikati(@RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,Model model) {
+    public String getAllSertifikati(
+            @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sort", defaultValue = "sertId") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "ASC") String direction,
+            Model model) {
         try {
-            ArrayList<Sertifikati> sertifikati = sertCrud.retrieveAllSertifikati();
+            // Izveidojam Sort objektu
+            Sort sort = direction.equalsIgnoreCase("DESC") 
+                ? Sort.by(sortBy).descending() 
+                : Sort.by(sortBy).ascending();
             
+            // Izveidojam Pageable objektu
+            Pageable pageable = PageRequest.of(page, size, sort);
+            
+            // Iegūstam lapoto rezultātu
+            Page<Sertifikati> sertifikatiPage = sertCrud.retrieveAllSertifikatiPaginated(pageable);
+            
+            // Tulkojam, ja vajadzīgs
+            List<Sertifikati> sertifikatiList = sertifikatiPage.getContent();
             if (!"lv".equals(lang)) {
-                sertifikati = translateSertifikatiList(sertifikati, lang);
+            	log.debug("Tulkojam sertifikātus uz: {}", lang);
+//                sertifikati = translateSertifikatiList(sertifikati, lang);
+                sertifikatiList = translateSertifikatiList(new ArrayList<>(sertifikatiList), lang);
             }
-
             
+            // Pievienojam pagination info modelim
+            model.addAttribute("sertifikati", sertifikatiList);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", sertifikatiPage.getTotalPages());
+            model.addAttribute("totalItems", sertifikatiPage.getTotalElements());
+            model.addAttribute("pageSize", size);
+            model.addAttribute("sortBy", sortBy);
+            model.addAttribute("sortDirection", direction);
             
+            // KRITISKS: Pievienojam languages UN currentLanguage PIRMS translation
+            model.addAttribute("languages", translatorService.getAvailableLanguages());
+            model.addAttribute("currentLanguage", lang);
+            
+            // Tulkojam galvenes
             model.addAttribute("header_id", translatorService.translateText("ID", lang));
             model.addAttribute("header_izsniegts", translatorService.translateText("Izsniegts", lang));
             model.addAttribute("header_parakstits", translatorService.translateText("Parakstīts", lang));
@@ -50,11 +86,15 @@ public class SertifikatiCRUDController {
             model.addAttribute("header_kursa_datums", translatorService.translateText("Kursa Datums", lang));
             model.addAttribute("header_skatit", translatorService.translateText("Skatīt", lang));
 
-            model.addAttribute("sertifikati", sertifikati);
+            model.addAttribute("sertifikati", sertifikatiList);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
+            
+            log.info("Veiksmīgi ielādēta sertifikātu lapa");
+            
             return "sertifikatu-page";
         } catch (Exception e) {
+        	log.error("Kļūda iegūstot visus sertifikātus: {}", e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -64,14 +104,15 @@ public class SertifikatiCRUDController {
     public String getSertifikatsById(@PathVariable int id, 
     @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
     Model model) {
-        try {
+    	log.info("GET pieprasījums sertifikātam ar ID: {}, valoda: {}", id, lang);
+    	
+    	try {
             Sertifikati s = sertCrud.retrieveSertifikatiById(id);
             
             if (!"lv".equals(lang)) {
+            	log.debug("Tulkojam sertifikātu ID={} uz: {}", id, lang);
                 s = translateSingleSertifikats(s, lang);
             }
-            
-            
             
             model.addAttribute("label_id", translatorService.translateText("ID", lang));
             model.addAttribute("label_izsniegts", translatorService.translateText("Izsniegts", lang));
@@ -82,8 +123,12 @@ public class SertifikatiCRUDController {
             model.addAttribute("sertifikats", s);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
+            
+            log.info("Veiksmīgi ielādēts sertifikāts ID: {}", id);
+            
             return "sertifikats-one-page";
         } catch (Exception e) {
+        	log.error("Kļūda iegūstot sertifikātu ar ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -93,11 +138,9 @@ public class SertifikatiCRUDController {
     public String getUpdateSertifikatsById(@PathVariable(name = "id") int id, 
     @RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
     Model model) {
-        try {
+    	log.info("GET pieprasījums sertifikāta atjaunināšanai ID: {}", id);
+    	try {
             Sertifikati sertifikatsForUpdating = sertCrud.retrieveSertifikatiById(id);
-            
-            
-            
             
             model.addAttribute("title", translatorService.translateText("Atjaunināt Sertifikātu", lang));
             model.addAttribute("label_id", translatorService.translateText("ID", lang));
@@ -116,8 +159,12 @@ public class SertifikatiCRUDController {
             model.addAttribute("sertifikats", sertifikatsForUpdating);
             model.addAttribute("languages", translatorService.getAvailableLanguages());
             model.addAttribute("currentLanguage", lang);
+            
+            log.info("Ielādēta atjaunināšanas forma sertifikātam ID: {}", id);
+            
             return "update-sertifikats";
         } catch (Exception e) {
+        	log.error("Kļūda ielādējot atjaunināšanas formu sertifikātam ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -126,14 +173,19 @@ public class SertifikatiCRUDController {
     @PostMapping("/update/{id}")
     public String postUpdateSertifikatsById(@Valid Sertifikati sertifikats, BindingResult result,
             Model model, @PathVariable(name = "id") int id) {
+    	log.info("POST pieprasījums sertifikāta atjaunināšanai ID: {}", id);
         if (result.hasErrors()) {
+        	log.warn("Validācijas kļūdas atjauninot sertifikātu ID {}: {}", id, result.getAllErrors());
             return "update-sertifikats";
         }
         try {
             sertCrud.updateById(id, sertifikats.getDalibnieks(), sertifikats.getKursaDatums(),
                     sertifikats.getIzsniegtsDatums(), sertifikats.isParakstits());
+            
+            log.info("Veiksmīgi atjaunināts sertifikāts ID: {}", id);
             return "redirect:/crud/sertifikati/show/all";
         } catch (Exception e) {
+        	log.error("Kļūda atjauninot sertifikātu ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -141,10 +193,13 @@ public class SertifikatiCRUDController {
 
     @GetMapping("/delete/{id}")
     public String deleteSertifikatsById(@PathVariable("id") int id, Model model) {
+    	log.info("DELETE pieprasījums sertifikātam ID: {}", id);
         try {
             sertCrud.deleteSertifikatiById(id);
+            log.info("Veiksmīgi izdzēsts sertifikāts ID: {}", id);
             return "redirect:/crud/sertifikati/show/all";
         } catch (Exception e) {
+        	log.error("Kļūda dzēšot sertifikātu ID {}: {}", id, e.getMessage(), e);
             model.addAttribute("package", e.getMessage());
             return "error-page";
         }
@@ -154,6 +209,7 @@ public class SertifikatiCRUDController {
     public String getInsertSertifikats(@RequestParam(name = "lang", required = false, defaultValue = "lv") String lang,
     Model model) {
         
+    	log.info("GET pieprasījums jauna sertifikāta pievienošanai, valoda: {}", lang);
         
         model.addAttribute("title", translatorService.translateText("Pievienot Jaunu Sertifikātu", lang));
         model.addAttribute("label_kursa_dalibnieka_id", translatorService.translateText("Kursa Dalībnieka ID", lang));
@@ -174,7 +230,9 @@ public class SertifikatiCRUDController {
             @RequestParam("izsniegtsDatums") String izsniegtsDatums,
             @RequestParam("parakstits") boolean parakstits,
             Model model) {
-        try {
+    	log.info("POST pieprasījums jauna sertifikāta pievienošanai: kdId={}, kdatId={}, parakstīts={}", 
+                kdId, kdatId, parakstits);
+    	try {
             sertCrud.insertNewSertifikats(kdId, kdatId, izsniegtsDatums, parakstits);
             return "redirect:/crud/sertifikati/show/all";
         } catch (Exception e) {
@@ -183,19 +241,10 @@ public class SertifikatiCRUDController {
         }
     }
 
-
-
-     
-    
-    
-    
-    
-    
-    
+    // Helper metodes tulkošanai
     private ArrayList<Sertifikati> translateSertifikatiList(ArrayList<Sertifikati> sertifikati, String targetLang) {
         List<String> textsToTranslate = new ArrayList<>();
         
-        // Collect all texts that need translation
         for (Sertifikati s : sertifikati) {
             KursaDalibnieks d = s.getDalibnieks();
             KursaDatumi kd = s.getKursaDatums();
@@ -210,10 +259,8 @@ public class SertifikatiCRUDController {
             }
         }
 
-        // Translate all texts in one batch
         List<String> translated = translatorService.translateBatch(textsToTranslate, targetLang);
 
-        // Assign translations back to objects
         int i = 0;
         for (Sertifikati s : sertifikati) {
             KursaDalibnieks d = s.getDalibnieks();
@@ -231,18 +278,6 @@ public class SertifikatiCRUDController {
         return sertifikati;
     }
 
-
-
-        
-        
-        
-      
-
-
-
-
-
- // Helper method to translate a single Sertifikati
     private Sertifikati translateSingleSertifikats(Sertifikati s, String targetLang) {
         List<String> textsToTranslate = new ArrayList<>();
         KursaDalibnieks d = s.getDalibnieks();
@@ -269,10 +304,4 @@ public class SertifikatiCRUDController {
 
         return s;
     }
-
-
-
-
-
-
 }

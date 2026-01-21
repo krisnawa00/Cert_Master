@@ -17,6 +17,13 @@ target/
 mvnw
 mvnw.cmd
 
+### Logs ###
+logs/
+*.log
+
+### Generated PDFs ###
+*.pdf
+
 
 ### IntelliJ IDEA ###
 .idea

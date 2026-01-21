@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistika</title>
+</head>
+<body>
+    <h1>Sertifikātu Statistika</h1>
+    
+    <p><a href="/crud/sertifikati/show/all">← Atpakaļ</a></p>
+
+    <h2>Vispārējā informācija</h2>
+    <ul>
+        <li>Kopā sertifikāti: <strong th:text="${generalStats.total}">0</strong></li>
+        <li>Parakstīti: <strong th:text="${generalStats.parakstiti}">0</strong> (<span th:text="${generalStats.parakstitiProcenti}">0%</span>)</li>
+        <li>Neparakstīti: <strong th:text="${generalStats.neparakstiti}">0</strong></li>
+        <li>Šomēnes izsniegti: <strong th:text="${generalStats.soMenes}">0</strong></li>
+        <li>Šogad izsniegti: <strong th:text="${generalStats.soGad}">0</strong></li>
+    </ul>
+
+    <hr>
+
+    <h2>Pa mēnešiem</h2>
+    <table border="1">
+        <tr>
+            <th>Mēnesis</th>
+            <th>Skaits</th>
+        </tr>
+        <tr th:each="entry : ${monthlyStats}">
+            <td th:text="${entry.key}">2025-01</td>
+            <td th:text="${entry.value}">10</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <h2>Populārākie kursi</h2>
+    <table border="1">
+        <tr>
+            <th>Kurss</th>
+            <th>Sertifikāti</th>
+        </tr>
+        <tr th:each="entry : ${courseStats}">
+            <td th:text="${entry.key}">Java</td>
+            <td th:text="${entry.value}">15</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <h2>Top 10 pilsētas</h2>
+    <table border="1">
+        <tr>
+            <th>Pilsēta</th>
+            <th>Dalībnieki</th>
+        </tr>
+        <tr th:each="entry : ${cityStats}">
+            <td th:text="${entry.key}">Rīga</td>
+            <td th:text="${entry.value}">8</td>
+        </tr>
+    </table>
+
+</body>
+</html>
