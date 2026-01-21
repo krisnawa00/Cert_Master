@@ -202,12 +202,23 @@ public class SertMaster1Application {
 				authRepo.save(auth1);
 				MyAuthority auth2 = new MyAuthority("ADMIN");
 				authRepo.save(auth2);
-				
+
+
+
 				PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-				MyUser u1 = new MyUser("kristers", encoder.encode("1234"), auth2); // admin
+				// Admin with 2FA (kristers)
+				MyUser u1 = new MyUser("kristers", encoder.encode("1234"), auth2);
+				u1.setTwoFactorEnabled(false); // Will be enabled after scanning QR code
 				userRepo.save(u1);
-				MyUser u2 = new MyUser("janis", encoder.encode("4321"), auth1); // user
+				
+				// Regular user without 2FA (janis)
+				MyUser u2 = new MyUser("janis", encoder.encode("4321"), auth1);
 				userRepo.save(u2);
+				
+				// MyUser u1 = new MyUser("kristers", encoder.encode("1234"), auth2); // admin
+				// userRepo.save(u1);
+				// MyUser u2 = new MyUser("janis", encoder.encode("4321"), auth1); // user
+				// userRepo.save(u2);
 				
 				
 			}

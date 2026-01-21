@@ -73,8 +73,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		
-				<!-- Cache Support -->
+		<!-- Cache Support -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
@@ -86,26 +85,39 @@
 			<artifactId>caffeine</artifactId>
 		</dependency>
 		
-
-	
-	
+		<!-- OpenPDF for certificate generation -->
 		<dependency>
-				<groupId>com.github.librepdf</groupId>
-				<artifactId>openpdf</artifactId>
-				<version>3.0.0</version>
+			<groupId>com.github.librepdf</groupId>
+			<artifactId>openpdf</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 	
-	
+		<!-- DeepL Translation API -->
 		<dependency>
 			<groupId>com.deepl.api</groupId>
 			<artifactId>deepl-java</artifactId>
 			<version>1.10.3</version>
 		</dependency>
 
-	
+		<!-- Google Authenticator (TOTP) for 2FA -->
+		<dependency>
+			<groupId>com.warrenstrange</groupId>
+			<artifactId>googleauth</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+
+		<!-- QR Code Generation -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.5.2</version>
+		</dependency>
 	</dependencies>
-
-
 
 	<build>
 		<plugins>

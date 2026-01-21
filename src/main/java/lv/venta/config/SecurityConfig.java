@@ -8,7 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import lv.venta.security.TwoFactorAuthenticationSuccessHandler;
 import lv.venta.service.impl.MyUserDetailsManegerServiceImpl;
 
 @Configuration
@@ -22,36 +24,35 @@ public class SecurityConfig {
 	
 	@Bean
 	public DaoAuthenticationProvider loadDaoAuthProvider() {
-		
 		PasswordEncoder passEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 		MyUserDetailsManegerServiceImpl service = loadMyUserdetailsManager();
 		
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setPasswordEncoder(passEncoder);
 		provider.setUserDetailsService(service);
-				
 		
 		return provider;
 	}
 	
-	
-	
+	@Bean
+	public AuthenticationSuccessHandler twoFactorAuthenticationSuccessHandler() {
+		return new TwoFactorAuthenticationSuccessHandler();
+	}
 	
 	@Bean
 	public SecurityFilterChain configureUrlssecurity(HttpSecurity http) throws Exception{
 		http.authorizeHttpRequests(auth -> auth
 		.requestMatchers("/send-email").hasAnyAuthority("USER","ADMIN")
 		
+		// 2FA endpoints
+		.requestMatchers("/2fa/**").authenticated()
+		
 		.requestMatchers("/crud/eparakstalogs/show/all").hasAnyAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/**").hasAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/delete/**").hasAuthority("ADMIN")
-
 		.requestMatchers("/crud/eparakstalogs/insert").hasAuthority("ADMIN")
 		
-		
-		
 		.requestMatchers("/crud/maciburezultati/insert").hasAuthority("ADMIN")
-		
 		
 		.requestMatchers("/crud/sertifikati/insert").hasAuthority("ADMIN")
 		.requestMatchers("/filter/sertifikati/**").hasAuthority("ADMIN")
@@ -64,7 +65,6 @@ public class SecurityConfig {
         .requestMatchers("/cache-status").hasAuthority("ADMIN")
         .requestMatchers("/cache-clear").hasAuthority("ADMIN")
 		.requestMatchers("/crud/eparakstalogs/update/**").hasAuthority("ADMIN")
-		
 		
 		.requestMatchers("/crud/maciburezultati/show/all").hasAuthority("ADMIN")
 		.requestMatchers("/crud/maciburezultati/**").hasAuthority("ADMIN")
@@ -81,21 +81,15 @@ public class SecurityConfig {
 		.requestMatchers("/pdf/**").hasAuthority("ADMIN")
         
         .anyRequest().authenticated()
-				
-				);
+		);
 		
-		
-
-		
-		http.formLogin(auth -> auth.permitAll());
+		http.formLogin(form -> form
+			.permitAll()
+			.successHandler(twoFactorAuthenticationSuccessHandler())
+		);
 		
 		http.csrf(auth -> auth.disable());
 		
 		return http.build();
-		
-		
 	}
-	
-	
-
 }

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Setup Two-Factor Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #002147;
+            text-align: center;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .qr-code img {
+            border: 2px solid #002147;
+            padding: 10px;
+            background: white;
+        }
+        .secret-key {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #002147;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #003366;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Setup Two-Factor Authentication</h1>
+        
+        <div class="instructions">
+            <h3>Follow these steps:</h3>
+            <ol>
+                <li>Install <strong>Google Authenticator</strong> app on your Android phone from Google Play Store</li>
+                <li>Open the app and tap the <strong>+</strong> button</li>
+                <li>Select <strong>"Scan a QR code"</strong></li>
+                <li>Scan the QR code below</li>
+                <li>The app will generate a 6-digit code that changes every 30 seconds</li>
+            </ol>
+        </div>
+
+        <div class="qr-code">
+            <h3>Scan this QR code:</h3>
+            <img th:src="${qrCode}" alt="QR Code" width="300" height="300">
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Important:</strong> If you cannot scan the QR code, you can manually enter this secret key into Google Authenticator:
+        </div>
+
+        <div class="secret-key">
+            <strong>Secret Key:</strong><br>
+            <code th:text="${secretKey}">SECRET_KEY_HERE</code>
+        </div>
+
+        <div class="instructions">
+            <h3>Account Details:</h3>
+            <p><strong>Account name:</strong> <span th:text="${username}">username</span></p>
+            <p><strong>Issuer:</strong> CertMaster</p>
+        </div>
+
+        <a href="/2fa/verify" class="button">
+            ✓ I've scanned the code - Continue to verify
+        </a>
+
+        <a href="/crud/sertifikati/show/all" class="button" style="background-color: #6c757d; margin-top: 10px;">
+            ← Set up later
+        </a>
+    </div>
+</body>
+</html>
