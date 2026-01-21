@@ -23,6 +23,7 @@ import lv.venta.model.EParakstaLogs;
 import lv.venta.service.TranslatorService;
 import lv.venta.service.impl.EparakstaLogsCRUDService;
 
+@Slf4j
 @Controller
 @RequestMapping("/crud/eparakstalogs")
 public class EparakstaLogsCRUDController {
