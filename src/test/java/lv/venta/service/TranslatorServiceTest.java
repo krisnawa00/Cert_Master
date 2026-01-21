@@ -1,10 +1,15 @@
 package lv.venta.service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,6 +18,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,16 +28,13 @@ import com.deepl.api.DeepLClient;
 import com.deepl.api.TextResult;
 
 /**
- * One parameterized test that gives strong coverage for translateBatch():
- * - targetLang == null
- * - targetLang == "lv"
- * - translator == null
- * - texts == null
- * - texts is empty
- * - success path (maps TextResult -> String)
- * - exception path (DeepL throws -> returns original texts)
+ * Coverage for:
+ * - translateBatch() guard/success/catch (parameterized)
+ * - translateText() early return + normal path
+ * - getAvailableLanguages() LinkedHashMap puts + return
+ * - init() (deeplApiKey null/empty branch + catch branch)
  */
-class TranslatorServiceTranslateBatchParameterizedTest {
+class TranslatorServiceTranslateTest {
 
     private TranslatorService service;
 
@@ -102,6 +105,82 @@ class TranslatorServiceTranslateBatchParameterizedTest {
             }
             case THROW -> assertEquals(c.texts, out);
         }
+    }
+
+    // -------- Added coverage for translateText() --------
+
+    @Test
+    void translateText_earlyReturns_whenNullBlank_orTargetLangLv() {
+        assertNull(service.translateText(null, "en"));
+        assertEquals("", service.translateText("", "en"));
+        assertEquals("   ", service.translateText("   ", "en"));
+        assertEquals("abc", service.translateText("abc", "lv")); // hits: targetLang.equals("lv")
+    }
+
+    @Test
+    void translateText_callsBatchAndReturnsFirstElement() throws Exception {
+        DeepLClient translatorMock = mock(DeepLClient.class);
+        ReflectionTestUtils.setField(service, "translator", translatorMock);
+
+        TextResult r1 = mock(TextResult.class);
+        when(r1.getText()).thenReturn("Sveiki");
+
+        when(translatorMock.translateText(eq(List.of("Hello")), isNull(), eq("EN")))
+                .thenReturn(List.of(r1));
+
+        String out = service.translateText("Hello", "en");
+
+        assertEquals("Sveiki", out);
+        verify(translatorMock, times(1)).translateText(eq(List.of("Hello")), isNull(), eq("EN"));
+    }
+
+    // -------- Added coverage for getAvailableLanguages() --------
+
+    @Test
+    void getAvailableLanguages_buildsAndReturnsLinkedHashMap() {
+        Map<String, String> langs = service.getAvailableLanguages();
+
+        // ensures code path executed: new LinkedHashMap + all puts + return
+        assertEquals(7, langs.size());
+        assertEquals("Latviešu", langs.get("LV"));
+        assertEquals("English (British)", langs.get("EN-GB"));
+        assertEquals("English (American)", langs.get("EN-US"));
+        assertEquals("Deutsch", langs.get("DE"));
+        assertEquals("Русский", langs.get("RU"));
+        assertEquals("Español", langs.get("ES"));
+        assertEquals("Français", langs.get("FR"));
+
+        // optional: ensure LinkedHashMap (keeps insertion order)
+        assertTrue(langs instanceof LinkedHashMap);
+    }
+
+    // -------- Added coverage for init() null/empty + catch --------
+
+    @Test
+    void init_returnsEarly_whenApiKeyNullOrEmpty() {
+        ReflectionTestUtils.setField(service, "deeplApiKey", null);
+        service.init(); // hits: deeplApiKey == null -> return
+        assertNull(ReflectionTestUtils.getField(service, "translator"));
+
+        ReflectionTestUtils.setField(service, "deeplApiKey", "");
+        service.init(); // hits: isEmpty -> return
+        assertNull(ReflectionTestUtils.getField(service, "translator"));
+    }
+
+    @Test
+    void init_hitsCatch_whenDeepLClientConstructionThrows() {
+        ReflectionTestUtils.setField(service, "deeplApiKey", "any-non-empty");
+
+        // Requires Mockito inline mock maker (dependency: org.mockito:mockito-inline)
+        // This forces an exception during "new DeepLClient(...)" so the catch block executes.
+        try (var mocked = mockConstruction(DeepLClient.class, (mock, context) -> {
+            throw new RuntimeException("boom");
+        })) {
+            service.init(); // executes catch in init()
+        }
+
+        // translator should remain null because construction failed
+        assertNull(ReflectionTestUtils.getField(service, "translator"));
     }
 
     enum Behavior { GUARD, SUCCESS, THROW }
