@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import lombok.extern.slf4j.Slf4j;
 import lv.venta.model.EParakstaLogs;
 import lv.venta.model.KursaDalibnieks;
 import lv.venta.model.KursaDatumi;
@@ -38,6 +39,7 @@ import lv.venta.repo.IVertejumsRepo;
 import lv.venta.repo.IMyAuthorityRepo;
 import lv.venta.repo.IMyUserRepo;
 
+@Slf4j
 @SpringBootApplication
 public class SertMaster1Application {
 
@@ -209,11 +211,18 @@ public class SertMaster1Application {
 				// Admin with 2FA (kristers)
 				MyUser u1 = new MyUser("kristers", encoder.encode("1234"), auth2);
 				u1.setTwoFactorEnabled(false); // Will be enabled after scanning QR code
+				u1.setSecretKey(null); // Will be generated during setup
 				userRepo.save(u1);
 				
+				log.info("Created admin user 'kristers' - 2FA disabled initially");
+
 				// Regular user without 2FA (janis)
 				MyUser u2 = new MyUser("janis", encoder.encode("4321"), auth1);
+				u2.setTwoFactorEnabled(false);
+				u2.setSecretKey(null);
 				userRepo.save(u2);
+				
+				log.info("Created regular user 'janis' - 2FA disabled");
 				
 				// MyUser u1 = new MyUser("kristers", encoder.encode("1234"), auth2); // admin
 				// userRepo.save(u1);

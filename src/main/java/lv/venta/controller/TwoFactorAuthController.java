@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import lv.venta.model.MyUser;
+import lv.venta.repo.IMyUserRepo;
 import lv.venta.service.impl.TwoFactorAuthService;
 
 @Slf4j
@@ -20,6 +22,9 @@ public class TwoFactorAuthController {
 
     @Autowired
     private TwoFactorAuthService twoFactorAuthService;
+
+    @Autowired
+    private IMyUserRepo userRepo;
 
     /**
      * Setup page - Generate QR code for first time setup
@@ -34,8 +39,19 @@ public class TwoFactorAuthController {
         log.info("User {} accessing 2FA setup page", username);
 
         try {
-            // Generate new secret key
-            String secret = twoFactorAuthService.generateSecretKey(username);
+            // Check if user already has a secret
+            MyUser user = userRepo.findByUsername(username);
+            String secret;
+            
+            if (user.getSecretKey() == null || user.getSecretKey().isEmpty()) {
+                // Generate new secret key and SAVE IT
+                secret = twoFactorAuthService.generateSecretKey(username);
+                log.info("Generated new secret key for user: {}", username);
+            } else {
+                // Use existing secret
+                secret = user.getSecretKey();
+                log.info("Using existing secret key for user: {}", username);
+            }
             
             // Generate QR code image
             String qrCodeImage = twoFactorAuthService.generateQRCodeImage(username, secret);
@@ -97,6 +113,50 @@ public class TwoFactorAuthController {
             model.addAttribute("error", "Invalid code. Please try again.");
             model.addAttribute("username", username);
             return "2fa-verify-page";
+        }
+    }
+
+    /**
+     * Enable 2FA - for users who completed setup
+     */
+    @PostMapping("/enable")
+    public String enable2FA(@RequestParam("code") int code,
+                           Authentication authentication,
+                           Model model) {
+        if (authentication == null) {
+            log.error("No authentication found when trying to enable 2FA");
+            return "redirect:/login";
+        }
+
+        String username = authentication.getName();
+        log.info("User {} attempting to enable 2FA with code: {}", username, code);
+
+        MyUser user = userRepo.findByUsername(username);
+        if (user == null) {
+            log.error("User not found: {}", username);
+            model.addAttribute("error", "User not found");
+            return "error-page";
+        }
+
+        log.info("Current user state - 2FA Enabled: {}, Secret Key: {}", 
+            user.isTwoFactorEnabled(), 
+            user.getSecretKey() != null ? "SET" : "NULL");
+
+        // Verify the code first
+        if (twoFactorAuthService.verifyCode(username, code)) {
+            // Enable 2FA
+            user.setTwoFactorEnabled(true);
+            userRepo.save(user);
+            
+            log.info("2FA ENABLED successfully for user: {} - Flag is now: {}", 
+                username, user.isTwoFactorEnabled());
+            
+            // Show success page
+            return "2fa-success-page";
+        } else {
+            log.warn("Invalid verification code during 2FA enable for user: {} (code was: {})", username, code);
+            model.addAttribute("error", "Invalid code. Please try again.");
+            return "redirect:/2fa/setup?error=invalid";
         }
     }
 
