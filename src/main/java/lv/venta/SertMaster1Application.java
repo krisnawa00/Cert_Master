@@ -32,12 +32,12 @@ import lv.venta.repo.IKursaDatumiRepo;
 import lv.venta.repo.IKurssRepo;
 import lv.venta.repo.ILietotajsRepo;
 import lv.venta.repo.IMacibuRezultatiRepo;
+import lv.venta.repo.IMyAuthorityRepo;
+import lv.venta.repo.IMyUserRepo;
 import lv.venta.repo.IPasniedzejiRepo;
 import lv.venta.repo.ISertRegTab;
 import lv.venta.repo.ISertifikatiRepo;
 import lv.venta.repo.IVertejumsRepo;
-import lv.venta.repo.IMyAuthorityRepo;
-import lv.venta.repo.IMyUserRepo;
 
 @Slf4j
 @SpringBootApplication
@@ -59,7 +59,7 @@ public class SertMaster1Application {
 			public void run(String... args) throws Exception {
 				
 				// ========== KURSA DALĪBNIEKI (24 PERSONAS) ==========
-				KursaDalibnieks KD1 = new KursaDalibnieks("Jānis","Bērziņš","janis.berzins@example.com","+37120000001","12345678901",Pilseta.Rīga,Valsts.Latvija,"Brīvības iela 1","5","LV-1001");
+				KursaDalibnieks KD1 = new KursaDalibnieks("Jack","Bērziņš","janis.berzins@example.com","+37120000001","12345678901",Pilseta.Rīga,Valsts.Latvija,"Brīvības iela 1","5","LV-1001");
 				KursaDalibnieks KD2 = new KursaDalibnieks("Ilze","Kalniņa","ilze.kalnina@example.com","+37120000002","22334455667",Pilseta.Jelgava,Valsts.Latvija,"Lielā iela 10","12","LV-3001");
 				KursaDalibnieks KD3 = new KursaDalibnieks("Pēteris","Ozoliņš","peteris.ozolins@example.com","+37120000003","33445566778",Pilseta.Liepāja,Valsts.Latvija,"Raiņa iela 20","3","LV-3401");
 				KursaDalibnieks KD4 = new KursaDalibnieks("Santa","Krūmiņa","santa.krumina@example.com","+37120000004","44556677889",Pilseta.Ventspils,Valsts.Latvija,"Saulrietu iela 5","7","LV-3601");
@@ -78,7 +78,7 @@ public class SertMaster1Application {
 				KursaDalibnieks KD16 = new KursaDalibnieks("Sanda","Meža","sanda.meza@example.com","+37120000016","16677788901",Pilseta.Tukums,Valsts.Latvija,"Pils iela 5","10","LV-3101");
 				KursaDalibnieks KD17 = new KursaDalibnieks("Valdis","Straume","valdis.straume@example.com","+37120000017","17788899012",Pilseta.Dobele,Valsts.Latvija,"Uzvaras iela 23","8","LV-3701");
 				KursaDalibnieks KD18 = new KursaDalibnieks("Dace","Sala","dace.sala@example.com","+37120000018","18899900123",Pilseta.Bauska,Valsts.Latvija,"Plūdoņa iela 17","6","LV-3901");
-				KursaDalibnieks KD19 = new KursaDalibnieks("Jānis","Vilks","janis.vilks@example.com","+37120000019","19900011234",Pilseta.Aizkraukle,Valsts.Latvija,"Gaismas iela 31","12","LV-5101");
+				KursaDalibnieks KD19 = new KursaDalibnieks("Daniel","Vilks","janis.vilks@example.com","+37120000019","19900011234",Pilseta.Aizkraukle,Valsts.Latvija,"Gaismas iela 31","12","LV-5101");
 				KursaDalibnieks KD20 = new KursaDalibnieks("Zane","Upīte","zane.upite@example.com","+37120000020","20011122345",Pilseta.Madona,Valsts.Latvija,"Skolas iela 14","5","LV-4801");
 				
 				KursaDalibnieks KD21 = new KursaDalibnieks("Kaspars","Birze","kaspars.birze@example.com","+37120000021","21122233456",Pilseta.Gulbene,Valsts.Latvija,"Ābeļu iela 8","9","LV-4401");
